@@ -51,7 +51,8 @@ end
 Th = pi/180*Th;                              
 % allchansind = 1:length(Th);
 %--- Transform polar to Cartesian coordinates.
-[intx,inty] = pol2cart(Th,Rd);
+%[intx,inty] = pol2cart(Th,Rd);
+[inty,intx] = pol2cart(Th,Rd);
 %
 % intx=[  0.2581
 %     0.2394

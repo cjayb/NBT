@@ -742,7 +742,8 @@ if strcmp(plotgrid,'on')
     plotchans = setxor(plotchans,gchans);   % remove grid chans from head plotchans   
 end
 
-[x,y]     = pol2cart(Th,Rd);  % transform electrode locations from polar to cartesian coordinates
+%[x,y]     = pol2cart(Th,Rd);  % transform electrode locations from polar to cartesian coordinates
+[y,x]     = pol2cart(Th,Rd);  % transform electrode locations from polar to cartesian coordinates
 plotchans = abs(plotchans);   % reverse indicated channel polarities
 allchansind = allchansind(plotchans);
 Th        = Th(plotchans);

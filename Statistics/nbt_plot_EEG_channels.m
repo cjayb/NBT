@@ -1,5 +1,5 @@
 function cb = nbt_plot_EEG_channels(c,minValue, maxValue, chanlocs,nbtColorMap, legend, LogScaleSwitch)
-error(nargchk(6, 7, nargin))
+error(nargchk(4, 7, nargin))
 
 if ~isempty(minValue)
     cmin=minValue;
@@ -19,7 +19,12 @@ end
 % else
 
    
-    
+if nargin < 5 || isempty(nbtColorMap)
+    nbtColorMap = colormap;
+end
+if nargin < 6 || isempty(legend)
+    legend = 'no legend';
+end
  
 
 % end
@@ -67,6 +72,6 @@ end
     
 
 %   axis equal
-cbfreeze
+%cbfreeze
 colormap(OldColorMap);
 end
