@@ -172,6 +172,9 @@ downButton = uicontrol(StatSelection,'Style','pushbutton','String','\/','Positio
         end
 
     function confirm_diff_group(d1,d2,text_diff2,text_diff4)
+        % SH: Line 178: indices of groups should be taken from the input
+        % fields instead of get(listGroup), otherwise we can't say group2
+        % minus group1
         group_ind = get(ListGroup,'Value'); % obj.groups
         nameg1 = get(text_diff2,'string');
         %             sep = findstr(nameg1,':');

@@ -47,10 +47,11 @@
         end
     elseif nGroups == 2
         % Set the groupType for plotting later on
-        groupType = 'difference';
+        groupType = 'difference';        
         
         % Check whether the first group is a difference group
         if strcmp(NBTstudy.groups{groups(1)}.groupType,'difference')
+            
             groups1 = NBTstudy.groups{groups(1)}.groupDifference;
             
             [Group1, Group2, signalBiomarkersGrp1, crossChannelBiomarkersGrp1] = extractBiomarkers(NBTstudy,groups1);
@@ -176,12 +177,18 @@
                 end
                 
                 for biomID = 1 : nBioms
+                    biomID
                     if ismember(biomID,bioms_ind)
-                        biomIndex = find(ismember(bioms_ind,biomID));
-                        if strcmp(multiComp,'fdr')
-                            [significanceMask{biomID}, ~] = nbt_MCcorrect(pValues{biomID},multiComp,q);
+                        if find(isnan(pValues{biomID}))
+                            significanceMask{biomID} = [];
                         else
-                            [significanceMask{biomID}, ~] = nbt_MCcorrect(pValues{biomID},multiComp);
+                            
+                            biomIndex = find(ismember(bioms_ind,biomID));
+                            if strcmp(multiComp,'fdr')
+                                [significanceMask{biomID}, ~] = nbt_MCcorrect(pValues{biomID},multiComp,q);
+                            else
+                                [significanceMask{biomID}, ~] = nbt_MCcorrect(pValues{biomID},multiComp);
+                            end
                         end
                     end
                 end
@@ -250,6 +257,7 @@
                 else
                     fgh(page)=figure('name',['Mean of  ',char(Group1.groupName)],'NumberTitle','off');
                 end
+                hold on;
         end      
         
         xSize = 27;
@@ -283,8 +291,9 @@
         
         crossChans = [21:25,36:40,41:45,46:50];
         for i = page * perPage - perPage + 1 : upperBound    
-            subaxis(6, maxColumns, 6+mod(i-1,25), 'Spacing', 0.03, 'Padding', 0, 'Margin', 0)
+            subax = subaxis(6, maxColumns, 6+mod(i-1,25), 'Spacing', 0.03, 'Padding', 0, 'Margin', 0);
             axis off;
+            
             if biomarkerIndex(i) ~= 0
                 cbType = '';
                 if ismember(i,crossChans)
@@ -329,19 +338,36 @@
                     end
                 end
                 
-                figure(fgh(end));
+                
                 %%% Plot topoplotConnect for CrossChannelBiomarkers
                 if ismember(i,crossChans)
-                    nbt_topoplotConnect(NBTstudy,biomarkerValues,chanChanThreshold)
+                    topoHandle = nbt_topoplotConnect(NBTstudy,biomarkerValues,chanChanThreshold);
                     nbt_plotColorbar(i, chanChanThreshold, 1, 6, units, maxColumns, 'normal');
+                    
+                    %%% Set the menu for the topoplot
+                    subaxMenu = uicontextmenu;
+                    set(topoHandle,'uicontextmenu',subaxMenu);
+                    uimenu(subaxMenu,'label','Plot topoplot','callback',{nbt_pvaluesmatrix(S)});
                 else
                     %%% Biomarker is not a CrossChannelBiomarker
                     %%% Plot the topoplot for the biomarker
-                    nbt_topoplot(biomarkerValues,chanLocs,'headrad','rim','emarker2',{significanceMask{i},'o','g',4,1},'maplimits',[-3 3],'style','map','numcontour',0,'electrodes','on','circgrid',circgrid,'gridscale',gridscale,'shading','flat');
+                    topoHandle = nbt_topoplot(biomarkerValues,chanLocs,'headrad','rim','emarker2',{significanceMask{biomarkerIndex(i)},'o','g',4,1},'maplimits',[-3 3],'style','map','numcontour',0,'electrodes','on','circgrid',circgrid,'gridscale',gridscale,'shading','flat');
                     set(gca, 'LooseInset', get(gca,'TightInset'));
                     nbt_plotColorbar(i, cmin, cmax, 6, units, maxColumns, cbType);
+                    
+                    if exist('S','var')
+                        %%% Set the menu for the topoplot
+                        subaxMenu = uicontextmenu;
+                        set(topoHandle,'uicontextmenu',subaxMenu);
+                        uimenu(subaxMenu,'label','Show pValues matrix','callback',{nbt_pvaluesmatrix(S)});
+                    else
+                        subaxMenu = uicontextmenu;
+                        set(topoHandle,'uicontextmenu',subaxMenu);
+                        uimenu(subaxMenu,'label','No statistics were computed');
+                    end
                 end
                 
+                figure(fgh(end));
            end
             
             %% PLOTTING FREQUENCY BANDS ABOVE THE TOP ROW
@@ -426,6 +452,9 @@
                 end
             case 'cstm'
         end
+        
+        
+        %%% Store the biomarkerValues in the NBTstudy object
     end
 
 % Nested functions part
@@ -469,11 +498,11 @@
         DataObjGrp1 = getData(Group1,AnalysisObjGrp1);
         DataObjGrp2 = getData(Group2,AnalysisObjGrp2);
 
-        [signalBiomarkersGrp1, crossChannelBiomarkersGrp1] = getBiomarkerValues(DataObjGrp1,subjectNumber);
-        [signalBiomarkersGrp2, crossChannelBiomarkersGrp2] = getBiomarkerValues(DataObjGrp2,subjectNumber);
+        [signalBiomsGrp1, crossChannelBiomsGrp1] = getBiomarkerValues(DataObjGrp1,subjectNumber);
+        [signalBiomsGrp2, crossChannelBiomsGrp2] = getBiomarkerValues(DataObjGrp2,subjectNumber);
 
-        signalBiomarkers = signalBiomarkersGrp1 - signalBiomarkersGrp2;
-        crossChannelBiomarkers = crossChannelBiomarkersGrp1 - crossChannelBiomarkersGrp2;
+        signalBiomarkers = signalBiomsGrp1 - signalBiomsGrp2;
+        crossChannelBiomarkers = crossChannelBiomsGrp1 - crossChannelBiomsGrp2;
     end
     
     function [signalBiomarkers, crossChannelBiomarkers] = getBiomarkerValues(DataObj, subjectNumber)
