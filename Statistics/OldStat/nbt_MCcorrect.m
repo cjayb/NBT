@@ -74,7 +74,10 @@ function [Pindex, pOut] = nbt_MCcorrect(p,Type,varargin)
             if isempty(q)
                 q = 0.05;
             end
-            [h, crit_p, Pc]=fdr_bh(p,q,'pdep','no');
+            [h, crit_p]=fdr_bh(p,q,'pdep','no');
+            Pc = p(p<=crit_p);
+        otherwise
+            error('NBT: nbt_MCcorrect: this method does not exist')
     end
     if(~isempty(Pc))
         Pindex = nbt_searchvector(pOld,Pc);
