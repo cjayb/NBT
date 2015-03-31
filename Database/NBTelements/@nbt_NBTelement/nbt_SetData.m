@@ -179,7 +179,12 @@ try
         tt = tt+1;
         if(~isempty(upID{1,1}))
             if(~strcmp(upID{1,1},'[]'))
-                NBTelement.ID{IDstep+tt,1} = [int2str(NewIDs(i)) '.' upID{i,1}];
+                if(length(NewIDs) == length(upID))
+                    upIDindex = i;
+                else 
+                    upIDindex = 1;
+                end
+                NBTelement.ID{IDstep+tt,1} = [int2str(NewIDs(i)) '.' upID{upIDindex,1}];
             else
                 NBTelement.ID{IDstep+tt,1} = [int2str(NewIDs(i)) '.[]'];
             end

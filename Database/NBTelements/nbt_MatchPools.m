@@ -55,7 +55,7 @@ end
     function CutString = CutOutString(CutString)
         if(isempty(AboveDots))
             CutString = CutString(1:BelowDots(end));
-        elseif(ismpty(BelowDots))
+        elseif(isempty(BelowDots))
             CutString = CutString(AboveDots(1):end);
         else
             CutString = CutString([1:BelowDots(end) (AboveDots(1)+1):end]);
