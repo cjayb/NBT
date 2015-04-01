@@ -56,10 +56,10 @@ opt.FileName     = '';
 opt.FileName    = check_file_name(signalInfo, opt.FileName);
 opt.SensorClass = check_sensor_class(size(rawSignal, 1), opt.SensorClass);
 
-if isfield(signalInfo.Interface, 'EEG') && ...
-        isfield(signalInfo.Interface.EEG, 'chanlocs'),
+if isfield(signalInfo.interface, 'EEG') && ...
+        isfield(signalInfo.interface.EEG, 'chanlocs'),
     hasEEGLAB = true;
-    str = signalInfo.Interface.EEG;
+    str = signalInfo.interface.EEG;
     [sensorArray, ordering] = sensors.eeglab_to_sensor_array(str, ...
         opt.SensorClass);
     rawSignal = rawSignal(ordering, :);
@@ -79,17 +79,17 @@ else
     eventArray = [];
 end
 
-importer = matrix(signalInfo.converted_sample_frequency, ...
+importer = matrix(signalInfo.convertedSamplingFrequency, ...
     'FileName',     opt.FileName, ...
     'Sensors',      sensorArray);
 physObj  = import(importer, rawSignal);
 
-set_name(physObj, signalInfo.file_name);
+set_name(physObj, signalInfo.subjectInfo);
 add_event(physObj, eventArray);
 
 % This is handy when converting back to NBT format (or to EEGLAB format)
 if hasEEGLAB,
-    set_meta(physObj, 'eeglab', signalInfo.Interface.EEG);
+    set_meta(physObj, 'eeglab', signalInfo.interface.EEG);
 end
 set_meta(physObj, 'nbt', signalInfo);
 
@@ -102,7 +102,7 @@ end
 
 function check_input_arguments(signalInfo, rawSignal)
 import exceptions.*;
-if ~isa(signalInfo, 'nbt_Info'),
+if ~isa(signalInfo, 'nbt_SignalInfo'),
     ME = InvalidArgument('signalInfo', ...
         'An NBT SignalInfo struct was expected');
     throw(ME);
@@ -128,8 +128,8 @@ if nargin > 1 && ~isempty(desiredFileName) && is_valid_filename(desiredFileName)
 end
 
 filePath = '';
-if ~isempty(str.Interface) && isfield(str.Interface, 'EEG'),
-   filePath = str.Interface.EEG.filepath;
+if ~isempty(str.interface) && isfield(str.interface, 'EEG'),
+   filePath = str.interface.EEG.filepath;
 end
 if isempty(filePath)
    filePath = pset.session.instance.Folder;

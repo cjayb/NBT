@@ -15,10 +15,10 @@ import misc.find_pattern;
 
 
 if strcmpi(s(1).type, '()') && ~isempty(obj)
-    
-    if isempty(obj.MemoryMap) || any(cellfun(@(x) isempty(x), obj.MemoryMap)) ,
+   % isemptyHandle = @(x) isempty(x);
+    %if isempty(obj.MemoryMap) ||  any(cellfun(isemptyHandle, obj.MemoryMap))
         make_mmemmapfile(obj);
-    end
+  %  end
     
 end
 

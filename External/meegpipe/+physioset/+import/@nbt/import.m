@@ -53,16 +53,16 @@ end
 
 nbtData = load(dataFileName);
 fNames = fieldnames(nbtData);
-if numel(fNames) > 1,
-    error('Invalid format for file %s', dataFileName);
-end
+%if numel(fNames) > 1,
+%    error('Invalid format for file %s', dataFileName);
+%end
 nbtData = nbtData.(fNames{1});
 
 nbtInfo = load(infoFileName);
 fNames = fieldnames(nbtInfo);
-if numel(fNames) > 1,
-    error('Invalid format for file %s', infoFileName);
-end
+%if numel(fNames) > 1,
+%    error('Invalid format for file %s', infoFileName);
+%end
 nbtInfo = nbtInfo.(fNames{1});
 
 if verbose,
