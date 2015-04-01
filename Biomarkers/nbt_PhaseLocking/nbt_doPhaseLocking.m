@@ -198,10 +198,9 @@ if ~isempty(windowleng)
     WindowStep = floor(nw*overlap);
     
     PhaseLockingObject =nbt_PhaseLocking(signallength,nchannels);
-
-    for k=1:nchannels
-        
-        for j=k+1:nchannels
+    
+    for k = 1 : (nchannels-1)
+        for j = k + 1 : nchannels
             disp([' channels ', num2str(k), ' ,' num2str(j), '...'])
             pos=1;
             jump = 0;

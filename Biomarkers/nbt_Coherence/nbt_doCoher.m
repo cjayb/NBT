@@ -95,14 +95,14 @@ Index = find(floor(f)>= FrequencyBand(1,1) &  floor(f)<= FrequencyBand(1,2));
 FrequencyIndex= [Index(1) Index(end)];
 %--- compute coherence matrix
 CoherenceMatrix = nan(size(Signal(:,:),2),size(Signal(:,:),2));
-CoherenceMatrixI = nan(size(Signal(:,:),2),size(Signal(:,:),2));
+ICoherenceMatrix = nan(size(Signal(:,:),2),size(Signal(:,:),2));
 disp([' Frequency band ', num2str(FrequencyBand(1,1)), '-', num2str(FrequencyBand(1,2)),' Hz'])
 
 try
-  for i=1:size(Signal(:,:),2)
+  for i = 1 : (size(Signal(:,:),2) - 1)
        disp([' channel ', num2str(i), ' ...'])
        [Pxx] = cpsd(Signal(:,i), Signal(:,i), W, [], W_length, Fs);
-        for j=i+1:size(Signal(:,:),2)
+        for j = i + 1 : size(Signal(:,:),2)
             [Pyy] = cpsd(Signal(:,j), Signal(:,j), W, [], W_length, Fs);
             [Pxy] = cpsd(Signal(:,i), Signal(:,j), W, [], W_length, Fs);
             Cxy=Pxy./sqrt(Pxx.*Pyy);

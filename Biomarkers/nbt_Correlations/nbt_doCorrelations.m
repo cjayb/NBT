@@ -1,7 +1,6 @@
-function [Correlation]=nbt_doCorrelations(Signal,Info)
 % Usage:nbt_doCorrelations(Signal,Info,Save_dir)
 %
-% computes correlations between the signals in the NBT Signal matrix
+% computes correlations between the channels in the NBT Signal matrix
 %
 % Inputs:
 %
@@ -34,8 +33,7 @@ function [Correlation]=nbt_doCorrelations(Signal,Info)
 %
 % See Readme.txt for additional copyright information.
 
-%%    assigning fields:
-
+function [CorrelationObject] = nbt_doCorrelations(Signal,Info)
 type='Pearson';% 'Pearson' (the default) to compute Pearson's linear
 % correlation coefficient, 'Kendall' to compute Kendall's
 % tau, or 'Spearman' to compute Spearman's rho.
@@ -45,31 +43,26 @@ disp('Command window code:')
 disp('nbt_doCorrelations(Signal,SignalInfo')
 disp(' ')
 
-disp(['Computing correlations for ',Info.file_name])
+disp(['Computing correlations for ',Info.subjectInfo])
 
-%% remove artifact intervals:
-
+% Remove artifact intervals:
 Signal = nbt_RemoveIntervals(Signal,Info);
 
-%%   Compute correlations
-[R,P]=corr(Signal,'type',type);
-s=size(R,2);
-R(1:s+1:s*s) = NaN;
-P(1:s+1:s*s) = NaN;
+% Compute correlations
+nChannels = size(Signal(:,:),2);
+CorrelationObject = nbt_Correlations(nChannels);
+for i = 1 : (nChannels - 1)
+    for j = i + 1 : nChannels
+        [CorrelationObject.correlation(i,j), CorrelationObject.pValues(i,j)] = corr(Signal(:,i),Signal(:,j),'type',type);
+    end
+end
 
-%% Set analysis results of bad channels to NaNs: (Note, analysis results vectors
- % should have the same length as the number of channels in your data if you want to use the following code)
+% Set results of bad channels to NaNs:
+CorrelationObject.correlation(find(Info.badChannels),:)=NaN;
+CorrelationObject.correlation(:,find(Info.badChannels))=NaN;
+CorrelationObject.pValues(find(Info.badChannels),:)=NaN;
+CorrelationObject.pValues(:,find(Info.badChannels))=NaN;
 
-R(find(Info.BadChannels),:)=NaN;
-R(:,find(Info.BadChannels))=NaN;
-P(find(Info.BadChannels),:)=NaN;
-P(:,find(Info.BadChannels))=NaN;
-
-%%  store and save markers in biomarker objects 
-
-Correlation = nbt_Correlations(R,P); 
-
-%% update biomarker object 
-
-Correlation = nbt_UpdateBiomarkerInfo(Correlation, Info);
+% Update biomarker object 
+CorrelationObject = nbt_UpdateBiomarkerInfo(CorrelationObject, Info);
 end
