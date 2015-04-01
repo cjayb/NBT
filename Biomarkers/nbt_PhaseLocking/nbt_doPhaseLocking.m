@@ -197,7 +197,7 @@ if ~isempty(windowleng)
     nw = length(w);   % size of window
     WindowStep = floor(nw*overlap);
     
-    PhaseLockingObject =nbt_PhaseLocking(signallength,nchannels);
+    PhaseLockingObject = nbt_PhaseLocking(signallength,nchannels);
     
     for k = 1 : (nchannels-1)
         for j = k + 1 : nchannels

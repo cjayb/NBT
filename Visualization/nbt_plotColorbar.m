@@ -56,7 +56,7 @@ function nbt_plotColorbar(subplotIndex, cmin, cmax, maxTicks, units, maxColumns,
     end
     
     if strcmp(cbType,'diff')
-        maxTicks = 8;
+        maxTicks = 7;
     end
     
     %%% Plot the colorbar on the righthand side of the topoplot
