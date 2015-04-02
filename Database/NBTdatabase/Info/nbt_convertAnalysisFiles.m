@@ -49,7 +49,7 @@ for j=3:length(d)
             if ~isempty(signalName)
                 sigInfo = load([d(j).name(1:end-12) 'info.mat']);
                 SubjectInfo = sigInfo.SubjectInfo;
-                eval([signalName ' = sigInfo.' signalName ';']);
+                eval([signalName ' = sigInfo.' signalName 'Info;']);
             end
             
             for i=1:length(oldBiomarkerFields)
