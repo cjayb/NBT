@@ -24,13 +24,13 @@ function nbt_CompressAnalysisFiles(startpath)
 d= dir (startpath);
 for j=3:length(d)
     if (d(j).isdir )
-        nbt_CompressAnalysisFiles([startpath,'/', d(j).name ]);
+        nbt_CompressAnalysisFiles([startpath filesep d(j).name ]);
     else
         b = strfind(d(j).name,'mat');
         cc= strfind(d(j).name,'analysis');
         
         if (length(b)~=0  && length(cc)~=0)
-            nbt_loadsavefile([startpath , '/',d(j).name]);
+            nbt_loadsavefile([startpath  filesep d(j).name]);
         end
     end
 end

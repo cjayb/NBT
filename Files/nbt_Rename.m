@@ -2,7 +2,7 @@
 % nbt_Rename(StartPath,filenameExt,BlockSep, BlockDef)
 % 
 %E.g.
-% nbt_Rename('/media/Data/','.cnt','_',{'dyslex';1;'yymmdd';5})
+% nbt_Rename('/media/Data/','.cnt','_',{'dyslex';1;'yymmdd';5}
 % will rename the file format <SubjectID>_x_x_x_<Condition>.cnt to
 % dyslex.<SubjectID>.yymmdd.<Condition>.cnt
 
@@ -36,7 +36,7 @@ function nbt_Rename(startpath, ext, BlockSep, BlockDef)
 d = dir(startpath);
 for j=3:length(d)
     if (d(j).isdir )
-        nbt_Rename([startpath,'/', d(j).name ], ext, BlockSep, BlockDef);
+        nbt_Rename([startpath filesep d(j).name ], ext, BlockSep, BlockDef);
     else
         %remove extenstion
         filename = d(j).name;
@@ -84,7 +84,7 @@ for j=3:length(d)
             end
             
             NewFilename = [ProjectID '.S' SubjectID '.' DateRec '.' Condition ext];
-            movefile([startpath,'/', filename ext], [startpath,'/', NewFilename]);
+            movefile([startpath filesep filename ext], [startpath filesep NewFilename]);
         catch
         end
         
