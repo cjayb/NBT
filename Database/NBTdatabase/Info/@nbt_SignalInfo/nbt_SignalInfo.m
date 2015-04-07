@@ -35,6 +35,7 @@ classdef nbt_SignalInfo
         signalOrigin                % Filename (path) of the raw signal or previous signal RawSignal> CleanSignal >ICASignal.
         researcherID                % Researcher ID
         signalType                  % EEG or other type of Signal
+        signalUnit                  % The unit of the signal, the signal should scaled to this unit during import (default: microvolts for EEG signals)
         frequencyRange              %If the signal has be filtered the frequencyRange in [lp hp] format
         filterSettings              % Struct with filtersettings.
         cleaningSettings            % Struct with cleaning settings

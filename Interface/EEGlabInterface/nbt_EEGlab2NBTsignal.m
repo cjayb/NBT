@@ -81,7 +81,7 @@ if (strcmpi(input('Do you want to save this signal? ([Y]es/[N]o)','s'),'y'))
     SignalInfo.interface.EEG = EEG;
     
     eval(['[',name,'Info]=SignalInfo;']);
-    fn=SignalInfo.subjectInfo;
+    fn=nbt_correctSubjectinfoNames(SignalInfo.subjectInfo);
     
     %--- save NBT files if the saveflag = 1
     if(exist('saveflag','var'))
@@ -99,31 +99,31 @@ if (strcmpi(input('Do you want to save this signal? ([Y]es/[N]o)','s'),'y'))
             disp('saving...')
             if present
                 try
-                    save([directoryname filesep fn ],[name 'Info'],'-append')
+                    save([directoryname filesep fn '.mat' ],[name 'Info'],'-append')
                     if(exist('SubjectInfo','var'))
-                        save([directoryname filesep fn ],'SubjectInfo','-append')
+                        save([directoryname filesep fn '.mat'],'SubjectInfo','-append')
                     end
                 catch
-                    save([directoryname filesep fn ],[name 'Info'])
+                    save([directoryname filesep fn '.mat'],[name 'Info'])
                     if(exist('SubjectInfo','var'))
-                        save([directoryname filesep fn ],'SubjectInfo','-append')
+                        save([directoryname filesep fn '.mat'],'SubjectInfo','-append')
                     end
                 end
                 
                 try
-                    save([directoryname filesep fn(1:end-9) '.mat'],name,'-append')
+                    save([directoryname filesep fn(1:end-5) '.mat'],name,'-append')
                 catch
-                    save([directoryname filesep fn(1:end-9) '.mat'],name)
+                    save([directoryname filesep fn(1:end-5) '.mat'],name)
                 end
                 
             else
-                OptionSave = input(['A file named ' fn(1:-9) '.mat does not exist in this directory. Do you want create a new file? [[Y]es [N]o]'],'s'); % e.g. RawSignal, CleanSigna
+                OptionSave = input(['A file named ' fn '.mat does not exist in this directory. Do you want create a new file? [[Y]es [N]o]'],'s'); % e.g. RawSignal, CleanSigna
                 if strcmp(OptionSave(1),'Y') || strcmp(OptionSave(1),'y')
-                    save([directoryname filesep fn ],[name 'Info']) 
+                    save([directoryname filesep fn '.mat'],[name 'Info']) 
                     if(exist('SubjectInfo','var'))
-                        save([directoryname filesep fn ],'SubjectInfo','-append')
+                        save([directoryname filesep fn '.mat'],'SubjectInfo','-append')
                     end
-                    save([directoryname filesep fn(1:end-9) '.mat'],name)
+                    save([directoryname filesep fn(1:end-5) '.mat'],name)
                 end
             end
             

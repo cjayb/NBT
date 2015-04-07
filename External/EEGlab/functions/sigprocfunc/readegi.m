@@ -196,6 +196,7 @@ end
 
 % convert from A/D units to microvolts
 if ( head.bits ~= 0 & head.range ~= 0 )
+    warning('readegi: missing header information, signal may not be in microvolts')
        TrialData = (head.range/(2^head.bits))*TrialData;
 end
 

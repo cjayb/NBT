@@ -19,8 +19,9 @@ if(auto ==1)
     end
     SignalInfo.signalName = name;
     SignalInfo.signalSHA256 = nbt_getHash(Signal);
-    eval(['[',name,'Info]=SignalInfo;']);
-    fn=SignalInfo.subjectInfo;
+    eval(['[',name,'Info]= SignalInfo;']);
+    eval([ name '= Signal;']);
+    fn = nbt_correctSubjectinfoNames(SignalInfo.subjectInfo);
 
     if(isempty(directoryname))
         disp('select directory to save NBT file')
@@ -30,32 +31,30 @@ if(auto ==1)
     
     present=0;
     for i=1:length(d)
-        if strcmp(d(i).name,[fn,'_info.mat'])
+        if strcmp(d(i).name,[fn '.mat'])
             present=1;
         end
     end
     disp('saving...')
     if present
         try
-            save([directoryname filesep fn '_info.mat'],[name 'Info'],'-append')
+            save([directoryname filesep fn '.mat'],[name 'Info'],'-append')
         catch
-            save([directoryname filesep fn '_info.mat'],[name 'Info'])
+            save([directoryname filesep fn '.mat'],[name 'Info'])
         end
         
-        if(~isempty(Signal))
-            eval(['[',name,']=Signal;']);
-            
+        if(~isempty(Signal))   
             try
-                save([directoryname filesep fn '.mat'],name,'-append')
+                save([directoryname filesep fn(1:end-5) '.mat'],name,'-append')
             catch
-                save([directoryname filesep fn '.mat'],name)
+                save([directoryname filesep fn(1:end-5) '.mat'],name)
             end
         end
     else
         OptionSave = input(['A file named' fn '_info.mat does not exist in this directory. Do you want create a new file? [[Y]es [N]o]'],'s'); % e.g. RawSignal, CleanSigna
         if strcmp(OptionSave(1),'Y') || strcmp(OptionSave(1),'y')
-            save([directoryname filesep fn '_info.mat'],[name 'Info'])
-            save([directoryname filesep fn '.mat'],name)
+            save([directoryname filesep fn '.mat'],[name 'Info'])
+            save([directoryname filesep fn(1:end-5) '.mat'],name)
         end
     end
     
