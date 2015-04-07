@@ -156,7 +156,11 @@ for k = 1:nchannels
 end
 SignalHilb = hilbert(FilteredSignal);
 disp('Instantaneous Phase...')
+
+
+
 phase = unwrap(angle(SignalHilb));
+
 % exclude 10% of the signal before and after because of distorsion
 % introduced by hilbert transform
 perc10w =  floor(signallength*0.1);
@@ -197,7 +201,7 @@ if ~isempty(windowleng)
     nw = length(w);   % size of window
     WindowStep = floor(nw*overlap);
     
-    PhaseLockingObject = nbt_PhaseLocking(signallength,nchannels);
+    PhaseLockingObject = nbt_PhaseLocking(signallength,nchannels,200);
     
     for k = 1 : (nchannels-1)
         for j = k + 1 : nchannels
@@ -244,7 +248,9 @@ if ~isempty(windowleng)
     end
 
 else
-    PhaseLockingObject =nbt_PhaseLocking(signallength,nchannels);
+    nPermutations = 200;
+    surrPLV = zeros(nchannels,nchannels,nPermutations);
+    PhaseLockingObject =nbt_PhaseLocking(signallength,nchannels,nPermutations);
     for k=1:nchannels
 %         disp([' channel ', num2str(k), ' ...'])
         for j=k+1:nchannels
@@ -252,10 +258,21 @@ else
 
                 phase1 = phase(:,k);           % make window y
                 phase2 = phase(:,j);
-            
+                
+                % Compute nPermutations surrogate PLV's (permutation test)
+                for permutation = 1 : 200
+                    
+                    
+                    
+                    
+                    permutedTimeSteps = randperm(size(phase2,1));
+                    phasePermuted = phase2(permutedTimeSteps(1:size(phase2,1)));
+                    RP=n*phase1-m*phasePermuted;
+                    surrPLV(k,j,permutation)=abs(sum(exp(i*RP)))/length(RP);
+                end
             try 
                RP=n*phase1-m*phase2;
-               PLV(k,j)=abs(sum(exp(i*RP)))/length(RP); 
+               PLV(k,j)=abs(sum(exp(i*RP)))/length(RP);
                [index1nm(k,j),index2nm(k,j),index3nm(k,j)] = nbt_n_m_detection(phase1,phase2,n,m);
             catch Er
                fprintf('Unable to process the Phase Locking \n');
@@ -268,6 +285,7 @@ end
 
 PhaseLockingObject.Ratio = [n m];
 PhaseLockingObject.PLV = PLV;
+PhaseLockingObject.surrogatePLV = surrPLV;
 PhaseLockingObject.Instphase = Instphase;
 % SignalInfo.frequencyRange = FrequencyBand;
 PhaseLockingObject.filterorder = filterorder;
