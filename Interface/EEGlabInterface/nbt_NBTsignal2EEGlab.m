@@ -50,12 +50,13 @@ function [EEG SignalPath] = nbt_NBTsignal2EEGlab(varargin)
 P=varargin;
 nargs=length(P);
 
-if nargs == 3
+if nargs == 4
     Signal= P{1};
     SignalInfo = P{2}; 
     SignalPath = P{3};
+    SubjectInfo = P{4};
     if(isempty(SignalInfo.Interface.EEG))    
-    EEG = eeg_emptyset;
+        EEG = eeg_emptyset;
     else
         EEG = SignalInfo.Interface.EEG;
     end
@@ -66,6 +67,7 @@ if nargs == 3
     EEG.pnts = size(EEG.data,2);
     SignalInfo.Interface.EEG=[];
     EEG.NBTinfo = SignalInfo;
+    EEG.NBTsubjectInfo = SubjectInfo;
 
     %Remove noisy intervals
     if(isfield(SignalInfo.Interface,'noisey_intervals'))
@@ -82,10 +84,10 @@ else
 %--- load NBT file
 disp('File information loading...')
 if isempty(varargin)
-    [Signal,SignalInfo,SignalPath]=nbt_load_file();
+    [Signal,SignalInfo,SignalPath, SubjectInfo]=nbt_load_file();
 else
     path_filename=varargin{1};
-    [Signal,SignalInfo,SignalPath]=nbt_load_file(path_filename);
+    [Signal,SignalInfo,SignalPath, SubjectInfo]=nbt_load_file(path_filename);
 end
 
 %--- Set EEGlab fields
@@ -108,6 +110,7 @@ EEG.data = Signal';
 EEG.pnts = size(EEG.data,2);
 SignalInfo.interface.EEG=[];
 EEG.NBTinfo = SignalInfo;
+EEG.NBTSubjectInfo = SubjectInfo;
 EEG = eeg_checkset(EEG);
 
 %--- save EEGlab structure if wanted

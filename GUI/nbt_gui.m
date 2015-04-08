@@ -98,9 +98,9 @@ if (standalone)
     
     %define menu
     FileSub = uimenu(NBTMenu,'label', ' &File ');
-    uimenu( FileSub, 'label', 'Load NBT Signal', 'callback', '[Signal,SignalInfo,SignalPath]=nbt_load_file;nbt_set_name(Signal, SignalInfo);');
+    uimenu( FileSub, 'label', 'Load NBT Signal', 'callback', '[Signal,SignalInfo,SignalPath, SubjectInfo]=nbt_load_file;nbt_set_name(Signal, SignalInfo);');
     uimenu( FileSub, 'label', 'Import files into NBT format', 'callback', ['nbt_import_files']);
-    uimenu( FileSub, 'label', 'Save NBT Signal', 'callback', ['nbt_SaveSignal(Signal,SignalInfo,[]);']);
+    uimenu( FileSub, 'label', 'Save NBT Signal', 'callback', ['nbt_SaveSignal(Signal,SignalInfo,[],0,[],SubjectInfo);']);
     FileSubImportSub = uimenu(FileSub, 'label', ' &Import options');
     uimenu( FileSubImportSub, 'label', 'Import BrainVision Analyzer files', 'callback', 'nbt_import_files([],[], @nbt_loadbv);');
     uimenu( FileSubImportSub, 'label', 'Import EDF files', 'callback', 'nbt_import_files([],[], @nbt_loadEDF);');   

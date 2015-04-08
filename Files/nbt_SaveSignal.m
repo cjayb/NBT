@@ -1,5 +1,5 @@
-function nbt_SaveSignal(Signal, SignalInfo, directoryname,auto,SignalName)
-narginchk(2, 5)
+function nbt_SaveSignal(Signal, SignalInfo, directoryname,auto,SignalName,SubjectInfo)
+narginchk(2, 6)
 if(~exist('auto','var'))
     auto = 0;
 end
@@ -15,7 +15,11 @@ if(auto ==1)
     if(~exist('SignalName','var'))
         name = input('Name of NBT Signal? (should contain the word Signal) ','s'); % e.g. RawSignal, CleanSignal
     else
-        name = SignalName;
+        if(isempty(SignalName))
+            name = input('Name of NBT Signal? (should contain the word Signal) ','s'); % e.g. RawSignal, CleanSignal
+        else
+            name = SignalName;
+        end
     end
     SignalInfo.signalName = name;
     SignalInfo.signalSHA256 = nbt_getHash(Signal);
@@ -51,9 +55,10 @@ if(auto ==1)
             end
         end
     else
-        OptionSave = input(['A file named' fn '_info.mat does not exist in this directory. Do you want create a new file? [[Y]es [N]o]'],'s'); % e.g. RawSignal, CleanSigna
+        OptionSave = input(['A file named ' fn '_info.mat does not exist in this directory. Do you want create a new file? [[Y]es [N]o]'],'s'); % e.g. RawSignal, CleanSigna
         if strcmp(OptionSave(1),'Y') || strcmp(OptionSave(1),'y')
             save([directoryname filesep fn '.mat'],[name 'Info'])
+            save([directoryname filesep fn '.mat'],'SubjectInfo','-append')
             save([directoryname filesep fn(1:end-5) '.mat'],name)
         end
     end

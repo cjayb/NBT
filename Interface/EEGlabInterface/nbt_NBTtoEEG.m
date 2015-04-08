@@ -41,7 +41,7 @@
 %--------------------------------------------------------------------------
 
 
-function EEG=nbt_NBTtoEEG(Signal, SignalInfo, SignalPath)
+function EEG=nbt_NBTtoEEG(Signal, SignalInfo, SignalPath, SubjectInfo)
 
 try
     if(~isempty(SignalInfo.interface.EEG))
@@ -69,6 +69,7 @@ end
 
 
 EEG.NBTinfo = SignalInfo;
+EEG.NBTSubjectInfo = SubjectInfo;
 EEG = eeg_checkset(EEG);
 end
 
