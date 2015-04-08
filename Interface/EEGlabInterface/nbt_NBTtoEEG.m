@@ -42,7 +42,7 @@
 
 
 function EEG=nbt_NBTtoEEG(Signal, SignalInfo, SignalPath, SubjectInfo)
-
+narginchk(3,4);
 try
     if(~isempty(SignalInfo.interface.EEG))
         EEG = SignalInfo.interface.EEG;
@@ -69,7 +69,11 @@ end
 
 
 EEG.NBTinfo = SignalInfo;
-EEG.NBTSubjectInfo = SubjectInfo;
+if(exist('SubjectInfo','var'))
+    EEG.NBTSubjectInfo = SubjectInfo;
+else
+    EEG.NBTSubjectInfo = [];
+end
 EEG = eeg_checkset(EEG);
 end
 

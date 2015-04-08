@@ -9,7 +9,7 @@ if(auto == 0)
         auto = 1;
     end
 end
-if(auto ==1)
+if(auto == 1)
     
     %--- make NBTSignal files
     if(~exist('SignalName','var'))
@@ -26,7 +26,7 @@ if(auto ==1)
     eval(['[',name,'Info]= SignalInfo;']);
     eval([ name '= Signal;']);
     fn = nbt_correctSubjectinfoNames(SignalInfo.subjectInfo);
-
+    
     if(isempty(directoryname))
         disp('select directory to save NBT file')
         directoryname = uigetdir('select directory to save NBT file');
@@ -47,7 +47,7 @@ if(auto ==1)
             save([directoryname filesep fn '.mat'],[name 'Info'])
         end
         
-        if(~isempty(Signal))   
+        if(~isempty(Signal))
             try
                 save([directoryname filesep fn(1:end-5) '.mat'],name,'-append')
             catch
