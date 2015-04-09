@@ -51,7 +51,7 @@
 % See Readme.txt for additional copyright information.
 % ---------------------------------------------------------------------------------------
 
-function[Signal,SignalInfo,path]=nbt_load_file(varargin)
+function[Signal,SignalInfo, path, SubjectInfo]=nbt_load_file(varargin)
 
 %% if file name not specified, select file from pop up window
 if isempty(varargin)
@@ -144,6 +144,8 @@ else
     disp('NBT Signal and Info Object loaded')
 end
 
-%% make into double
+%% Load SubjectInfo
+load([path file(1:end-4),'_info.mat'],'SubjectInfo');
 
+%% make into double
 Signal = double(Signal(:,:));

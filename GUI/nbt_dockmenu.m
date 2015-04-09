@@ -44,7 +44,7 @@ else
         if(exist('SignalInfo', 'var'))
         % convert Signal and SignalInfo to EEG
         eeglab 
-        EEG=nbt_NBTtoEEG(Signal, SignalInfo, SignalPath);
+        EEG=nbt_NBTtoEEG(Signal, SignalInfo, SignalPath, SubjectInfo);
         [ALLEEG EEG CURRENTSET]= eeg_store(ALLEEG, EEG);        
         eeglab redraw
         else 

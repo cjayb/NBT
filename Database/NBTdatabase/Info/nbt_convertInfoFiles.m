@@ -62,7 +62,7 @@ for j=3:length(d)
                 %then we create the SignalInfo objects
                 for i=1:length(oldInfoFields)
                     tmp = nbt_SignalInfo;
-                    tmp.subjectInfo     = oldInfo.(oldInfoFields{i}).file_name;
+                    tmp.subjectInfo     =  nbt_correctSubjectinfoNames(oldInfo.(oldInfoFields{i}).file_name);
                     tmp.signalName      = oldInfoFields{i}(1:end-4);
                     tmp.signalID        = oldInfo.(oldInfoFields{i}).NBTDID;
                     tmp.signalOrigin    = 'converted from old Info object';

@@ -52,7 +52,7 @@ function [Signal, SignalInfo]=nbt_AutoRejectTransient(Signal, SignalInfo, NonEEG
 eeg_chans = nbt_negSearchVector(1:size(Signal,2),NonEEGCh);
 [Signal, SignalInfo, RemovedData, OldChanlocs] = nbt_RemoveChan(Signal,SignalInfo, NonEEGCh);
 %convert to EEG structure
-EEG = nbt_NBTtoEEG(Signal, SignalInfo, []);
+EEG = nbt_NBTtoEEG(Signal, SignalInfo, [],[]);
 
 try
     EEG = eeg_interp(EEG, nbt_negSearchVector(find(EEG.NBTinfo.BadChannels),NonEEGCh));
@@ -61,7 +61,7 @@ end
 [Signal, SignalInfo]=nbt_EEGtoNBT(EEG, [] , []);
 [Signal, SignalInfo] =nbt_AddChan(Signal,SignalInfo, RemovedData, NonEEGCh, OldChanlocs);
 
-EEG = nbt_NBTtoEEG(Signal, SignalInfo, []);
+EEG = nbt_NBTtoEEG(Signal, SignalInfo, [],[]);
 
 % disp('High-pass filter 0.5 Hz - low-pass filter 45 Hz')
 % data = nbt_filter_fir(EEG.data',0.5,45,EEG.srate,4);

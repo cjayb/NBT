@@ -38,7 +38,7 @@
 % See Readme.txt for additional copyright information.
 %--------------------------------------------------------------------------
 
-function [Signal,SignalInfo, SignalPath] = nbt_EEGlab2NBTsignal(EEG,saveflag)
+function [Signal,SignalInfo, SignalPath, SubjectInfo] = nbt_EEGlab2NBTsignal(EEG,saveflag)
 
 EEG = eeg_checkset(EEG(1));
 Signal = double(EEG.data');
@@ -57,7 +57,9 @@ end
 if isfield(EEG,'NBTinfo')
     if(isa(EEG.NBTinfo,'nbt_SignalInfo'))
         SignalInfo = EEG.NBTinfo;
+        SubjectInfo = EEG.NBTSubjectInfo;
         EEG=rmfield(EEG,'NBTinfo');
+        EEG=rmfield(EEG,'NBTSubjectInfo');
     else
         [SignalInfo, SubjectInfo] = nbt_CreateInfoObject(EEG.setname, [], EEG.srate,[],double(EEG.data'));
     end

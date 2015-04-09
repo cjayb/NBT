@@ -44,15 +44,17 @@ narginchk(3,4);
 eval([ObjectName '= evalin(''caller'', ObjectName );']);
 
 %Then we save it
-if(length(strfind(SignalInfo.subjectInfo,'.')) > 3)
+% if(length(strfind(SignalInfo.subjectInfo,'.')) > 3)
+%     %%% Hack for converted old data, remove
+%     SignalInfo.subjectInfo = strrep(SignalInfo.subjectInfo,'SS','S');        
+%     an_file = [SaveDir filesep SignalInfo.subjectInfo(1:end-9) '_analysis.mat'];
+% else
     %%% Hack for converted old data, remove
-    SignalInfo.subjectInfo = strrep(SignalInfo.subjectInfo,'SS','S');        
-    an_file = [SaveDir filesep SignalInfo.subjectInfo(1:end-9) '_analysis.mat'];
-else
-    %%% Hack for converted old data, remove
-    SignalInfo.subjectInfo = strrep(SignalInfo.subjectInfo,'SS','S');
-    an_file = [SaveDir filesep SignalInfo.subjectInfo '_analysis.mat'];
-end
+ %   SignalInfo.subjectInfo = strrep(SignalInfo.subjectInfo,'SS','S');
+ %   an_file = [SaveDir filesep SignalInfo.subjectInfo '_analysis.mat'];
+%end
+SignalInfo.subjectInfo = nbt_correctSubjectinfoNames(SignalInfo.subjectInfo);
+an_file = [SaveDir filesep SignalInfo.subjectInfo(1:end-5) '_analysis.mat'];
 if(exist(an_file,'file') == 2)
    % NBTanalysisFile = matfile(an_file,'Writable', true);
    % eval(['NBTanalysisFile.' ObjectName '= ' ObjectName ';'])
@@ -62,9 +64,9 @@ elseif(exist(an_file,'file') == 0)
     save(an_file, ObjectName,'-v7') 
 end
 
-SignalInfo.listOfBiomarkers{end+1} = ObjectName;
-info_name = [SaveDir filesep SignalInfo.subjectInfo '_info.mat'];
-% [SignalInfo.signalName 'Info'];
+%SignalInfo.listOfBiomarkers{end+1} = ObjectName;
+%info_name = [SaveDir filesep SignalInfo.subjectInfo '.mat'];
+%[SignalInfo.signalName 'Info'];
 % save(info_name, 'SignalInfo');
 
 %And then we clear it
