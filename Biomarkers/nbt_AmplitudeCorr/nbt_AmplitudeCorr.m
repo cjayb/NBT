@@ -38,21 +38,21 @@ classdef nbt_AmplitudeCorr < nbt_CrossChannelBiomarker
         units = {' ',' ',' ',' ',' ',' ',' ',' '};
     end
     methods
-        function BiomarkerObject = nbt_AmplitudeCorr(nChannels)
+        function BiomarkerObject = nbt_AmplitudeCorr(NumChannels)
             if nargin == 0
-                nChannels = 1;
+                NumChannels = 1;
             end
-            BiomarkerObject.markerValues = nan(nChannels,nChannels);
-            BiomarkerObject.maxCorr = nan(nChannels,1);
-            BiomarkerObject.minCorr = nan(nChannels,1);
-            BiomarkerObject.medianCorr = nan(nChannels,1);
-            BiomarkerObject.meanCorr = nan(nChannels,1);
-            BiomarkerObject.stdCorr = nan(nChannels,1);
-            BiomarkerObject.IQRCorr = nan(nChannels,1);
-            BiomarkerObject.rangeCorr = nan(nChannels,1);
+            BiomarkerObject.MarkerValues = nan(NumChannels,NumChannels);
+            BiomarkerObject.MaxCorr = nan(NumChannels,1);
+            BiomarkerObject.MinCorr = nan(NumChannels,1);
+            BiomarkerObject.MedianCorr = nan(NumChannels,1);
+            BiomarkerObject.MeanCorr = nan(NumChannels,1);
+            BiomarkerObject.StdCorr = nan(NumChannels,1);
+            BiomarkerObject.IQRCorr = nan(NumChannels,1);
+            BiomarkerObject.RangeCorr = nan(NumChannels,1);
             BiomarkerObject.lastUpdate = datestr(now);
-            BiomarkerObject.primaryBiomarker = 'markerValues';
-            BiomarkerObject.biomarkers ={'markerValues','maxCorr', 'minCorr','medianCorr','meanCorr','stdCorr','IQRCorr','rangeCorr'};
+            BiomarkerObject.primaryBiomarker = 'MarkerValues';
+            BiomarkerObject.biomarkers ={'MarkerValues','MaxCorr', 'MinCorr','MedianCorr','MeanCorr','StdCorr','IQRCorr','RangeCorr'};
             BiomarkerObject = setUniqueIdentifiers(BiomarkerObject);
         end
         
