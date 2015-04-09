@@ -1,6 +1,7 @@
 %nbt_Study is a collector object of the nbt_Stat and nbt_Group objects.
 classdef nbt_Study
    properties
+       data
        groups
        statAnalysis
        settings
