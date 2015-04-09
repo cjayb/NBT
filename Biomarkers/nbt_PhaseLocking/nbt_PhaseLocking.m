@@ -50,13 +50,12 @@
     
 classdef nbt_PhaseLocking < nbt_CrossChannelBiomarker  
     properties    
-    ratio 
-    PLV
-    surrogatePLV
-    instantPhase
+    Ratio 
+    PLV 
+    Instphase
 %     frequencyRange 
-    filterOrder 
-    interval
+    filterorder 
+    interval 
 %     synchlag
     IndexE %index based on the Shannon entropy
     IndexF %based on the intensity of the first Fourier mode of the distribution
@@ -74,20 +73,18 @@ classdef nbt_PhaseLocking < nbt_CrossChannelBiomarker
     
     methods
        
-        function BiomarkerObject = nbt_PhaseLocking(LengthSign,NumChannels,nPermutations)
+        function BiomarkerObject = nbt_PhaseLocking(LengthSign,NumChannels)
             if nargin == 0
                 LengthSign = 1;
                 NumChannels = 1;
             end
             % assign values for this biomarker object:
             %% Define Phase Locking values
-            BiomarkerObject.ratio = nan(1,2);
+            BiomarkerObject.Ratio = nan(NumChannels,NumChannels);
             BiomarkerObject.PLV = nan(NumChannels,NumChannels);
-            BiomarkerObject.surrogatePLV = nan(NumChannels,NumChannels,nPermutations);
-            BiomarkerObject.instantPhase = nan(LengthSign,NumChannels);
-            BiomarkerObject.filterOrder = nan(1);
-            BiomarkerObject.interval = nan(1,2); 
-            
+            BiomarkerObject.Instphase = nan(LengthSign,NumChannels);
+            BiomarkerObject.filterorder =  nan(1);
+            BiomarkerObject.interval =  nan(1,2); 
 %             BiomarkerObject.synchlag =  nan(2,NumChannels,NumChannels); 
             BiomarkerObject.IndexE = nan(NumChannels,NumChannels); %index based on the Shannon entropy
             BiomarkerObject.IndexCP = nan(NumChannels,NumChannels);%based on the conditional probability
@@ -102,7 +99,7 @@ classdef nbt_PhaseLocking < nbt_CrossChannelBiomarker
             BiomarkerObject.IndexF_in_time = [];
             
             BiomarkerObject.primaryBiomarker = 'PLV';
-            BiomarkerObject.biomarkers = {'PLV','instantPhase'};
+            BiomarkerObject.biomarkers = {'PLV','Instphase'};
            
             
         end

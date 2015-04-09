@@ -58,13 +58,13 @@ classdef nbt_Coher < nbt_CrossChannelBiomarker
        units = {' ', ' '};
     end
     methods
-        function BiomarkerObject = nbt_Coher(nChannels)
+        function BiomarkerObject = nbt_Coher(NumChannels)
             if nargin == 0
-                nChannels = 1;
+                NumChannels = 1;
             end
             % Define coherence matrix values
-            BiomarkerObject.Coherence = nan(nChannels, nChannels);
-            BiomarkerObject.ICoherence = nan(nChannels, nChannels);
+            BiomarkerObject.Coherence = nan(NumChannels, NumChannels);
+            BiomarkerObject.ICoherence = nan(NumChannels, NumChannels);
             BiomarkerObject.interval =  nan(1,2); 
             % Define fields for additional information           
             BiomarkerObject.DateLastUpdate = datestr(now);

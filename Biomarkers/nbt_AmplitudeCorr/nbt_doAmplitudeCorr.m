@@ -27,22 +27,18 @@ function AmplitudeCorrObject = nbt_doAmplitudeCorr(Signal, SignalInfo)
 AmplitudeCorrObject = nbt_AmplitudeCorr(size(Signal,2));
 Signal = nbt_RemoveIntervals(Signal,SignalInfo);
 
-nChannels = size(Signal(:,:),2);
-
-for i = 1 : (nChannels-1)
-    for j = i + 1 : nChannels
-        [VecCorr, ~] = corr(Signal(:,i),Signal(:,j),'type','spearman'); 
-        AmplitudeCorrObject.markerValues(i,j) = VecCorr.';
-    end
+for i=1:size(Signal(:,:),2)
+    [VecCorr, p]=corr(Signal(:,i),Signal(:,:),'type','spearman'); 
+    AmplitudeCorrObject.MarkerValues(:,i) = VecCorr.';
     %single index attempts
-    AmplitudeCorrObject.maxCorr(i) = max(VecCorr(VecCorr ~= 1));
-    AmplitudeCorrObject.minCorr(i) = min(VecCorr);
-    AmplitudeCorrObject.medianCorr(i) = nanmedian(VecCorr);
-    AmplitudeCorrObject.meanCorr(i) = nanmean(VecCorr);
+    AmplitudeCorrObject.MaxCorr(i) = max(VecCorr(VecCorr ~= 1));
+    AmplitudeCorrObject.MinCorr(i) = min(VecCorr);
+    AmplitudeCorrObject.MedianCorr(i) = nanmedian(VecCorr);
+    AmplitudeCorrObject.MeanCorr(i) = nanmean(VecCorr);
     % AmplitudeCorrObject.StdCorr(i) = std(VecCorr);
-    AmplitudeCorrObject.stdCorr(i) = sqrt(nanvar(VecCorr));
+    AmplitudeCorrObject.StdCorr(i) = sqrt(nanvar(VecCorr));
     AmplitudeCorrObject.IQRCorr(i) = iqr(VecCorr);
-    AmplitudeCorrObject.rangeCorr(i) = range(VecCorr);
+    AmplitudeCorrObject.RangeCorr(i) = range(VecCorr);
 end
     AmplitudeCorrObject = nbt_UpdateBiomarkerInfo(AmplitudeCorrObject, SignalInfo);    
 end
