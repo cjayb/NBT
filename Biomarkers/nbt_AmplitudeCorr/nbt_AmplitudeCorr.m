@@ -25,13 +25,13 @@
 classdef nbt_AmplitudeCorr < nbt_CrossChannelBiomarker
     properties
         markerValues
-        maxCorr
-        minCorr
-        medianCorr
-        meanCorr
-        stdCorr
+        MaxCorr
+        MinCorr
+        MedianCorr
+        MeanCorr
+        StdCorr
         IQRCorr
-        rangeCorr
+        RangeCorr
     end
     properties (Constant)
         biomarkerType = {'nbt_CrossChannelBiomarker','nbt_SignalBiomarker', 'nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker'};
