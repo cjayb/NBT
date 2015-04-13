@@ -72,13 +72,13 @@ if (nargs<2 | isempty(P{2}))
     %---
     for i=startindex:length(d)
         if ~isempty(findstr('analysis',d(i).name))
-            [biomarker_objects,biomarkers] = nbt_ExtractBiomarkers([path,'/', d(i).name]);
+            [biomarker_objects,biomarkers] = nbt_extractBiomarkers([path,'/', d(i).name]);
             break
         end
     end
     
     else
-        [biomarker_objects,biomarkers] = nbt_ExtractBiomarkers([path(1:end-4) '_analysis.mat']);
+        [biomarker_objects,biomarkers] = nbt_extractBiomarkers([path(1:end-4) '_analysis.mat']);
     end
     
     
@@ -159,7 +159,7 @@ end
 
 %% test per region in case of 129-channel EEG data
 
-if (isfield(SignalInfo.Interface,'EEG') && number_of_biomarkers==129) 
+if (isfield(SignalInfo.interface,'EEG') && number_of_biomarkers==129) 
     
     for i=1:number_of_subjects 
         c1_regions(:,i) = nbt_get_regions(c1(:,i),[],SignalInfo);
@@ -214,7 +214,7 @@ end
     xa=-2;
     
     subplot(2,4,5)
-    topoplot(meanc1',SignalInfo.Interface.EEG.chanlocs,'headrad','rim');
+    topoplot(meanc1',SignalInfo.interface.EEG.chanlocs,'headrad','rim');
     cb = colorbar('westoutside');
     set(get(cb,'title'),'String',unit);
     caxis([cmin,cmax])
@@ -222,7 +222,7 @@ end
     set(gca,'fontsize',fontsize)
     
     subplot(2,4,6)
-    nbt_plot_EEG_channels(meanc1,cmin,cmax,SignalInfo.Interface.EEG.chanlocs)
+    nbt_plot_EEG_channels(meanc1,cmin,cmax,SignalInfo.interface.EEG.chanlocs)
     axis equal
     cb = colorbar('westoutside');
     set(get(cb,'title'),'String',unit);
@@ -231,7 +231,7 @@ end
     
     %% in case of 129-channel EEG data, we also plot the sub-regions:
 
-if isfield(SignalInfo.Interface,'EEG') && number_of_biomarkers==129 
+if isfield(SignalInfo.interface,'EEG') && number_of_biomarkers==129 
     %% plot grand average subregions
     subplot(2,4,7)
     nbt_plot_subregions(mean_c1_regions,1,cmin,cmax)
