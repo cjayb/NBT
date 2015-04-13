@@ -33,6 +33,7 @@
 
 classdef nbt_QBiomarker < nbt_CoreBiomarker
     properties
+        qVersion
     end
     
     methods

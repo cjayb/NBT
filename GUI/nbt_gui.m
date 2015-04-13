@@ -104,6 +104,7 @@ if (standalone)
     FileSubImportSub = uimenu(FileSub, 'label', ' &Import options');
     uimenu( FileSubImportSub, 'label', 'Import BrainVision Analyzer files', 'callback', 'nbt_import_files([],[], @nbt_loadbv);');
     uimenu( FileSubImportSub, 'label', 'Import EDF files', 'callback', 'nbt_import_files([],[], @nbt_loadEDF);');   
+    uimenu( FileSubImportSub, 'label', 'Import ARSQ data', 'callback', 'nbt_runImportARSQ(pwd)');
     FileSubExportSub = uimenu(FileSub,'label', ' &Export options');
     uimenu(FileSubExportSub,'label', 'Export to BrainVision Analyzer format', 'callback', 'nbt_EEGLABwrp(@pop_writebva, Signal, SignalInfo, SignalPath, 0);');
     uimenu( FileSubExportSub, 'label', 'Export NBT Signal to a matrix', 'callback', 'ExSignal = nbt_exportSignal(Signal, SignalInfo);');
