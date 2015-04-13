@@ -130,7 +130,7 @@ for i=1:length(FileList)
         Signals = nbt_SetData(Signals,{signalFields{mm}},{Condition, SubjectInfo.conditionID; Subject, SubjectInfo.subjectID; Project, SubjectInfo.projectInfo(1:end-4)});
         BiomarkerList = SubjectInfo.listOfBiomarkers;
         for m = 1:length(BiomarkerList)
-        eval(['QB = isa(' BiomarkerList{m} ',' ''' nbt_QBiomarker' ''');']);
+        eval(['QB = isa(' BiomarkerList{m} ',' '''nbt_QBiomarker' ''');']);
         if(QB)
             continue;
         end

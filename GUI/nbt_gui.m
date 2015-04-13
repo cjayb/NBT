@@ -177,7 +177,7 @@ if (standalone)
     uimenu(CompBio,'label', 'List biomarkers in current signal', 'callback', 'nbt_list_biomarkers(SignalInfo,SignalPath)');
     
     Stat = uimenu(NBTMenu, 'label', ' &Biomarker statistics');
-    uimenu(Stat, 'label', ' &Current Signal', 'callback',  ['nbt_statistics_group([SignalPath  SignalInfo.file_name ''.mat''])'  ]);
+    uimenu(Stat, 'label', ' &Current Signal', 'callback',  ['nbt_statistics_group([SignalPath  SubjectInfo.fileName ''.mat''])'  ]);
     uimenu(Stat, 'label', ' &Statistics GUI','callback', 'nbt_statisticsGUI;');
 
     

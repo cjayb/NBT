@@ -53,8 +53,12 @@ else
     ClassificationStatObj.channels = 1:size(Data_groups{1}{1,1},1);
 end
 warning('Now just using all channels - .channels should be set properly')
-ClassificationStatObj.classificationType = 'crossValidate';
-Type = 'crossValidate';
+% ClassificationStatObj.classificationType = 'crossValidate';
+% Type = 'crossValidate';
+
+ClassificationStatObj.classificationType = 'validate';
+Type = 'validate';
+
 ClassificationStatObj.uniqueBiomarkers = size(Data_groups{1}.biomarkers,2);
 
 if ~isempty(ClassificationStatObj.dimensionReduction)
@@ -132,6 +136,7 @@ end
 % ChannelsToUse =[];
 
 ClassificationStatObj.realOutcome = Outcome;
+
 %save DataMatrix DataMatrix %sorry Sonja :(
 %save Outcome Outcome  %also not saving s further down
 

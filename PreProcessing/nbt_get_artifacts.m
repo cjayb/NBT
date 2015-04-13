@@ -313,7 +313,7 @@ function plotting
         minInt = max(minInt,1);
         maxInt = min(maxInt,length(Signal));
         noisey_intervals=[noisey_intervals;[minInt maxInt]];
-        SignalInfo.Interface.noisey_intervals=noisey_intervals;
+        SignalInfo.interface.noisey_intervals=noisey_intervals;
         ax=axis;
         hold on
         hhtemp=uicontextmenu;

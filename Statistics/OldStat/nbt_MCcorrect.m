@@ -1,3 +1,4 @@
+
 %This function returns the index of MC corrected p-values.
 %------------------------------------------------------------------------------------
 % Originally created by Simon-Shlomo Poil (2011), see NBT website (http://www.nbtwiki.net) for current email address
@@ -74,7 +75,7 @@ function [Pindex, pOut] = nbt_MCcorrect(p,Type,varargin)
             if isempty(q)
                 q = 0.05;
             end
-            [h, crit_p]=fdr_bh(p,q,'pdep','no');
+            [h, crit_p]=fdr_bh(p,q,'dep','no');
             Pc = p(p<=crit_p);
         otherwise
             error('NBT: nbt_MCcorrect: this method does not exist')

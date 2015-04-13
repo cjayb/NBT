@@ -19,17 +19,17 @@ L = loadInfofile(FileName2,PathName2);
 S2_info = eval(['L.',StudentSignalName]);
 clear L
 
-Analysis1 = [PathName1 S1_info.file_name,'_analysis.mat'];
-[biomarker_objects1,biomarkers1] = nbt_ExtractBiomarkers(Analysis1);
+Analysis1 = [PathName1 S1_info.subjectInfo(1:end-5),'_analysis.mat'];
+[biomarker_objects1,biomarkers1] = nbt_extractBiomarkers(Analysis1);
 
-Analysis2 = [PathName2 S2_info.file_name,'_analysis.mat'];
-[biomarker_objects2,biomarkers2] = nbt_ExtractBiomarkers(Analysis2);
+Analysis2 = [PathName2 S2_info.subjectInfo,'_analysis.mat'];
+[biomarker_objects2,biomarkers2] = nbt_extractBiomarkers(Analysis2);
 
 % verify signal length
 disp('Check on signal length:')
 duration_original = 5*60; % 5 minutes of duration
-duration_faster = S1_info.Interface.EEG.pnts/S1_info.Interface.EEG.srate;
-duration_student = S2_info.Interface.EEG.pnts/S2_info.Interface.EEG.srate;
+duration_faster = S1_info.interface.EEG.pnts/S1_info.interface.EEG.srate;
+duration_student = S2_info.interface.EEG.pnts/S2_info.interface.EEG.srate;
 duration_faster_percent = duration_faster*100/duration_original;
 duration_student_percent = duration_student*100/duration_original;
 disp('--- Original duration 300 seconds (5 minutes).')
@@ -39,8 +39,8 @@ disp(['--- Student procedure: final duration = ' num2str(round(duration_student/
 % verify removed channels
 disp('Check on removed channels:')
 chans_eyes = [ 8 14 21 25 125 126 127 128 ];
-chans_faster = find(S1_info.BadChannels)';
-chans_student = find(S2_info.BadChannels)';
+chans_faster = find(S1_info.badChannels)';
+chans_student = find(S2_info.badChannels)';
 join_faster_and_eyes_chans = sort([chans_eyes chans_faster]);
 k = 1;
 additional_student_chans = [];
@@ -98,10 +98,10 @@ for i = 1:length(biomarker_objects2)
 end
 
 for i = 1: length(biom1) 
-   [B1(:,i),Sub1,Proj1,unit{i}]=nbt_load_analysis(PathName1,[S1_info.file_name,'_analysis.mat'],[biomarker_objects1{biom1(i)},'.Channels'],@nbt_get_biomarker,[],[],[]);
+   [B1(:,i),Sub1,Proj1,unit{i}]=nbt_load_analysis(PathName1,[S1_info.subjectInfo(1:end-5),'_analysis.mat'],[biomarker_objects1{biom1(i)},'.Channels'],@nbt_get_biomarker,[],[],[]);
 end
 for i = 1: length(biom2)
-   [B2(:,i),Sub2,Proj2,unit{i}]=nbt_load_analysis(PathName2,[S2_info.file_name,'_analysis.mat'],[biomarker_objects2{biom2(i)},'.Channels'],@nbt_get_biomarker,[],[],[]);
+   [B2(:,i),Sub2,Proj2,unit{i}]=nbt_load_analysis(PathName2,[S2_info.subjectInfo,'_analysis.mat'],[biomarker_objects2{biom2(i)},'.Channels'],@nbt_get_biomarker,[],[],[]);
 end
 % % abs diff
 % for i = 1: length(biom2)
@@ -114,7 +114,7 @@ for i = 1: length(biom2)
     B_error(find(isnan(B2(:,i))),i) = nan;
 end
 
-chanloc = S1_info.Interface.EEG.chanlocs;
+chanloc = S1_info.interface.EEG.chanlocs;
 % figure
 [W H] = nbt_getScreenSize;
 figure('Position',[10 H/3 W/2 H/2],'Name','Percent Error','numbertitle','off')
