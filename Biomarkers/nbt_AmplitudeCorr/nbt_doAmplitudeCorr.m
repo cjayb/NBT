@@ -27,18 +27,30 @@ function AmplitudeCorrObject = nbt_doAmplitudeCorr(Signal, SignalInfo)
 AmplitudeCorrObject = nbt_AmplitudeCorr(size(Signal,2));
 Signal = nbt_RemoveIntervals(Signal,SignalInfo);
 
-for i=1:size(Signal(:,:),2)
-    [VecCorr, p]=corr(Signal(:,i),Signal(:,:),'type','spearman'); 
-    AmplitudeCorrObject.MarkerValues(:,i) = VecCorr.';
-    %single index attempts
-    AmplitudeCorrObject.MaxCorr(i) = max(VecCorr(VecCorr ~= 1));
-    AmplitudeCorrObject.MinCorr(i) = min(VecCorr);
-    AmplitudeCorrObject.MedianCorr(i) = nanmedian(VecCorr);
-    AmplitudeCorrObject.MeanCorr(i) = nanmean(VecCorr);
-    % AmplitudeCorrObject.StdCorr(i) = std(VecCorr);
-    AmplitudeCorrObject.StdCorr(i) = sqrt(nanvar(VecCorr));
-    AmplitudeCorrObject.IQRCorr(i) = iqr(VecCorr);
-    AmplitudeCorrObject.RangeCorr(i) = range(VecCorr);
+MarkerValues = AmplitudeCorrObject.MarkerValues;
+for i=1:size(Signal(:,:),2)-1
+    tic
+    disp(i)
+    [VecCorr]=corr(Signal(:,i),Signal(:,i+1:end),'type','spearman'); 
+    MarkerValues(i,i+1:end) = VecCorr;
+    toc
 end
+
+
+MarkerValues  = triu(MarkerValues,1) + triu(MarkerValues, 1);
+for i=1:length(MarkerValues)
+    %single index attempts
+    AmplitudeCorrObject.MaxCorr(i) = max(MarkerValues(MarkerValues(:,i)~=1,i));
+    AmplitudeCorrObject.MinCorr(i) = min(MarkerValues(:,i));
+    AmplitudeCorrObject.MedianCorr(i) = nanmedian(MarkerValues(:,i));
+    AmplitudeCorrObject.MeanCorr(i) = nanmean(MarkerValues(:,i));
+    % AmplitudeCorrObject.StdCorr(i) = std(VecCorr);
+    AmplitudeCorrObject.StdCorr(i) = sqrt(nanvar(MarkerValues(:,i)));
+    AmplitudeCorrObject.IQRCorr(i) = iqr(MarkerValues(:,i));
+    AmplitudeCorrObject.RangeCorr(i) = range(MarkerValues(:,i));
+end
+    
+ AmplitudeCorrObject.MarkerValues = MarkerValues;
+
     AmplitudeCorrObject = nbt_UpdateBiomarkerInfo(AmplitudeCorrObject, SignalInfo);    
 end
