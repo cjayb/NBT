@@ -13,8 +13,8 @@ classdef nbt_spiderplot < nbt_Visualization
             n_groups = length(obj.groups);
             
             for j=1:n_groups
-                
-                Data_groups{j} = StudyObj.groups{obj.groups(j)}.getData(obj,j); 
+               
+                Data_groups{j} = StudyObj.groups{obj.groups(j)}.getData(obj);
                 
             end
             
@@ -45,7 +45,7 @@ classdef nbt_spiderplot < nbt_Visualization
                         % n_groups = size(StudyObj.groups,1);
 
                         for i = 1:n_groups
-                            conditions{i} = char(StudyObj.groups{obj.groups(i),1}.groupName);
+                            conditions{i} = char(StudyObj.groups{obj.groups(i)}.groupName);
                         end
 
                         data = [];

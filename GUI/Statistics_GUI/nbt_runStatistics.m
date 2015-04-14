@@ -70,7 +70,7 @@ S = S.calculate(NBTstudy);
 
 NBTstudy.statAnalysis{length(NBTstudy.statAnalysis)+1} = S;
 disp('Statistics done.')
-if ~strcmp(class(S),'nbt_lssvm')
+if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot')
     nbt_plot_2conditions_topoAll(S)
 end
 end
