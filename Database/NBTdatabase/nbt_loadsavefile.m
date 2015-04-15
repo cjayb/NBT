@@ -21,10 +21,10 @@
 
 
 function nbt_loadsavefile(NBTanalysis_filepath)
-loadsavefile_tmp = NBTanalysis_filepath;
+loadsavefile_tmpa = NBTanalysis_filepath;
 load(NBTanalysis_filepath)
-NBTanalysis_filepath = loadsavefile_tmp;
-clear tmp;
+NBTanalysis_filepath = loadsavefile_tmpa;
+clear loadsavefile_tmpa;
 save(NBTanalysis_filepath)
 end
 
