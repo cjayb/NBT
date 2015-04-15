@@ -22,15 +22,65 @@ end
 
 % reorder the questions (and answers) for computing the factors
 load ARSQfactors
-sortedAnswers = nan(length(ARSQ.Answers),1);
-sortedQuestions = cell(length(ARSQ.Answers),1);
-for i=1:length(ARSQ.Questions)
-    index_question = find(strcmp(ARSQfactors.arsqLabels, ARSQ.Questions{i}));
-    if isempty(index_question)
-        disp(ARSQ.Questions{i})
-    else
-    sortedAnswers(index_question) = ARSQ.Answers(i);
-    sortedQuestions{index_question} = ARSQ.Questions{i};
+
+ARSQlanguage = input('Choose your ARSQ language: EN/NL/LT/RU/DE/DK/IT/zh ','s');
+
+if ~strcmp(ARSQlanguage,'EN')
+    ARSQtemplate = importdata('ARSQ.xlsx');
+    firstARSQDataRow = ARSQtemplate.textdata.Sheet1(1,:);
+
+    switch ARSQlanguage
+        case 'EN'
+            ARSQlanguage = 'English (EN)';
+        case 'NL'
+            ARSQlanguage = 'Dutch (NL)';
+        case 'LT'
+            ARSQlanguage = 'Lithuanian (LT)';    
+        case 'RU'
+            ARSQlanguage = 'Russian (RU)';    
+        case 'DE'
+            ARSQlanguage = 'German (DE)';    
+        case 'DK'
+            ARSQlanguage = 'Danish (DK)';
+        case 'IT'
+            ARSQlanguage = 'Italian (IT)';
+        case 'zh'
+            ARSQlanguage = 'Chinese (zh)';
+    end
+
+    language_index = find(strcmp(firstARSQDataRow,ARSQlanguage));
+    
+    ARSQfactors.arsqLabels = ARSQtemplate.textdata.Sheet1(2:end-2,language_index);
+    
+end
+
+ARSQ_subset = setdiff(ARSQfactors.arsqLabels,ARSQ.Questions);
+ARSQ_superset = setdiff(ARSQ.Questions,ARSQfactors.arsqLabels);
+
+if ~isempty(ARSQ_subset) % questions missing from the ARSQ template
+    disp('Some items from the ARSQ template are missing')
+end
+
+sortedAnswers = nan(length(ARSQfactors.arsqLabels),1);
+sortedQuestions = cell(length(ARSQfactors.arsqLabels),1);
+for i=1:length(ARSQfactors.arsqLabels)
+    index_question = find(strcmp(ARSQfactors.arsqLabels{i}, ARSQ.Questions));
+    if ~isempty(index_question)
+%         disp(['"' ARSQ.Questions{i} '" is not a question from the ARSQ template.'])
+%         
+%     else
+    sortedAnswers(i) = ARSQ.Answers(index_question);
+    sortedQuestions{i} = ARSQ.Questions{index_question};
+     end
+end
+
+% add extra questions at the end
+l=length(sortedAnswers);
+if ~isempty(ARSQ_superset)
+    for i=1:length(ARSQ_superset)
+        index_question = find(strcmp(ARSQ_superset{i}, ARSQ.Questions));
+        sortedAnswers(l+i) = ARSQ.Answers(index_question);
+        sortedQuestions{l+i} = ARSQ.Questions{index_question};        
     end
 end
 
