@@ -14,16 +14,16 @@
 %               length in sec of the hamming window used to compute the coherence
 %
 % Outputs:
-%   CoherenceObject - update the Coherence Biomarker  
+%   CoherenceObject - update the Coherence Biomarker
 %
 % Example:
 %    Coherence8_13Hz = nbt_doCoher(Signal,SignalInfo,[8 13])
 %
 % References:
-% 
-% See also: 
-%  
-  
+%
+% See also:
+%
+
 %------------------------------------------------------------------------------------
 % Originally created by Giuseppina Schiavone (2011), see NBT website (http://www.nbtwiki.net) for current email address
 %------------------------------------------------------------------------------------
@@ -34,8 +34,8 @@
 % 2 April 2013: Added ICoherence (imaginary part of Coherence) by advice of
 % Vladimir Miskovic
 %
-% Copyright (C) <year>  <Main Author>  (Neuronal Oscillations and Cognition group, 
-% Department of Integrative Neurophysiology, Center for Neurogenomics and Cognitive Research, 
+% Copyright (C) <year>  <Main Author>  (Neuronal Oscillations and Cognition group,
+% Department of Integrative Neurophysiology, Center for Neurogenomics and Cognitive Research,
 % Neuroscience Campus Amsterdam, VU University Amsterdam)
 %
 % Part of the Neurophysiological Biomarker Toolbox (NBT)
@@ -58,16 +58,16 @@
 % -------------------------------------------------------------------------
 function CoherenceObject = nbt_doCoher(Signal,SignalInfo,FrequencyBand,interval)
 %--- input checks
-error(nargchk(4,4,nargin))
+narginchk(4,4)
 
-%%   give information to the user	
+%%   give information to the user
 disp(' ')
 disp('Command window code:')
-disp(['CoherenceObject = nbt_doCoher(Signal,SignalInfo,FrequencyBand)'])
+disp('CoherenceObject = nbt_doCoher(Signal,SignalInfo,FrequencyBand)')
 disp(' ')
 disp(['Computing Coherence for ',SignalInfo.subjectInfo])
 
-%% remove artifact intervals	
+%% remove artifact intervals
 
 Signal = nbt_RemoveIntervals(Signal,SignalInfo);
 
@@ -90,38 +90,42 @@ W = hamming(W_length);
 %     error(['The time interval is too short. The minimum time interval for this signal = is )' num2str(round(W_length/Fs))])
 % end
 %--- extract frequency vector f from coherence function
-[t,f]=mscohere(Signal(:,1),Signal(:,1),W,[],W_length,Fs);
+[~,f]=mscohere(Signal(:,1),Signal(:,1),W,[],W_length,Fs);
 Index = find(floor(f)>= FrequencyBand(1,1) &  floor(f)<= FrequencyBand(1,2));
 FrequencyIndex= [Index(1) Index(end)];
 %--- compute coherence matrix
 CoherenceMatrix = nan(size(Signal(:,:),2),size(Signal(:,:),2));
-CoherenceMatrixI = nan(size(Signal(:,:),2),size(Signal(:,:),2));
+ICoherenceMatrix = nan(size(Signal(:,:),2),size(Signal(:,:),2));
 disp([' Frequency band ', num2str(FrequencyBand(1,1)), '-', num2str(FrequencyBand(1,2)),' Hz'])
 
-try
-  for i=1:size(Signal(:,:),2)
-       disp([' channel ', num2str(i), ' ...'])
-       [Pxx] = cpsd(Signal(:,i), Signal(:,i), W, [], W_length, Fs);
-        for j=i+1:size(Signal(:,:),2)
-            [Pyy] = cpsd(Signal(:,j), Signal(:,j), W, [], W_length, Fs);
-            [Pxy] = cpsd(Signal(:,i), Signal(:,j), W, [], W_length, Fs);
-            Cxy=Pxy./sqrt(Pxx.*Pyy);
-            Coh  = (abs(Cxy)).^2;
-            ICoh = (imag(Cxy)).^2;
-            % mean of the coherence function is computed along each
-            % frequency band
-            Coh = 0.5*log((1+Coh)./(1-Coh)); %first do Fisher's Z
-            CoherenceMatrix(i,j) = nanmean(Coh(FrequencyIndex(1):FrequencyIndex(2)));
-            CoherenceMatrix(i,j) = (exp(2*CoherenceMatrix(i,j))-1)./(exp(2*CoherenceMatrix(i,j))+1); %now do an inverse-Fisher's Z to transform back to coherence
-            ICoh = 0.5*log((1+ICoh)./(1-ICoh)); %first do Fisher's Z
-            ICoherenceMatrix(i,j) = nanmean(ICoh(FrequencyIndex(1):FrequencyIndex(2)));
-            ICoherenceMatrix(i,j) = (exp(2*ICoherenceMatrix(i,j))-1)./(exp(2*ICoherenceMatrix(i,j))+1); %now do an inverse-Fisher's Z to transform back to coherence
+
+    %First we generate the P matrix
+    NN = size(Signal(:,:),2);
+    P = cell(NN,NN);
+    for i=1:NN
+        for j=i:NN
+            [P{i,j}] = cpsd(Signal(:,i), Signal(:,j), W, [], W_length, Fs);
         end
-  end
-catch Er
-  fprintf('Unable to process the Coherence Matrix \n');
-  rethrow(Er)
+    end
+ %   P  = triu(P,1) + triu(P, 1);
+    
+    
+for i=1:NN-1
+    for j=i+1:NN
+        Cxy  = P{i,j}./sqrt(P{i,i}.*P{j,j});
+        Coh  = (abs(Cxy)).^2;
+        ICoh = (imag(Cxy)).^2;
+        % mean of the coherence function is computed along each
+        % frequency band
+        Coh = 0.5*log((1+Coh)./(1-Coh)); %first do Fisher's Z
+        CoherenceMatrix(i,j) = nanmean(Coh(FrequencyIndex(1):FrequencyIndex(2)));
+        CoherenceMatrix(i,j) = (exp(2*CoherenceMatrix(i,j))-1)./(exp(2*CoherenceMatrix(i,j))+1); %now do an inverse-Fisher's Z to transform back to coherence
+        ICoh = 0.5*log((1+ICoh)./(1-ICoh)); %first do Fisher's Z
+        ICoherenceMatrix(i,j) = nanmean(ICoh(FrequencyIndex(1):FrequencyIndex(2)));
+        ICoherenceMatrix(i,j) = (exp(2*ICoherenceMatrix(i,j))-1)./(exp(2*ICoherenceMatrix(i,j))+1); %now do an inverse-Fisher's Z to transform back to coherence
+    end
 end
+
 
 CoherenceObject.Coherence = CoherenceMatrix;
 CoherenceObject.ICoherence = ICoherenceMatrix;

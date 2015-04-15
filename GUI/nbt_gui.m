@@ -104,6 +104,7 @@ if (standalone)
     FileSubImportSub = uimenu(FileSub, 'label', ' &Import options');
     uimenu( FileSubImportSub, 'label', 'Import BrainVision Analyzer files', 'callback', 'nbt_import_files([],[], @nbt_loadbv);');
     uimenu( FileSubImportSub, 'label', 'Import EDF files', 'callback', 'nbt_import_files([],[], @nbt_loadEDF);');   
+    uimenu( FileSubImportSub, 'label', 'Import ARSQ data', 'callback', 'nbt_runImportARSQ(pwd)');
     FileSubExportSub = uimenu(FileSub,'label', ' &Export options');
     uimenu(FileSubExportSub,'label', 'Export to BrainVision Analyzer format', 'callback', 'nbt_EEGLABwrp(@pop_writebva, Signal, SignalInfo, SignalPath, 0);');
     uimenu( FileSubExportSub, 'label', 'Export NBT Signal to a matrix', 'callback', 'ExSignal = nbt_exportSignal(Signal, SignalInfo);');
@@ -177,7 +178,7 @@ if (standalone)
     uimenu(CompBio,'label', 'List biomarkers in current signal', 'callback', 'nbt_list_biomarkers(SignalInfo,SignalPath)');
     
     Stat = uimenu(NBTMenu, 'label', ' &Biomarker statistics');
-    uimenu(Stat, 'label', ' &Current Signal', 'callback',  ['nbt_statistics_group([SignalPath  SignalInfo.file_name ''.mat''])'  ]);
+    uimenu(Stat, 'label', ' &Current Signal', 'callback',  ['nbt_statistics_group([SignalPath  SubjectInfo.fileName ''.mat''])'  ]);
     uimenu(Stat, 'label', ' &Statistics GUI','callback', 'nbt_statisticsGUI;');
 
     

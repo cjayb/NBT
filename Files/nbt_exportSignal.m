@@ -53,16 +53,18 @@
 function ExSignal = nbt_exportSignal(Signal, SignalInfo)
 
 
-if isfield(SignalInfo.Interface,'noisey_intervals')
-    intervals=SignalInfo.Interface.noisey_intervals;
+if isfield(SignalInfo.interface,'noisey_intervals')
+    intervals=SignalInfo.interface.noisey_intervals;
     good=1:size(Signal,1);
     for i=1:size(intervals,1)
         good = setdiff(good, intervals(i,1):intervals(i,2));
     end
     ExSignal = Signal(good,:);
+else
+   ExSignal = Signal; 
 end
 
 %--- Set bad channels to NaN
-ExSignal(:,SignalInfo.BadChannels) = nan;
+ExSignal(:,SignalInfo.badChannels) = nan;
 disp('Signal exported as a matrix in ExSignal')
-
+end

@@ -34,7 +34,7 @@ classdef nbt_ARSQ < nbt_QBiomarker
         function ARSQobject = nbt_ARSQ(NumQ)
             ARSQobject.Questions = cell(NumQ,1);
             ARSQobject.Answers = nan(NumQ,1);
-            ARSQobject.biomarkers = {'answers'};
+            ARSQobject.biomarkers = {'Answers'};
         end
     end
 end

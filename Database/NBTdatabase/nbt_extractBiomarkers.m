@@ -26,10 +26,10 @@ else
         try
             Sclass = superclasses(s(ii).class);
             Sclass = Sclass(1);
-            if(strcmp(Sclass{1,1}(end-8:end),'Biomarker') & ~strcmp(s(ii).class,'nbt_questionnaire'))
+            if(strcmp(Sclass{1,1}(end-8:end),'Biomarker') && ~strcmp(s(ii).class,'nbt_questionnaire'))
                 BiomarkerObjects    = [BiomarkerObjects, s(ii).name];
                 try
-                    Biomarkers{counter} = eval([s( ii ).name,'.Biomarkers;']);
+                    Biomarkers{counter} = eval([s( ii ).name,'.biomarkers;']);
                 catch
                     Biomarkers{counter} = eval([s( ii ).name,'.biomarkers;']);
                 end

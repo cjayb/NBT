@@ -33,6 +33,7 @@
 
 classdef nbt_QBiomarker < nbt_CoreBiomarker
     properties
+        qVersion
     end
     
     methods
@@ -56,7 +57,7 @@ classdef nbt_QBiomarker < nbt_CoreBiomarker
             BiomarkerObject.lastUpdate = BiomarkerObject.DateLastUpdate; %last date this biomarker was updated
             BiomarkerObject.primaryBiomarker = BiomarkerObject.PrimaryBiomarker; % the primary biomarker to use in scripts
             BiomarkerObject.biomarkers = BiomarkerObject.Biomarkers; % list of all biomarkers in the object
-            BiomarkerObject.biomarkerUnits = BiomarkerObject.BiomarkerUnits; %list of biomarker units
+      %      BiomarkerObject.biomarkerUnits = BiomarkerObject.BiomarkerUnits; %list of biomarker units
             BiomarkerObject.researcherID = BiomarkerObject.ReseacherID; % ID of the Reseacher or script that made the last update
             BiomarkerObject.nbtVersion = BiomarkerObject.NBTversion;
             BiomarkerObject.subjectInfo = subjectInfo;
