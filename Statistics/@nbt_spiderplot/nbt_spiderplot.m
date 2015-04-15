@@ -38,7 +38,8 @@ classdef nbt_spiderplot < nbt_Visualization
                         
                         sig_dim = [];
 
-                        error_measure = 'CI'; % ask in query
+                        error_measure = input('Choose the error measure: type SEM for standard error of the mean, SD for standard deviation or CI for a 95% confidence interval ','s');
+                        %error_measure = 'CI';
                         %error_measure = 'SD';
                         %error_measure = 'SEM';
 
@@ -63,15 +64,15 @@ classdef nbt_spiderplot < nbt_Visualization
 %                             dat_name = strcat('Data',num2str(i));  
 %                             data_group = eval([dat_name '{bID, 1}']); % n_answers x n_subjects
 % 
-%                             data_group_factors = computeFactors(data_group);
+%                             data_group_ARSQfactors = computeARSQfactors(data_group);
 %
-%                             data_all_groups{i} = data_group_factors;
+%                             data_all_groups{i} = data_group_ARSQfactors;
 
-                            if strcmp(error_measure,'SEM')    
+                            if strcmp(error_measure,'SEM') % standard error of the mean   
                                 mean_group = nanmean(data_group);
                                 int_group = nanstd(data_group)/sqrt(length(data_group));
 
-                            elseif strcmp(error_measure,'SD')
+                            elseif strcmp(error_measure,'SD') % standard deviation
                                 mean_group = nanmean(data_group);
                                 int_group = nanstd(data_group);
 
@@ -102,15 +103,16 @@ classdef nbt_spiderplot < nbt_Visualization
                         
                         if strcmp(obj.group{1}.biomarkers,'NBTe_nbt_ARSQ')
                             bioms_name = 'ARSQ';
-                            load Factors
-                            dimension_names = Factors.factorLabels;
+                            load ARSQfactors
+                            dimension_names = ARSQfactors.factorLabels;
                         else
                             bioms_name = char(obj.group{1}.biomarkers);
                             bioms_name = bioms_name(10:end);
                             dimension_names = []; % ?????
                         end
                          
-                        spider_plot(data, bioms_name,[0 5], dimension_names, conditions, sig_dim) 
+                        title = strcat(bioms_name,' (error measure: ', error_measure,')');
+                        spider_plot(data, title,[0 5], dimension_names, conditions, sig_dim) 
                         
             %            [D1, D2]=nbt_MatchVectors(Data1{bID,1}, Data2{bID,1}, getSubjectList(Data1,bID), getSubjectList(Data2,bID), 0, 0);
                      %   [~, obj.qPValues(:,qBios)] = ttest(Data1{bID,1}',Data2{bID,1}','tail',  obj.testOptions.tail);
