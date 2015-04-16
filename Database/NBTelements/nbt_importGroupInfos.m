@@ -203,7 +203,7 @@ for i=1:length(FileList)
             %Create the Data cell
             eval(['NumBiomarkers = length(' BiomarkerList{m} '.biomarkers);']);
             eval(['BiomarkerType = ' BiomarkerList{m} '.biomarkerType;']);
-            eval(['BiomarkerUnit = ' BiomarkerList{m} '.biomarkerUnits;']);
+            eval(['BiomarkerUnit = ' BiomarkerList{m} '.units;']);
             
             if(NumBiomarkers ~=0)
                 for dd = 1:NumBiomarkers

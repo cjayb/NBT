@@ -42,7 +42,8 @@ function nbt_SaveClearObject(ObjectName, SignalInfo, SaveDir, ReloadSwitch)
 narginchk(3,4);
 %first we get the object to save
 eval([ObjectName '= evalin(''caller'', ObjectName );']);
-
+SaveName = [ObjectName SignalInfo.signalName];
+eval([SaveName '=' ObjectName ';'])
 %Then we save it
 % if(length(strfind(SignalInfo.subjectInfo,'.')) > 3)
 %     %%% Hack for converted old data, remove
@@ -58,10 +59,10 @@ an_file = [SaveDir filesep SignalInfo.subjectInfo(1:end-5) '_analysis.mat'];
 if(exist(an_file,'file') == 2)
    % NBTanalysisFile = matfile(an_file,'Writable', true);
    % eval(['NBTanalysisFile.' ObjectName '= ' ObjectName ';'])
- save(an_file, ObjectName, '-append');
+ save(an_file, SaveName, '-append');
     disp('NBT: Analysis File already exists. Appending to existing file!');
 elseif(exist(an_file,'file') == 0)
-    save(an_file, ObjectName,'-v7') 
+    save(an_file, SaveName,'-v7') 
 end
 
 %SignalInfo.listOfBiomarkers{end+1} = ObjectName;

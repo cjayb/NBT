@@ -49,7 +49,6 @@ classdef (Abstract) nbt_SignalBiomarker < nbt_CoreBiomarker
         filterSettings % Defintion of filter settings applied to the signal.
         signalName % Name of the signal used to compute the biomaker
         signalID %signalDID of the signal used to compute the biomakrer
-        biomarkerUnits
     end
     methods
         function BiomarkerObject = nbt_SignalBiomarker()
@@ -109,7 +108,6 @@ classdef (Abstract) nbt_SignalBiomarker < nbt_CoreBiomarker
             BiomarkerObject.lastUpdate = BiomarkerObject.DateLastUpdate; %last date this biomarker was updated
             BiomarkerObject.primaryBiomarker = BiomarkerObject.PrimaryBiomarker; % the primary biomarker to use in scripts
             BiomarkerObject.biomarkers = BiomarkerObject.Biomarkers; % list of all biomarkers in the object
-            BiomarkerObject.biomarkerUnits = BiomarkerObject.BiomarkerUnits; %list of biomarker units
             BiomarkerObject.researcherID = BiomarkerObject.ReseacherID; % ID of the Reseacher or script that made the last update
             BiomarkerObject.frequencyRange = BiomarkerObject.FrequencyRange; %Frequency range of processed signal [] means broadband.
             BiomarkerObject.signalName = BiomarkerObject.SignalName; % Name of the signal used to compute the biomaker
