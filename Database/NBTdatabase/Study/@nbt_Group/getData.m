@@ -136,8 +136,8 @@ function  DataObj = getData(GrpObj,StatObj)
                 [DataObj.subjectList{bID,1}] = evalin('base', ['nbt_GetData(Subject' subNBTelementCall ');']);
             catch me
                 %Only one Subject?
-             %   disp('Assuming only One subject?');
-             %   [DataObj.subjectList{bID,1}] = evalin('base', 'constant{nbt_searchvector(constant , {''Subject''}),2};');
+               disp('Assuming only One subject?');
+               [DataObj.subjectList{bID,1}] = evalin('base', 'constant{nbt_searchvector(constant , {''Subject''}),2};');
 
             end
             

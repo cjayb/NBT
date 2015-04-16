@@ -1,6 +1,7 @@
 % This method returns an InfoCell which, e.g., can be used to fill the boxes in the
 % defineGroup GUI.
 function [InfoCell, BioCell, IdentCell,GrpObj, FileInfo] = getSubjectInfo(GrpObj)
+IdentCell = cell(0,0);
 %First we determine which database is used.
 switch GrpObj.databaseType
     case 'NBTelement' %NBTelement database in base.
