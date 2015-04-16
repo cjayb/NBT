@@ -1,5 +1,6 @@
 
 function nbt_NBTRunAnalysisARSQ(varargin)
+
 script = NBTwrapper();
 nbt_NBTcompute(script,'RawSignal',pwd,pwd)
 end
