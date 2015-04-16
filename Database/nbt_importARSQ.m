@@ -1,4 +1,4 @@
-function nbt_importARSQ(filename, SignalInfo, SaveDir)
+function nbt_importARSQ(filename, SignalInfo, SaveDir, ARSQlanguage)
 
 ARSQData = importdata([filename '.csv']);
 
@@ -23,7 +23,9 @@ end
 % reorder the questions (and answers) for computing the factors
 load ARSQfactors
 
-ARSQlanguage = input('Choose your ARSQ language: EN/NL/LT/RU/DE/DK/IT/zh ','s');
+if ~exist('ARSQlanguage')
+    ARSQlanguage = input('Choose your ARSQ language: EN/NL/LT/RU/DE/DK/IT/zh ','s');
+end
 
 if ~strcmp(ARSQlanguage,'EN')
     ARSQtemplate = importdata('ARSQ.xlsx');
@@ -65,7 +67,7 @@ sortedAnswers = nan(length(ARSQfactors.arsqLabels),1);
 sortedQuestions = cell(length(ARSQfactors.arsqLabels),1);
 for i=1:length(ARSQfactors.arsqLabels)
     index_question = find(strcmp(ARSQfactors.arsqLabels{i}, ARSQ.Questions));
-    if ~isempty(index_question)
+    if ~isempty(index_question)&&(length(index_question)==1)
 %         disp(['"' ARSQ.Questions{i} '" is not a question from the ARSQ template.'])
 %         
 %     else
