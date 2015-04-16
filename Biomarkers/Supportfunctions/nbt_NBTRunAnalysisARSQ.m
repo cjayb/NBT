@@ -9,7 +9,7 @@ function NBTfunction_handle = NBTwrapper()
 
     function NBTscript(Signal, SignalInfo, SaveDir)
           
-          nbt_importARSQ(SignalInfo.subjectInfo, SignalInfo, SaveDir)
+          nbt_importARSQ(SignalInfo.subjectInfo, SignalInfo, SaveDir, 'EN')
          
     end
 
