@@ -94,6 +94,7 @@ function obj = nbt_generateBiomarkerList(NBTstudy,signal,grpNumber)
                 [subBiomName, freqRange] = strtok(subBiomName,'_');
                 freqRange = strrep(freqRange,'_','');
             end            
+            
 
             if ismember(biomName,biomarkersFixedOrder) & ismember(subBiomName,subBiomarkersFixedOrder)
                 biomIndex = find(ismember(subBiomarkersFixedOrder,subBiomName));

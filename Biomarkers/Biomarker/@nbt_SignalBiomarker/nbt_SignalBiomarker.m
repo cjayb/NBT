@@ -97,7 +97,14 @@ classdef (Abstract) nbt_SignalBiomarker < nbt_CoreBiomarker
         
         function BiomarkerObject = convertBiomarker(BiomarkerObject,subjectInfo)
             try
-                BiomarkerObject.markerValues = BiomarkerObject.MarkerValues; % the biomarker values
+                if(~isempty(BiomarkerObject.MarkerValues))
+                    BiomarkerObject.markerValues = BiomarkerObject.MarkerValues; % the biomarker values
+                    idx = find(strcmp(BiomarkerObject.Biomarkers,'MarkerValues'));
+                    BiomarkerObject.Biomarkers{idx} = 'markerValues';
+                    if(strcmp(BiomarkerObject.PrimaryBiomarker,'MarkerValues'))
+                       BiomarkerObject.PrimaryBiomarker = 'markerValues'; 
+                    end
+                end
             catch
                 if(~isempty(BiomarkerObject.MarkerValues))
                    error('You need to define a markerValues field in your biomarker to convert it from the old format') 
