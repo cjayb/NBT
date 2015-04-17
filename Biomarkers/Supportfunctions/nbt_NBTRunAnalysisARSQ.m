@@ -1,23 +1,18 @@
 
-function nbt_NBTRunAnalysisARSQ(varargin)
+function nbt_NBTRunAnalysisARSQ(startpath) 
 
-script = NBTwrapper();
-nbt_NBTcompute(script,'Planar1Signal',pwd,pwd)
-end
+    d = dir([startpath '/*_info.mat']);
+    
+    ARSQlanguage = input('Choose your ARSQ language: EN/NL/LT/RU/DE/DK/IT/zh ','s');
 
+    for j=1:length(d)
 
-function NBTfunction_handle = NBTwrapper()
+        load(d(j).name)
 
-    function NBTscript(Signal, SignalInfo, SaveDir)
-          
-          nbt_importARSQ(SignalInfo.subjectInfo(1:end-5), SignalInfo, SaveDir, 'DK')
-         
+%         nbt_importARSQ(d(j).name(1:end-9), SubjectInfo, pwd, ARSQlanguage)
+%         nbt_importARSQ(SignalInfo.subjectInfo(1:end-5), SignalInfo, SaveDir, 'EN')
+        nbt_importARSQ(Planar1SignalInfo.subjectInfo(1:end-5), Planar1SignalInfo, pwd, ARSQlanguage)
+
     end
 
-NBTfunction_handle = @NBTscript;
-end
-
-
-function ICASignalInfo=nbt_LoadNewChanloc()
-load NewChanloc.mat
 end
