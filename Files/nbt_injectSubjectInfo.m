@@ -4,6 +4,9 @@ end
 
 function innerfunc(fileName)
 load(fileName, 'SubjectInfo')
+if(~exist('SubjectInfo','var'))
+   SubjectInfo = nbt_SubjectInfo; 
+end
 fidx = strfind(fileName,filesep);
 [projectID,leftover] = strtok(fileName(fidx(end)+1:end),'.');
 [subjectID,leftover] = strtok(leftover,'.');

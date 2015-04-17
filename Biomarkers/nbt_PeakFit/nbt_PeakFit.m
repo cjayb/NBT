@@ -197,5 +197,13 @@ classdef nbt_PeakFit < nbt_SignalBiomarker
                  'AbsolutePower_Delta', 'AbsolutePower_Theta', 'AbsolutePower_Alpha', 'AbsolutePower_Beta', 'AbsolutePower_Broadband', 'AbsolutePower_Alpha1', 'AbsolutePower_Alpha2','AbsolutePower_Gamma', 'RelativePower_Delta', 'RelativePower_Theta','RelativePower_Alpha', 'RelativePower_Beta', 'RelativePower_Gamma'};
              BiomarkerObject.uniqueIdentifiers = cell(0,0);
         end
+        
+        function obj3=combinePlanar(obj1, obj2)
+      
+           obj3 = nbt_PeakFit;
+           combineMethod = {'mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean','mean'};
+           obj3 = combinePlanar@nbt_SignalBiomarker(obj1,obj2,obj3,combineMethod);
+        end
+        
     end
 end

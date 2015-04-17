@@ -124,8 +124,26 @@ classdef (Abstract) nbt_SignalBiomarker < nbt_CoreBiomarker
             BiomarkerObject = setUniqueIdentifiers(BiomarkerObject);
             
            % if isempty(BiomarkerObject.frequencyRange)
-                
-            
+           
         end 
+    
+    
+    function obj3=combinePlanar(obj1,obj2,obj3,combineMethod)
+    
+    for i=1:length(obj1.biomarkers)
+        if iscell(obj1.(obj1.biomarkers{i}))
+            continue
+        end
+        switch combineMethod{i}
+            case 'vecsum'
+                obj3.(obj1.biomarkers{i}) =  sqrt(obj1.(obj1.biomarkers{i}).^2 + obj2.(obj1.biomarkers{i}).^2);
+            case 'mean'
+                obj3.(obj1.biomarkers{i}) =  (obj1.(obj1.biomarkers{i}) + obj2.(obj1.biomarkers{i}))/2;
+        end
+    end
+    
+    end
+    
+    
     end % end methods
 end
