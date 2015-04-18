@@ -58,7 +58,7 @@ if strcmp(class(S),'nbt_lssvm')
     S.nCrossVals = input('Input the desired number of cross-validations (e.g. 100) ');
     dimRed = input('Would you like to perform dimensionality reduction first? Y/N ','s');
     if strcmp(dimRed,'Y')
-        S.dimensionReduction = input('Which kind of dimensionality reduction? PCA/PLS/ICA? ','s');
+        S.dimensionReduction = input('Which kind of dimensionality reduction? PCA/PLS/ICA/MDS? ','s');
     end    
 end
 
