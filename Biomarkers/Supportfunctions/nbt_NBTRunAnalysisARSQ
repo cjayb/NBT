@@ -1,0 +1,21 @@
+
+function nbt_NBTRunAnalysisARSQ(startpath) 
+
+    d = dir(startpath);
+    
+    ARSQlanguage = input('Choose your ARSQ language: EN/NL/LT/RU/DE/DK/IT/zh ','s');
+
+    for j=3:length(d)
+
+        if ~isempty(strfind(d(j).name,'info'))
+
+            load(d(j).name)
+
+            nbt_importARSQ(Planar1SignalInfo.subjectInfo(1:end-5), Planar1SignalInfo, pwd, ARSQlanguage)
+        end
+
+    end
+
+end
+
+% nbt_fileLooper(pwd, '.mat', 'info', @nbt_importARSQ, 0)

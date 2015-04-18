@@ -96,9 +96,9 @@ for i=1:length(FileList)
     for m = 1:length(subjectBiomarkerFields)
         %importing biomarkers not related to signals
         eval(['QB = ~isa(' subjectBiomarkerFields{m} ',' ''' nbt_QBiomarker' ''');']);
-         if(QB)
-             continue;
-         end
+%          if(QB)
+%              continue;
+%          end
         
         eval(['NBTelementName = [''NBTe_'' class(' subjectBiomarkerFields{m} ')];']);
          

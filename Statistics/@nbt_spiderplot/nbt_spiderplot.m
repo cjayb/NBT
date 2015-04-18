@@ -56,7 +56,7 @@ classdef nbt_spiderplot < nbt_Visualization
                             data_group = Data_groups{i};
                             
                             if strcmp(obj.group{1}.biomarkers,'NBTe_nbt_ARSQ')
-                                data_group = computeFactors(data_group{bID,1});
+                                data_group = computeFactors(data_group{bID,1}); % n_subjects x n_factors
                             end
                             
                             data_all_groups{i} = data_group;
@@ -69,20 +69,20 @@ classdef nbt_spiderplot < nbt_Visualization
 %                             data_all_groups{i} = data_group_ARSQfactors;
 
                             if strcmp(error_measure,'SEM') % standard error of the mean   
-                                mean_group = nanmean(data_group);
+                                mean_group = nanmean(data_group,1);
                                 int_group = nanstd(data_group)/sqrt(length(data_group));
 
                             elseif strcmp(error_measure,'SD') % standard deviation
-                                mean_group = nanmean(data_group);
+                                mean_group = nanmean(data_group,1);
                                 int_group = nanstd(data_group);
 
                             elseif strcmp(error_measure,'CI') %% 95% conf int
-                                mean_group = nanmean(data_group);
+                                mean_group = nanmean(data_group,1);
                                 int_group = nanstd(data_group)/sqrt(length(data_group))*1.96;
 
                             end
 
-                            data = [data (mean_group-int_group)' mean_group' (mean_group+int_group)'];
+                            data = [data (mean_group-int_group)' mean_group' (mean_group+int_group)']; % data n_factors x 6
 
                         end
 

@@ -62,6 +62,9 @@ while(isempty(strfind(Infofields{idx},'Signal')))
     idx = idx +1;
 end
 InfoToLoad = Infofields{idx};
+try
 GrpObj.chanLocs = Loaded.(InfoToLoad).interface.EEG.chanlocs;
 GrpObj.ref = Loaded.(InfoToLoad).interface.EEG.ref;
+catch
+end
 end

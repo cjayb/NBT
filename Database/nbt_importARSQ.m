@@ -1,4 +1,5 @@
 function nbt_importARSQ(filename, SignalInfo, SaveDir, ARSQlanguage)
+% nbt_importARSQ(filename, SubjectInfo, SaveDir, ARSQlanguage)
 
 ARSQData = importdata([filename '.csv']);
 
