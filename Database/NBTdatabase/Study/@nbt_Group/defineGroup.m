@@ -63,8 +63,9 @@ while(isempty(strfind(Infofields{idx},'Signal')))
 end
 InfoToLoad = Infofields{idx};
 try
-GrpObj.chanLocs = Loaded.(InfoToLoad).interface.EEG.chanlocs;
-GrpObj.ref = Loaded.(InfoToLoad).interface.EEG.ref;
+    GrpObj.chanLocs = Loaded.(InfoToLoad).interface.EEG.chanlocs;
+    GrpObj.ref = Loaded.(InfoToLoad).interface.EEG.ref;
 catch
+    warning('No Channel locations found')
 end
 end

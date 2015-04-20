@@ -48,7 +48,7 @@ classdef nbt_SubjectInfo
         % subjectClassification
         % notes
         % researcherID
-        
+        notes
     end
     
     

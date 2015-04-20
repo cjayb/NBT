@@ -29,15 +29,12 @@ for i = startindex:length(d)
         
         %% FileInfo collects data for further selection
         FileInfo(pro,1) = {[SubjectInfo.fileName '_analysis.mat']};%contains filename
-        FileInfo(pro,2) = {SubjectInfo.conditionID}; %ConditionID
-        FileInfo(pro,3) = {SubjectInfo.projectInfo(1:end-4)}; %ProjectID
-        FileInfo(pro,4) = {num2str(SubjectInfo.subjectID)}; %SubjectID
-        FileInfo(pro,5) = {SubjectInfo.dateOfRecording}; %Recording Date
-        FileInfo(pro,6) = {SubjectInfo.subjectGender};
-        if isa(SubjectInfo.subjectAge,'char')
-            FileInfo(pro,7) = {str2double(SubjectInfo.subjectAge)};
-        else
-            FileInfo(pro,7) = {SubjectInfo.subjectAge};
+        FileInfo(pro,2) = {SubjectInfo.projectInfo(1:end-4)}; %ProjectID
+        FileInfo(pro,3) = {num2str(SubjectInfo.subjectID)}; %SubjectID
+        FileInfo(pro,4) = {SubjectInfo.conditionID}; %ConditionID
+        subjectInfoFields = fields(SubjectInfo.info);
+        for sf = 1:length(subjectInfoFields)
+            FileInfo(pro,sf+4) = {SubjectInfo.info.(subjectInfoFields{sf})};
         end
         pro=pro+1;
     end

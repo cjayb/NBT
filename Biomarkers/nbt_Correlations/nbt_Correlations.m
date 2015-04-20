@@ -6,12 +6,18 @@ classdef nbt_Correlations < nbt_CrossChannelBiomarker  % define here the name of
         Between_Channels
         Between_Channels_P_values
     end
+    
+    properties (Constant)
+        biomarkerType = {'nbt_CrossChannelBiomarker'};
+        units = {' '};
+    end
+    
     methods
         % Now follows the definition of the function that makes a biomarker
         % of the type "nbt_Biomarker_template". The name of this function should alway be
         % the same as the name of the new biomarker object, in this example nbt_Biomarker_template
         % The inputs contain the information you want to add to the biomarker object :
-        function BiomarkerObject =nbt_Correlations(Between_Channels,Between_Channels_P_values)
+        function BiomarkerObject = nbt_Correlations(Between_Channels,Between_Channels_P_values)
             
             % assign values that each biomarker object has, for example:
             BiomarkerObject.Between_Channels = Between_Channels;

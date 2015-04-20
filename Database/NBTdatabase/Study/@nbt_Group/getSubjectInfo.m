@@ -124,18 +124,10 @@ switch GrpObj.databaseType
         readconditions = unique(FileInfo(:,2));
         readproject = unique(FileInfo(:,3));
         readsubject = unique(FileInfo(:,4));
-        readdate = unique(FileInfo(:,5));
         
-        temp=FileInfo(:,6);
-        emptyCells = cellfun(@isempty,temp);
-        temp(emptyCells) = [];
-        readgender=unique(temp);
-        
-        temp=FileInfo(:,7);
-        emptyCells = cellfun(@isempty,temp);
-        temp(emptyCells) = [];
-        readage=unique(cell2mat((temp)));
+     
         [biomarker_objects,biomarkers] = nbt_extractBiomarkers([GrpObj.databaseLocation filesep FileInfo{1,1}]);
+   
         
 end
 

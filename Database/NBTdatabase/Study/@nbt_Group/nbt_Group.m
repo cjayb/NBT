@@ -19,7 +19,7 @@ classdef nbt_Group %NBT GroupObject - contains group definitions + Database poin
     
     methods (Access = public)
         function GrpObj = nbt_Group %object contructor
-            GrpObj.databaseType = 'NBTelement'; % 'NBTelement' or 'File'
+            GrpObj.databaseType = 'File'; % 'NBTelement' or 'File'
             GrpObj.biomarkerList = [];
         end
                 
