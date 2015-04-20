@@ -175,6 +175,7 @@ if (standalone)
     uimenu(perFolder,'label', 'Phase Locking Value', 'callback', ['SettingsPLV = [];nbt_NBTcompute(@nbt_runPhaseLocking_gui); clear SettingsPLV']);
     uimenu(perFolder,'label', 'Spectral biomarkers', 'callback', ['FrequencyBandsInput=[];nbt_NBTcompute(@nbt_runPeakFit);clear FrequencyBandsInput']);
     uimenu(perFolder,'label', 'Cross-Frequency PLV', 'callback', ['FrequencyBands=[];nbt_NBTcompute(@nbt_runCrossPhaseLocking_gui);clear FrequencyBands;']);
+    uimenu(perFolder,'label', 'ARSQ', 'callback', 'nbt_NBTRunAnalysisARSQ');
     uimenu(CompBio,'label', 'List biomarkers in current signal', 'callback', 'nbt_list_biomarkers(SignalInfo,SignalPath)');
     
     Stat = uimenu(NBTMenu, 'label', ' &Biomarker statistics');
