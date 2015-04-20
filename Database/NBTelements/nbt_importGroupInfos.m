@@ -93,37 +93,37 @@ for i=1:length(FileList)
         
     end
     
-    for m = 1:length(subjectBiomarkerFields)
-        %importing biomarkers not related to signals
-        eval(['QB = ~isa(' subjectBiomarkerFields{m} ',' ''' nbt_QBiomarker' ''');']);
-%           if(QB)
-%               continue;
-%           end
-        
-        eval(['NBTelementName = [''NBTe_'' class(' subjectBiomarkerFields{m} ')];']);
-         
-        
-        addflag = ~exist(NBTelementName,'var');
-        if addflag
-            eval([NBTelementName '= nbt_NBTelement(' int2str(NextID) ',''' int2str(NextID) '.3.2.1'', 3);'])
-            eval([NBTelementName '.Class = ''nbt_QBiomarker'' ;']);
-            NextID = NextID + 1;
-        end
-        %Create the Data cell
-        
-        eval(['NumBiomarkers = length(' subjectBiomarkerFields{m} '.biomarkers);']);
-        if(NumBiomarkers ~=0)
-            for dd = 1:NumBiomarkers
-                eval( ['DataString = nbt_cellc(' subjectBiomarkerFields{m} '.biomarkers,dd);']);
-                eval(['Data{dd,1} = ' subjectBiomarkerFields{m} '.' DataString ';']);
-                eval([NBTelementName '.Biomarkers{ dd ,1} = DataString; '])
-                
-            end
-            eval([NBTelementName ' = nbt_SetData(' NBTelementName ', Data, {Condition, SubjectInfo.conditionID; Subject, SubjectInfo.subjectID;Project, SubjectInfo.projectInfo(1:end-4)});']);
-            
-            clear Data
-        end
-    end
+%     for m = 1:length(subjectBiomarkerFields)
+%         %importing biomarkers not related to signals
+%         eval(['nQB = ~isa(' subjectBiomarkerFields{m} ',' ''' nbt_QBiomarker' ''');']);
+%            if(nQB)
+%                continue;
+%            end
+%         
+%         eval(['NBTelementName = [''NBTe_'' class(' subjectBiomarkerFields{m} ')];']);
+%          
+%         
+%         addflag = ~exist(NBTelementName,'var');
+%         if addflag
+%             eval([NBTelementName '= nbt_NBTelement(' int2str(NextID) ',''' int2str(NextID) '.3.2.1'', 3);'])
+%             eval([NBTelementName '.Class = ''nbt_QBiomarker'' ;']);
+%             NextID = NextID + 1;
+%         end
+%         %Create the Data cell
+%         
+%         eval(['NumBiomarkers = length(' subjectBiomarkerFields{m} '.biomarkers);']);
+%         if(NumBiomarkers ~=0)
+%             for dd = 1:NumBiomarkers
+%                 eval( ['DataString = nbt_cellc(' subjectBiomarkerFields{m} '.biomarkers,dd);']);
+%                 eval(['Data{dd,1} = ' subjectBiomarkerFields{m} '.' DataString ';']);
+%                 eval([NBTelementName '.Biomarkers{ dd ,1} = DataString; '])
+%                 
+%             end
+%             eval([NBTelementName ' = nbt_SetData(' NBTelementName ', Data, {Condition, SubjectInfo.conditionID; Subject, SubjectInfo.subjectID;Project, SubjectInfo.projectInfo(1:end-4)});']);
+%             
+%             clear Data
+%         end
+%     end
     
     
     for mm = 1:length(signalFields)
@@ -158,20 +158,12 @@ for i=1:length(FileList)
                     eval([NBTelementName '_' NumIdentifiers{ni} '.isBiomarker = false;']);
                     NextID = NextID + 1;
                 end
-                
                 eval(['connector = ''' NBTelementName '_' NumIdentifiers{ni} ''';']);
-                
                 connectorValue = {num2str(eval([BiomarkerList{m} '.' NumIdentifiers{ni}]))};
                 oldValue{ni} = num2str(eval([BiomarkerList{m} '.' NumIdentifiers{ni}]));
-                
                 newStuff = eval(['''' NBTelementName '_' NumIdentifiers{ni} ', oldValue{' num2str(ni) '}''']);
-                
-                    
                 eval([NBTelementName '_' NumIdentifiers{ni} '= nbt_SetData(' NBTelementName '_' NumIdentifiers{ni} ', connectorValue ,{' connectorKeys '});']);
-                
-                
                 connectorKeys = [newStuff, ';' ,  connectorKeys];
-                
             end
             
             
