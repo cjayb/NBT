@@ -126,8 +126,8 @@ for i=1:length(FileList)
         end
         % add biomarker Info
          eval([NBTelementName '.Biomarkers = ' subjectBiomarkerFields{m} '.biomarkers;'])
-         eval([NBTelementName '.BiomarkerType = ' subjectBiomarkerFields{m} '.biomarkerType'])        
-         eval([NBTelementName '.BiomarkerUnit = ' subjectBiomarkerFields{m} '.units']) 
+         eval([NBTelementName '.BiomarkerType = ' subjectBiomarkerFields{m} '.biomarkerType;'])        
+         eval([NBTelementName '.BiomarkerUnit = ' subjectBiomarkerFields{m} '.units;']) 
     end
     
 %% Importing biomarkers related to signals
