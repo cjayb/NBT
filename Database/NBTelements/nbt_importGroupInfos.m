@@ -92,10 +92,11 @@ for i=1:length(FileList)
         end
         
     end
-    
+
+%% importing biomarkers not related to signals
     for m = 1:length(subjectBiomarkerFields)
-        %importing biomarkers not related to signals
-        eval(['QB = ~isa(' subjectBiomarkerFields{m} ',' ''' nbt_QBiomarker' ''');']);
+
+        eval(['QB = ~isa(' subjectBiomarkerFields{m} ',' '''nbt_QBiomarker' ''');']);
            if(QB)
                continue;
            end
@@ -123,22 +124,26 @@ for i=1:length(FileList)
             
             clear Data
         end
+        % add biomarker Info
+         eval([NBTelementName '.Biomarkers = ' subjectBiomarkerFields{m} '.biomarkers;'])
+         eval([NBTelementName '.BiomarkerType = ' subjectBiomarkerFields{m} '.biomarkerType'])        
+         eval([NBTelementName '.BiomarkerUnit = ' subjectBiomarkerFields{m} '.units']) 
     end
     
-    
+%% Importing biomarkers related to signals
+    BiomarkerList = SubjectInfo.listOfBiomarkers;
     for mm = 1:length(signalFields)
         Signals = nbt_SetData(Signals,{signalFields{mm}},{Condition, SubjectInfo.conditionID; Subject, SubjectInfo.subjectID; Project, SubjectInfo.projectInfo(1:end-4)});
-        BiomarkerList = SubjectInfo.listOfBiomarkers;
         for m = 1:length(BiomarkerList)
         eval(['QB = isa(' BiomarkerList{m} ',' '''nbt_QBiomarker' ''');']);
-%         if(QB)
-%             continue;
-%         end
+         if(QB)
+             continue;
+         end
             % create NBTelement, unless it exists
             eval(['NBTelementName = [''NBTe_'' class(' BiomarkerList{m} ')];']);
             NumIdentifiers  = eval([BiomarkerList{m} '.uniqueIdentifiers;']);
             
-             if(~QB)
+             
                 connectorEval = eval(['strcmp(' BiomarkerList{m} '.signalName , signalFields{mm});']);
                 if(connectorEval)
                     connector = 'Signals';
@@ -160,21 +165,12 @@ for i=1:length(FileList)
                 end
                 
                 eval(['connector = ''' NBTelementName '_' NumIdentifiers{ni} ''';']);
-                
                 connectorValue = {num2str(eval([BiomarkerList{m} '.' NumIdentifiers{ni}]))};
                 oldValue{ni} = num2str(eval([BiomarkerList{m} '.' NumIdentifiers{ni}]));
-                
-                newStuff = eval(['''' NBTelementName '_' NumIdentifiers{ni} ', oldValue{' num2str(ni) '}''']);
-                
-                    
-                eval([NBTelementName '_' NumIdentifiers{ni} '= nbt_SetData(' NBTelementName '_' NumIdentifiers{ni} ', connectorValue ,{' connectorKeys '});']);
-                
-                
+                newStuff = eval(['''' NBTelementName '_' NumIdentifiers{ni} ', oldValue{' num2str(ni) '}''']);  
+                eval([NBTelementName '_' NumIdentifiers{ni} '= nbt_SetData(' NBTelementName '_' NumIdentifiers{ni} ', connectorValue ,{' connectorKeys '});']); 
                 connectorKeys = [newStuff, ';' ,  connectorKeys];
-                
             end
-            
-            
             ky = eval([connector '.Key']);
             kid = eval([connector '.ElementID']); 
             addflag = ~exist(NBTelementName,'var');
@@ -197,14 +193,9 @@ for i=1:length(FileList)
                 eval([NBTelementName '.Key =' '[num2str(' NBTelementName '.ElementID' ') ''' '.' ky '''' '];' ])
                 eval([NBTelementName '.Uplink = ' num2str(kid) ';'])
             end
-            
-            end
-            
+                        
             %Create the Data cell
             eval(['NumBiomarkers = length(' BiomarkerList{m} '.biomarkers);']);
-            eval(['BiomarkerType = ' BiomarkerList{m} '.biomarkerType;']);
-            eval(['BiomarkerUnit = ' BiomarkerList{m} '.units;']);
-            
             if(NumBiomarkers ~=0)
                 for dd = 1:NumBiomarkers
                     eval( ['DataString = nbt_cellc(' BiomarkerList{m} '.biomarkers,dd);']);
@@ -212,21 +203,20 @@ for i=1:length(FileList)
                     if(size(Data{dd,1},2) > size(Data{dd,1},1)) %to fix bug with biomarkers with wrong dimension
                        Data{dd,1} = Data{dd,1}';  
                     end
-                    eval([NBTelementName '.Biomarkers{ dd ,1} = DataString; '])
-                    eval([NBTelementName '.BiomarkerType{dd} = BiomarkerType{dd}; '])
-                    eval([NBTelementName '.BiomarkerUnit{dd} = BiomarkerUnit{dd};'])
                 end
-               
-                if(~QB)
                 eval([NBTelementName ' = nbt_SetData(' NBTelementName ', Data, {' connectorKeys '});']);
-                end
-                
                 clear Data
             end
+            
+            %Add biomarker Info
+            eval([NBTelementName '.Biomarkers = ' BiomarkerList{m} '.biomarkers;'])
+            eval([NBTelementName '.BiomarkerType = ' BiomarkerList{m} '.biomarkerType'])        
+            eval([NBTelementName '.BiomarkerUnit = ' BiomarkerList{m} '.units'])         
         end
     end
 end
 
+%% cleaning up and saving
 s = whos;
 for ii=1:length(s)
     if(~strcmp(s(ii).class,'nbt_NBTelement') && ~strcmp(s(ii).name,'s'))
@@ -242,3 +232,4 @@ disp('NBTelements imported')
 disp('NBTelementBase.mat saved in')
 disp(pwd)
 end
+
