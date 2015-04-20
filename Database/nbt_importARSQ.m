@@ -1,10 +1,11 @@
-function nbt_importARSQ(filename, SignalInfo, SaveDir, ARSQlanguage)
-% nbt_importARSQ(filename, SubjectInfo, SaveDir, ARSQlanguage)
+function nbt_importARSQ(filename, SaveDir, ARSQlanguage)
+pathIdx = strfind(filename,filesep);
+subjectInfoFileName = [filename(pathIdx(end)+1:end-4) '_info'];
 
-ARSQData = importdata([filename '.csv']);
+feature('DefaultCharacterSet','UTF-8'); %to insure correct encoding of text-strings
+ARSQData = importdata(filename);
 
 %% Populate the ARSQ biomarker
-
 ARSQ = nbt_ARSQ( size(ARSQData.textdata,2));
 %Questions
 for i=1:(size(ARSQData.textdata,2))
@@ -91,8 +92,8 @@ ARSQ.Questions = sortedQuestions;
 ARSQ.Answers = sortedAnswers;
 
 ARSQ.qVersion = nbt_getHash(ARSQ.Questions);
-ARSQ = nbt_UpdateBiomarkerInfo(ARSQ, SignalInfo);
+ARSQ = nbt_UpdateBiomarkerInfo(ARSQ, subjectInfoFileName);
 %eval([BiomarkerName ' = nbt_UpdateBiomarkerInfo(' BiomarkerName ', SignalInfo);']);
-nbt_SaveClearObject('ARSQ', SignalInfo, SaveDir)
+nbt_SaveClearObject('ARSQ', subjectInfoFileName, SaveDir)
 
 end

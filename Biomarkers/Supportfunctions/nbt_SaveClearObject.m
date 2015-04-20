@@ -42,27 +42,37 @@ function nbt_SaveClearObject(ObjectName, SignalInfo, SaveDir, ReloadSwitch)
 narginchk(3,4);
 %first we get the object to save
 eval([ObjectName '= evalin(''caller'', ObjectName );']);
-SaveName = [ObjectName SignalInfo.signalName];
-eval([SaveName '=' ObjectName ';'])
+
+if(isa(SignalInfo,'nbt_SignalInfo'))
+    SaveName = [ObjectName '@' SignalInfo.signalName];
+    eval([SaveName '=' ObjectName ';'])
+else
+    SaveName = ObjectName;
+end
 %Then we save it
 % if(length(strfind(SignalInfo.subjectInfo,'.')) > 3)
 %     %%% Hack for converted old data, remove
-%     SignalInfo.subjectInfo = strrep(SignalInfo.subjectInfo,'SS','S');        
+%     SignalInfo.subjectInfo = strrep(SignalInfo.subjectInfo,'SS','S');
 %     an_file = [SaveDir filesep SignalInfo.subjectInfo(1:end-9) '_analysis.mat'];
 % else
-    %%% Hack for converted old data, remove
- %   SignalInfo.subjectInfo = strrep(SignalInfo.subjectInfo,'SS','S');
- %   an_file = [SaveDir filesep SignalInfo.subjectInfo '_analysis.mat'];
+%%% Hack for converted old data, remove
+%   SignalInfo.subjectInfo = strrep(SignalInfo.subjectInfo,'SS','S');
+%   an_file = [SaveDir filesep SignalInfo.subjectInfo '_analysis.mat'];
 %end
-SignalInfo.subjectInfo = nbt_correctSubjectinfoNames(SignalInfo.subjectInfo);
-an_file = [SaveDir filesep SignalInfo.subjectInfo(1:end-5) '_analysis.mat'];
+if(isa(SignalInfo,'nbt_SignalInfo'))
+    subjectInfoFileName = nbt_correctSubjectinfoNames(SignalInfo.subjectInfo);
+else
+    subjectInfoFileName = nbt_correctSubjectinfoNames(SignalInfo);
+end
+
+an_file = [SaveDir filesep subjectInfoFileName(1:end-5) '_analysis.mat'];
 if(exist(an_file,'file') == 2)
-   % NBTanalysisFile = matfile(an_file,'Writable', true);
-   % eval(['NBTanalysisFile.' ObjectName '= ' ObjectName ';'])
- save(an_file, SaveName, '-append');
+    % NBTanalysisFile = matfile(an_file,'Writable', true);
+    % eval(['NBTanalysisFile.' ObjectName '= ' ObjectName ';'])
+    save(an_file, SaveName, '-append');
     disp('NBT: Analysis File already exists. Appending to existing file!');
 elseif(exist(an_file,'file') == 0)
-    save(an_file, SaveName,'-v7') 
+    save(an_file, SaveName,'-v7')
 end
 
 %SignalInfo.listOfBiomarkers{end+1} = ObjectName;
