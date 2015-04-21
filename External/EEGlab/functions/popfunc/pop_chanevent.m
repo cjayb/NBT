@@ -243,7 +243,7 @@ for ci = chan
     if isempty(tmpevent), 
         fprintf('No event found for channel %d\n', ci);
     else
-        for tmpi = 1:length(tmpevent)
+        for tmpi = 1:length(tmpevent)          
             if ~isnan(g.nbtype)
                 events(counte).type    = g.typename;
             else

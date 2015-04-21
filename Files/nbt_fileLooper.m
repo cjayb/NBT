@@ -22,7 +22,7 @@ for j=3:length(d)
             typef = 1;
         end
         
-        if (~isempty(ext)  && ~isempty(typef))
+        if (~isempty(ext)  && ~isempty(typef) && ~strcmp(d(j).name,'NBTelementBase.mat'))
             funchandle([startpath  filesep d(j).name]);
         end
     end

@@ -40,10 +40,14 @@ classdef nbt_QBiomarker < nbt_CoreBiomarker
         function BiomarkerObject = nbt_QBiomarker()
         end
         
-        function biomarkerObject=nbt_UpdateBiomarkerInfo(biomarkerObject, subjectInfo)
+        function biomarkerObject=nbt_UpdateBiomarkerInfo(biomarkerObject, SignalInfo)
             biomarkerObject.lastUpdate = datestr(now);
             biomarkerObject.nbtVersion = nbt_getVersion;
-            biomarkerObject.subjectInfo = subjectInfo;
+            if(isa(SignalInfo,'nbt_SignalInfo'))
+                biomarkerObject.subjectInfo = SignalInfo.subjectInfo;
+            else
+                biomarkerObject.subjectInfo = SignalInfo;
+            end
         end
         
         function BiomarkerObject = convertBiomarker(BiomarkerObject,subjectInfo)

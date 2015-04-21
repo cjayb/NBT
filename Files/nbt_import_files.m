@@ -58,13 +58,13 @@
 
 
 
-function filename = nbt_import_files(sourcedirectory, destdirectory, LoadHandle, LoadHandleSwitch)
+function filename = nbt_import_files(sourcedirectory, destdirectory, LoadHandle, LoadHandleSwitch, ExtMulti, NameConvention, resample,doReadLoc)
 %% check inputs
-narginchk(0,4)
+narginchk(0,8)
 %% assigning directory and other fields
 persistent allfiles
 persistent SegmentOption
-allfiles = 1;
+allfiles = 0;
 if(~exist('sourcedirectory','var') | isempty(sourcedirectory))
     sourcedirectory=(uigetdir([],'Select directory with files to be imported'));
     if sourcedirectory==0  % cancelled
@@ -91,15 +91,18 @@ if strcmp(extension,'.fdt')
     extension = '.set';
 end
 %% Check for multiple file structures
-ExtMulti = input('Does the source folder contain different types of files? (y/n) ','s');
-if strcmpi(ExtMulti,'y')
-    extension = input('Please specify target file extension (e.g., .raw) ', 's');
+if(~exist('ExtMulti','var') || isempty(ExtMulti))
+    ExtMulti = input('Does the source folder contain different types of files? (y/n) ','s');
+    if strcmpi(ExtMulti,'y')
+        extension = input('Please specify target file extension (e.g., .raw) ', 's');
+    end
 end
-
 %% Get info, also for NBT file name
-disp('File names in NBT should be: <ProjectID>.S<SubjectID>.<DateOfRecording [yymmdd]>.<Condition>, for example NBT.S0099.090212.EOR1')
-NameConvention=input('Is the filename already according to the NBT convention? (y/n) ','s');
-% NameConvention='y';
+if(~exist('NameConvention','var') || isempty(NameConvention))
+    disp('File names in NBT should be: <ProjectID>.S<SubjectID>.<DateOfRecording [yymmdd]>.<Condition>, for example NBT.S0099.090212.EOR1')
+    NameConvention=input('Is the filename already according to the NBT convention? (y/n) ','s');
+    % NameConvention='y';
+end
 
 if strcmpi(NameConvention,'n')
     disp('Generating filenames  (note use nbt_Rename for automatic renaming:')
@@ -114,18 +117,23 @@ if (strcmp(extension, '.txt') || strcmp(extension, '.mat'))
     Columns=input('channels in rows (type r) or in columns (type c)? ','s');
 end
 
-if (strcmp(extension,'.raw') || strcmp(extension,'.mat') || strcmp(extension,'.dat') || strcmp(extension,'.set'))
-    resample=input('Do you want to downsample the signals? (y/n) ','s');
-    if strcmpi(resample,'y')
-        resamplefreq=input('Resample at how many Hz? ');
+if(~exist('resample','var') || isempty(resample))
+    if (strcmp(extension,'.raw') || strcmp(extension,'.mat') || strcmp(extension,'.dat') || strcmp(extension,'.set'))
+        
+        resample=input('Do you want to downsample the signals? (y/n) ','s');
+        if strcmpi(resample,'y')
+            resamplefreq=input('Resample at how many Hz? ');
+        else
+            resamplefreq=input('What is the sample frequency? ');
+        end
     else
-        resamplefreq=input('What is the sample frequency? ');
+        resamplefreq = Fs;
     end
-else
-    resamplefreq = Fs;
 end
 
-doReadLoc=input('Do you want to read a special channel location file (answer n to use standard channel location file) (y/n) ','s');
+if(~exist('doReadLoc','var') || isempty(doReadLoc))
+    doReadLoc=input('Do you want to read a special channel location file (answer n to use standard channel location file) (y/n) ','s');
+end
 if strcmpi(doReadLoc,'y')
     ReadLocFilename = input('Channel location filename: ', 's');
 end
@@ -196,7 +204,7 @@ for i=1:length(directory)
             else
                 filename=[ProjectID,'.S',SubjectID,'.',num2str(Date),'.',Condition];
             end
-            if(~exist('LoadHandle', 'var'))
+            if(~exist('LoadHandle','var') || isempty(LoadHandle))
                 switch extension
                     case '.txt' % text files
                         disp(['Converting ',directory(i).name])
@@ -331,7 +339,7 @@ for i=1:length(directory)
                         Fs=EEG.srate;
                         nr_ch = EEG.nbchan;
                         fileloc =  ['GSN-HydroCel-' num2str(nr_ch) '.sfp'];
-                     
+                        
                         if(strcmpi(doReadLoc,'y'))
                             EEG.chanlocs = readlocs(ReadLocFilename);
                         else
@@ -384,7 +392,7 @@ for i=1:length(directory)
             
             %% make Info object
             if(~exist('SignalInfo', 'var'))
-                [SignalInfo, SubjectInfo] = nbt_CreateInfoObject(filename, [], Fs, 'RawSignal', Signal); 
+                [SignalInfo, SubjectInfo] = nbt_CreateInfoObject(filename, [], Fs, 'RawSignal', Signal);
             end
             
             if(exist('resample','var'))
@@ -402,7 +410,7 @@ for i=1:length(directory)
             if strcmp(NameConvention,'n')
                 SignalInfo.signalOrigin = directory(i).name;
             end
-
+            
             %% save NBT Signal and info
             
             RawSignal = Signal;
