@@ -95,5 +95,22 @@ classdef nbt_SignalInfo
                 yesno = strcmp(nbt_getHash(single(Signal)),SignalInfo.signalSHA256);
             end
         end
+        
+        function check(SignalInfo, RawSignalInfo, fileName, SignalName) %function to check the format of the SignalInfo
+      
+        % check subjectInfo
+            pathIdx = strfind(fileName,filesep);
+           fileName = fileName(pathIdx(end)+1:end);
+           nbt_stringCheck(SignalInfo.subjectInfo,fileName(1:end-9), 'SignalInfo: subjectInfo not correct')
+        %signalName
+        nbt_stringCheck(SignalInfo.signalName,SignalName,'SignalInfo: signalName not correct')
+        %NBTDID 
+        nbt_stringCheck(SignalInfo.signalID,RawSignalInfo.signalID, 'SignalInfo: signalID not correct')
+        
+        %sampling frequency
+        if(isempty(SignalInfo.convertedSamplingFrequency))
+           error('SignalInfo: Sampling frequency missing') 
+        end
+        end
     end
 end

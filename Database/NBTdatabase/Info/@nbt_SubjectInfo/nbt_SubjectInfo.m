@@ -65,6 +65,27 @@ classdef nbt_SubjectInfo
             SubjectInfo.info.notes = [];
             SubjectInfo.info.researcherID = [];
         end
+        
+        function check(SubjectInfo,fileName)
+          
+           pathIdx = strfind(fileName,filesep);
+           fileName = fileName(pathIdx(end)+1:end);
+           [projectID, stripoff] = strtok(fileName,'.');
+           projectID = [projectID '.mat'];
+           [subjectID, stripoff] = strtok(stripoff,'.');
+           subjectID = str2double(subjectID(2:end));
+           [dateOfRec, stripoff] = strtok(stripoff,'.');
+           [conditionID] = strtok(stripoff,'.');
+           conditionID = conditionID(1:end-5);
+           
+           nbt_stringCheck(fileName(1:end-9),SubjectInfo.fileName,'SubjectInfo: fileName error');
+           nbt_stringCheck(projectID, SubjectInfo.projectInfo,'SubjectInfo: ProjectInfo error');
+           if(SubjectInfo.subjectID ~= subjectID)
+              error('SubjectInfo: SubjectID error') 
+           end
+           nbt_stringCheck(conditionID, SubjectInfo.conditionID,'SubjectInfo: ConditionID error');
+           nbt_stringCheck(dateOfRec, SubjectInfo.info.dateOfRecording,'SubjectInfo: dateOfRecording error');
+        end
     
         SubjectInfo = importSubjectInfoFromXLS(SubjectInfo,filename, SubjectIDcolumn, importparameters);
         SubjectInfo = importSubjectInfoFromCSV(SubjectInfo,filename);

@@ -61,7 +61,7 @@ end
         SignalInfo  = nbt_SignalInfo;
         if(~isempty(FileExt))
             SubjectInfo.fileName  = filename(1:(strfind(filename,FileExt)-2));  % Filename of the Signal file
-            SignalInfo.subjectInfo = [SubjectInfo.fileName];
+            SignalInfo.subjectInfo = [SubjectInfo.fileName '_info.mat'];
             SubjectInfo.conditionID = filename((IDdots(3)+1):(IDdots(4)-1));
         else
             SubjectInfo.fileName  = filename;  % Filename of the Signal file
