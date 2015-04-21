@@ -65,6 +65,7 @@ function  DataObj = getData(GrpObj,StatObj)
                                     d1{k} = (d1{k}-d2{k}).^2; % square difference
                             end
                         end
+                        DataObj.dataStore{bID} = d1;
 
                         %                DataObj.dataStore = cellfun(@minus, DataObj.dataStore{1}, DataObj2.dataStore{1},'Un',0);
                         %                 for k=1:size(DataObj.dataStore,1)
