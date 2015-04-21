@@ -105,8 +105,9 @@ classdef nbt_SignalInfo
         %signalName
         nbt_stringCheck(SignalInfo.signalName,SignalName,'SignalInfo: signalName not correct')
         %NBTDID 
-        nbt_stringCheck(SignalInfo.signalID,RawSignalInfo.signalID, 'SignalInfo: signalID not correct')
-        
+        if(~isempty(RawSignalInfo.signalID))
+            nbt_stringCheck(SignalInfo.signalID,RawSignalInfo.signalID, 'SignalInfo: signalID not correct')
+        end
         %sampling frequency
         if(isempty(SignalInfo.convertedSamplingFrequency))
            error('SignalInfo: Sampling frequency missing') 
