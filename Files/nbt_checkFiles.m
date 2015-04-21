@@ -1,15 +1,15 @@
 function nbt_checkFiles(startpath)
+narginchk(1,2)
 %Output some info
 nbt_fileStat(startpath)
 
 % Check Info files
 nbt_fileLooper(startpath,'.mat','info', @innerLoopInfo,0)
-% Check Analysis files
 
 % Check Signal files
 nbt_fileLooper(startpath,'.mat','signal', @innerLoopSignal,0)
 
-disp('No errors found')
+disp('No errors found in the Signal, SignalInfo(s), and SubjectInfo')
 end
 
 function innerLoopInfo(fileName)
