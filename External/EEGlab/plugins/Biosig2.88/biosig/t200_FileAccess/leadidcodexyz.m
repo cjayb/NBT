@@ -60,7 +60,7 @@ if ~BIOSIG_GLOBAL.ISLOADED_XYZ;
                 	end
                         [t1,t2] = strtok(t(1:ix3-1),[9,32]);
                         [t2,t3] = strtok(t2,[9,32]);
-                        id = str2double(t2);
+                        id = biosig_str2double(t2);
                         N  = N + 1;
                         Labels{N,1}	  = t1;
                         Code(N,1)         = id;
@@ -83,7 +83,7 @@ if ~BIOSIG_GLOBAL.ISLOADED_XYZ;
                 elseif strncmp(x,'#',1)
                 else
                         N = N + 1;
-                        [num,status,strarray] = str2double(x);
+                        [num,status,strarray] = biosig_str2double(x);
                         Code(N,1)   = num(1);
                         Labels{N,1} = upper(strarray{2});
                         Phi(N,1)    = num(3);
