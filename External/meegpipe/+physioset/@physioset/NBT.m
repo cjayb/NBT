@@ -1,4 +1,4 @@
-function [Signal,SignalInfo, SignalPath] = NBT(varargin)
+function [Signal,SignalInfo, SignalPath, SubjectInfo] = NBT(varargin)
 % eeglab - Conversion to NBT info object
 %
 % See: <a href="matlab:misc.md_help('+physioset/@physioset/eeglab.md')">misc.md_help(''+physioset/@physioset/eeglab.md'')</a>
@@ -24,6 +24,7 @@ end
 obj = varargin(1:count);
 
 varargin = varargin(count+1:end);
+saveflag = varargin{1,1};
 
 opt.BadDataPolicy = 'reject';
 opt.MemoryMapped = false;
@@ -81,7 +82,7 @@ else
     
     dataFile        = get_datafile(obj);
     [~, f_name]     = fileparts(dataFile);
-    tmp.setname     = sprintf('%s file', f_name);
+    tmp.setname     = sprintf('%s', f_name);
     tmp.comments    = [ 'Original file: ' dataFile ];
     tmp.pnts        = size(data, 2);
     tmp.trials      = size(data, 3);
@@ -115,7 +116,12 @@ if didSelection,
     end
 end
 
-[Signal,SignalInfo, SignalPath] = nbt_EEGlab2NBTsignal(EEG,1);
+%get filepath
+pathIdx = strfind(dataFile,filesep);
+EEG.filepath = dataFile(1:pathIdx(end));
+
+
+[Signal, SignalInfo, SignalPath, SubjectInfo] = nbt_EEGtoNBT(EEG, [], [], saveflag,'RawSignal');
 
 end
 
