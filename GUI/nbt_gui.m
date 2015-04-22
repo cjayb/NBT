@@ -104,7 +104,8 @@ if (standalone)
     FileSubImportSub = uimenu(FileSub, 'label', ' &Import options');
     uimenu( FileSubImportSub, 'label', 'Import BrainVision Analyzer files', 'callback', 'nbt_import_files([],[], @nbt_loadbv);');
     uimenu( FileSubImportSub, 'label', 'Import EDF files', 'callback', 'nbt_import_files([],[], @nbt_loadEDF);');   
-    uimenu( FileSubImportSub, 'label', 'Import ARSQ data', 'callback', 'nbt_runImportARSQ(pwd)');
+    uimenu( FileSubImportSub, 'label', 'Import MFF files (current folder)', 'callback', 'nbt_importMFF(pwd);');
+    uimenu( FileSubImportSub, 'label', 'Import ARSQ data', 'callback', 'nbt_runImportARSQ');
     FileSubExportSub = uimenu(FileSub,'label', ' &Export options');
     uimenu(FileSubExportSub,'label', 'Export to BrainVision Analyzer format', 'callback', 'nbt_EEGLABwrp(@pop_writebva, Signal, SignalInfo, SignalPath, 0);');
     uimenu( FileSubExportSub, 'label', 'Export NBT Signal to a matrix', 'callback', 'ExSignal = nbt_exportSignal(Signal, SignalInfo);');
@@ -175,7 +176,6 @@ if (standalone)
     uimenu(perFolder,'label', 'Phase Locking Value', 'callback', ['SettingsPLV = [];nbt_NBTcompute(@nbt_runPhaseLocking_gui); clear SettingsPLV']);
     uimenu(perFolder,'label', 'Spectral biomarkers', 'callback', ['FrequencyBandsInput=[];nbt_NBTcompute(@nbt_runPeakFit);clear FrequencyBandsInput']);
     uimenu(perFolder,'label', 'Cross-Frequency PLV', 'callback', ['FrequencyBands=[];nbt_NBTcompute(@nbt_runCrossPhaseLocking_gui);clear FrequencyBands;']);
-    uimenu(perFolder,'label', 'ARSQ', 'callback', 'nbt_NBTRunAnalysisARSQ');
     uimenu(CompBio,'label', 'List biomarkers in current signal', 'callback', 'nbt_list_biomarkers(SignalInfo,SignalPath)');
     
     Stat = uimenu(NBTMenu, 'label', ' &Biomarker statistics');

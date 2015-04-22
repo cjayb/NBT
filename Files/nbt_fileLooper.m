@@ -1,7 +1,11 @@
-function nbt_fileLooper(startpath,fileExt, fileType, funchandle, enterSubDir)
+function nbt_fileLooper(startpath,fileExt, fileType, funchandle, enterSubDir, dirBased)
+narginchk(5,6)
+if(~exist('dirBased','var'))
+dirBased = 0;
+end
 d = dir (startpath);
 for j=3:length(d)
-    if (d(j).isdir )
+    if (d(j).isdir && ~dirBased)
         if (enterSubDir)
             nbt_fileLooper([startpath filesep d(j).name ]);
         end
