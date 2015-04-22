@@ -406,13 +406,13 @@ function plotting
     end
 
     function[]=set_bad_channel(d1,d2,ii)
-        SignalInfo.BadChannels(ii) = 1;
+        SignalInfo.badChannels(ii) = 1;
         set(h(ii),'color','k')
         
     end
 
     function[]=unset_bad_channel(d1,d2,ii)
-        SignalInfo.BadChannels(ii) = 0;
+        SignalInfo.badChannels(ii) = 0;
         set(h(ii),'color',colors(ii,:))
         
     end
