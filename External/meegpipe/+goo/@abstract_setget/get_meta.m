@@ -23,7 +23,13 @@ if numel(obj) > 1,
     return;
 end
 
-if nargin < 2, value = obj.Info; return; end
+if nargin < 2, 
+    value = obj.Info;
+    if(isempty(fields(value)))
+       value = [] ;
+    end    
+    return
+end
 
 if numel(varargin) < 2,
     if isfield(obj.Info, varargin{1}),
@@ -42,6 +48,7 @@ value = repmat({[]}, 1, numel(varargin));
 for i = 1:numel(args)
     value{idx(i)} = obj.Info.(args{i});
 end
+
 
 
 end
