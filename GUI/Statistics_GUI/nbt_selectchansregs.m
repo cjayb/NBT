@@ -91,11 +91,11 @@ catch
     [name,path] = uigetfile('','Select an Info file with channel information');
     Loaded = load([path  name]);
     Infofields = fieldnames(Loaded);
-      idx = 1;
-    find_signal = strfind(Infofields(idx),'Signal');
+      idx = 0;
+    find_signal = strfind(Infofields(idx+1),'Signal');
     if strcmp(class(find_signal),'cell')
         while(isempty(find_signal{1}))
-            find_signal = strfind(Infofields(idx),'Signal');
+            find_signal = strfind(Infofields(idx+1),'Signal');
             idx = idx +1;
         end
     else
