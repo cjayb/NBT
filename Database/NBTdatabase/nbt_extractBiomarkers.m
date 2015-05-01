@@ -7,7 +7,12 @@ if(~exist('s','var'))
     for ii=1:length(s)
         try
         Sclass = superclasses(s(ii).class);
-        Sclass = Sclass(1);
+        if ismember('nbt_QBiomarker',Sclass)           
+            index = find(ismember(Sclass,'nbt_QBiomarker'));
+            Sclass = Sclass(index);
+        else
+            Sclass = Sclass(1);
+        end
         if(strcmp(Sclass{1,1}(end-8:end),'Biomarker'))
             BiomarkerObjects = [BiomarkerObjects, s(ii).name];
             Biomarkers{counter}=evalin('caller',[s( ii ).name,'.biomarkers;']);

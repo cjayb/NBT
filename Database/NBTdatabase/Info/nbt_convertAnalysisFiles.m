@@ -49,7 +49,7 @@ for j=3:length(d)
             if ~isempty(signalName)
                 sigInfo = load([d(j).name(1:end-12) 'info.mat']);
                 SubjectInfo = sigInfo.SubjectInfo;
-                eval([signalName ' = sigInfo.' signalName, 'Info;']);
+                eval([signalName 'Info = sigInfo.' signalName 'Info;']);
             end
             
             for i=1:length(oldBiomarkerFields)
@@ -76,7 +76,7 @@ for j=3:length(d)
                             SubjectInfo = sigInfo.SubjectInfo;
                             eval([signalName ' = sigInfo.' signalName ';']);
                         end
-                        eval([ oldBiomarkerFields{i} '= nbt_UpdateBiomarkerInfo(' oldBiomarkerFields{i} ',' signalName ');']);
+                        eval([ oldBiomarkerFields{i} '= nbt_UpdateBiomarkerInfo(' oldBiomarkerFields{i} ',' signalName 'Info);']);
                         
 %                         % check if field frequencyRange exists in the biomarker object
 %                         eval([ 'freqRng = isempty(' oldBiomarkerFields{i} '.frequencyRange);' ]);
@@ -104,7 +104,7 @@ for j=3:length(d)
 %                             end
 %                         end
                         
-                        eval([signalName '.listOfBiomarkers = [' signalName '.listOfBiomarkers ; {''' oldBiomarkerFields{i} '''}];']);
+                        eval([signalName 'Info.listOfBiomarkers = [' signalName 'Info.listOfBiomarkers ; {''' oldBiomarkerFields{i} '''}];']);
                         
                         save(d(j).name,(oldBiomarkerFields{i}),'-append')
                     else
@@ -116,7 +116,7 @@ for j=3:length(d)
                 end
                 
             end
-            save([d(j).name(1:end-12) 'info.mat'],signalName,'SubjectInfo','-append')
+            save([d(j).name(1:end-12) 'info.mat'],[signalName 'Info'],'SubjectInfo','-append')
         end
     end
 end
