@@ -507,20 +507,20 @@ if isempty(hdr),
                 error('%s contains no records', [name ext]);
             end
             
-            if isinteger(true_nrec),
-                if verbose,
-                    warning('io:edfplus:read:inconsistentHeader', ...
-                        [...
-                        'Header says %d records but there are %d records ' ...
-                        'in this file: %d records will be used'...
-                        ], hdr.nrec, true_nrec, true_nrec);
-                    hdr.nrec = true_nrec;
-                end
-            else
-                
-                error('io:edfplus:read:inconsistentHeader', ...
-                    'Inconsistent header information');
-            end
+%             if isinteger(true_nrec),
+%                 if verbose,
+%                     warning('io:edfplus:read:inconsistentHeader', ...
+%                         [...
+%                         'Header says %d records but there are %d records ' ...
+%                         'in this file: %d records will be used'...
+%                         ], hdr.nrec, true_nrec, true_nrec);
+%                     hdr.nrec = true_nrec;
+%                 end
+%             else
+%                 
+%                 error('io:edfplus:read:inconsistentHeader', ...
+%                     'Inconsistent header information');
+%             end
         end
     end    
     

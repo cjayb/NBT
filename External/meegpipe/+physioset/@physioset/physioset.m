@@ -800,7 +800,7 @@ classdef physioset < ...
         
         str      = eeglab(obj, varargin);
         
-        [Signal, str, SignalPath]      = NBT(obj, varargin);
+        [Signal, str, SignalPath, SubjectInfo]      = NBT(obj, varargin);
         
         str      = fieldtrip(obj, varargin);
         

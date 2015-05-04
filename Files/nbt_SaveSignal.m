@@ -22,7 +22,7 @@ if(auto == 1)
         end
     end
     SignalInfo.signalName = name;
-    SignalInfo.signalSHA256 = nbt_getHash(Signal);
+%    SignalInfo.signalSHA256 = nbt_getHash(Signal);
     eval(['[',name,'Info]= SignalInfo;']);
     eval([ name '= Signal;']);
     fn = nbt_correctSubjectinfoNames(SignalInfo.subjectInfo);
@@ -39,30 +39,34 @@ if(auto == 1)
             present=1;
         end
     end
-    disp('saving...')
-    if present
+ disp('saving...')
+    if (present || auto)
         try
-            save([directoryname filesep fn '.mat'],[name 'Info'],'-append')
+            save([directoryname filesep fn '.mat' ],[name 'Info'],'-append')
+            if(exist('SubjectInfo','var'))
+                save([directoryname filesep fn '.mat'],'SubjectInfo','-append')
+            end
         catch
             save([directoryname filesep fn '.mat'],[name 'Info'])
-        end
-        
-        if(~isempty(Signal))
-            try
-                save([directoryname filesep fn(1:end-5) '.mat'],name,'-append')
-            catch
-                save([directoryname filesep fn(1:end-5) '.mat'],name)
+            if(exist('SubjectInfo','var'))
+                save([directoryname filesep fn '.mat'],'SubjectInfo','-append')
             end
         end
+        try
+            save([directoryname filesep fn(1:end-5) '.mat'],name,'-append')
+        catch
+            save([directoryname filesep fn(1:end-5) '.mat'],name)
+        end
     else
-        OptionSave = input(['A file named ' fn '_info.mat does not exist in this directory. Do you want create a new file? [[Y]es [N]o]'],'s'); % e.g. RawSignal, CleanSigna
+        OptionSave = input(['A file named ' fn '.mat does not exist in this directory. Do you want create a new file? [[Y]es [N]o]'],'s'); % e.g. RawSignal, CleanSigna
         if strcmp(OptionSave(1),'Y') || strcmp(OptionSave(1),'y')
             save([directoryname filesep fn '.mat'],[name 'Info'])
-            save([directoryname filesep fn '.mat'],'SubjectInfo','-append')
+            if(exist('SubjectInfo','var'))
+                save([directoryname filesep fn '.mat'],'SubjectInfo','-append')
+            end
             save([directoryname filesep fn(1:end-5) '.mat'],name)
         end
     end
-    
     disp('NBT signal saved')
 end
 end
