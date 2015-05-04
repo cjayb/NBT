@@ -18,7 +18,7 @@ classdef nbt_PLI < nbt_CrossChannelBiomarker
             BiomarkerObject.IQR = nan(NumChannels,1);
             BiomarkerObject.Std = nan(NumChannels,1);
             BiomarkerObject.primaryBiomarker = 'PLI';
-            BiomarkerObject.biomarkers = {'pliVal'};
+            BiomarkerObject.biomarkers = {'pliVal','Median','IQR'};
         end
     end
 end
