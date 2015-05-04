@@ -46,32 +46,33 @@
 % See Readme.txt for additional copyright information.
 % ---------------------------------------------------------------------------------------
 
-function [Signal, SignalInfo] = nbt_AutoCleanHN(Signal, SignalInfo, SignalPath) % EyeCh , NonEEGCh
-% narginchk(3,5)
-narginchk(3,3)
+function [Signal, SignalInfo] = nbt_AutoCleanHN(Signal, SignalInfo, SignalPath, EyeCh , NonEEGCh)
+narginchk(3,5)
+% narginchk(3,3)
 
-EyeCh = [8, 14, 21, 25, 125, 126, 127, 128];
+% EyeCh = [8, 14, 21, 25, 125, 126, 127, 128];
 
-%    if(isempty(SignalInfo.NonEEGch))
-%       SignalInfo.NonEEGch = input('Please specify Non-EEG channels: ');
-%    end
+   if(isempty(SignalInfo.nonEEGch))
+      SignalInfo.nonEEGch = input('Please specify Non-EEG channels: ');
+   end
 
-%    if(isempty(SignalInfo.EyeCh))
-%      SignalInfo.EyeCh = input('Please specify eye channels: ');
-%    end
-% if(~exist('NonEEGCh','var'))
-    NonEEGCh = SignalInfo.NonEEGch;
-% end
-% if(~exist('EyeCh','var'))
-%     EyeCh = SignalInfo.EyeCh;
-% end
+   if(isempty(SignalInfo.eyeCh))
+     SignalInfo.eyeCh = input('Please specify eye channels: ');
+   end
+   
+if(~exist('NonEEGCh','var'))
+    NonEEGCh = SignalInfo.nonEEGch;
+end
+if(~exist('EyeCh','var'))
+    EyeCh = SignalInfo.eyeCh;
+end
    
 % Protocol
 %. 0. Ref-ref to Cz
 %first we find Cz
 cznotfound = true;
-for CzID = 1:SignalInfo.Interface.number_of_channels
-    if(strcmpi(SignalInfo.Interface.EEG.chanlocs(CzID).labels,'Cz'))
+for CzID = 1:SignalInfo.interface.EEG.nbchan
+    if(strcmpi(SignalInfo.interface.EEG.chanlocs(CzID).labels,'Cz'))
         cznotfound = false;
         break;
     end
@@ -80,15 +81,15 @@ if(cznotfound)
     CzID = input('Please specify Cz channel number')
 end
 
-% CzID = SignalInfo.Interface.EEG.ref;
+% CzID = SignalInfo.interface.EEG.ref;
 
 %Downsample to 250 Hz
 %[Signal, SignalInfo] = nbt_EEGLABwrp(@pop_resample, Signal, SignalInfo, [], 0, 250);
-%SignalInfo.converted_sample_frequency = 250;
+%SignalInfo.convertedSamplingFrequency = 250;
 %Re-reference to Cz
-[Signal, SignalInfo] = nbt_EEGLABwrp(@nbt_ReRef, Signal,SignalInfo,[],0,CzID);
+[Signal, SignalInfo] = nbt_EEGLABwrp(@nbt_ReRef, Signal,SignalInfo,SignalPath,[],0,CzID);
 % 1. Filter Data
-[Signal] = nbt_filter_fir(Signal,0.5,45,SignalInfo.converted_sample_frequency,2/0.5,1);
+[Signal] = nbt_filter_fir(Signal,0.5,45,SignalInfo.convertedSamplingFrequency,2/0.5,1);
 % 2. Mark Bad Channels
 [Signal, SignalInfo] = nbt_EEGLABwrp(@nbt_FindBadChannels, Signal, SignalInfo, [] , 0, 's', NonEEGCh);
 SignalInfo.BadChannels(NonEEGCh) = 1;

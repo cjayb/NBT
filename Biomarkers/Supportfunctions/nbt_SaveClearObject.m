@@ -44,7 +44,7 @@ narginchk(3,4);
 eval([ObjectName '= evalin(''caller'', ObjectName );']);
 
 if(isa(SignalInfo,'nbt_SignalInfo'))
-    SaveName = [ObjectName '@' SignalInfo.signalName];
+    SaveName = [ObjectName '_' SignalInfo.signalName];
     eval([SaveName '=' ObjectName ';'])
 else
     SaveName = ObjectName;
