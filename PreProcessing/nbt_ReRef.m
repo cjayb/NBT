@@ -43,7 +43,7 @@
 
 
 function EEG=nbt_ReRef(EEG, RefCh)
-    if size(EEG.chanlocs,2) ~= EEG.nbchan
+    if length(EEG.chanlocs) ~= EEG.nbchan
         error('Number of channels does not match channel locations; use nbt_Missing_BadChannels to correct this')
        %badCh = nbt_Missing_BadChannels(EEG);
         %   EEG = pop_reref(EEG,[],'exclude',find(badCh));

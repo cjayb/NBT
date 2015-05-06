@@ -32,7 +32,7 @@ evalin('base', 'clear global ALLEEG');
 evalin('base', 'clear global CURRENTSET');
 global EEG
 global ALLEEG
-EEG = nbt_NBTtoEEG(Signal, SignalInfo, SignalPath,[]); %some issues with noisy intervals
+EEG = nbt_NBTtoEEG(Signal, SignalInfo, SignalPath, []); %some issues with noisy intervals
 [ALLEEG EEG index] = eeg_store(ALLEEG, EEG);
 evalin('base','global EEG');
 evalin('base','global ALLEEG');
@@ -69,7 +69,7 @@ end
 
 if(isstruct(EEG))
     try
-        [Signal, SignalInfo]=nbt_EEGtoNBT(EEG, [], []);
+        [Signal, SignalInfo]=nbt_EEGtoNBT(EEG, [], [], 0);
     catch
     end
 end

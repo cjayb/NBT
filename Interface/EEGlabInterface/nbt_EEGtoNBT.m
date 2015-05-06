@@ -89,7 +89,8 @@ else
     try
         SignalPath = evalin('base', 'SignalPath');
     catch
-        SignalPath = input('Please specify signal path : ','s');
+        SignalPath = pwd;
+        %SignalPath = input('Please specify signal path : ','s');
     end
 end
 

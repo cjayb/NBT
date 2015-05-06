@@ -58,7 +58,7 @@ try
     EEG = eeg_interp(EEG, nbt_negSearchVector(find(EEG.NBTinfo.BadChannels),NonEEGCh));
 catch
 end
-[Signal, SignalInfo]=nbt_EEGtoNBT(EEG, [] , []);
+[Signal, SignalInfo]=nbt_EEGtoNBT(EEG, [] , [], 0);
 [Signal, SignalInfo] =nbt_AddChan(Signal,SignalInfo, RemovedData, NonEEGCh, OldChanlocs);
 
 EEG = nbt_NBTtoEEG(Signal, SignalInfo, [],[]);
@@ -114,5 +114,5 @@ posAtimes(posAtimes(:,1) <= 0,1) = 1;
 posAtimes(posAtimes(:,2) > size(EEGold.data,2),2) = size(EEGold.data,2); 
 
 EEGold=eeg_eegrej(EEGold, posAtimes);
-[Signal, SignalInfo]=nbt_EEGtoNBT(EEGold, [] , []);
+[Signal, SignalInfo]=nbt_EEGtoNBT(EEGold, [] , [], 0);
 end
