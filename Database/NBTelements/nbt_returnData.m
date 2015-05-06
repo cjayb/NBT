@@ -56,7 +56,7 @@ if(~exist('SubBiomarker','var'))
     Units = NBTelement.BiomarkerUnit;
 else
     for mm=1:length(NBTelement.Biomarkers)
-        if(strcmp(NBTelement.Biomarkers{mm,1}, SubBiomarker))
+        if(strcmp(NBTelement.Biomarkers{mm}, SubBiomarker))
             for i=1:length(IncludePool)
             Data{i,1} =  NBTelement.Data{mm,(str2double(strtok(DataID(IncludePool(i)),'.')))};
             if (~isempty(NBTelement.BiomarkerUnit))

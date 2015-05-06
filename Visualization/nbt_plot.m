@@ -186,15 +186,11 @@ function plotting
             label{i}=[num2str(channels(i)) '(' Info.interface.EEG.chanlocs(i).labels ')'];
         end      
         set(gca,'YTick', temp(1,:), 'YTickLabel',label)
-
-       
     else
         for i=1:size(Signal,2)
             label{i}=[num2str(channels(i))];
         end      
         set(gca,'YTick', temp(1,:), 'YTickLabel',label)
-        
-
     end
     
     hold off

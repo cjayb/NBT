@@ -127,7 +127,7 @@ if ~isempty(epochVal),
 end
 
 args = {'type', '', 'latency', [], 'position', [], 'urevent', [], ...
-    'meta', struct};
+    'meta', []};
 
 if epoched,
     args = [args, {'epoch', []}];
@@ -163,8 +163,11 @@ for i = 1:numel(a)
     
     metaData      = get_meta(a(i));
     
-    duplicateFields = intersect(fieldnames(metaData), eeglabFields);
-    ev(i).meta      = rmfield(metaData, duplicateFields);
+    if(~isempty(metaData))
+        duplicateFields = intersect(fieldnames(metaData), eeglabFields);
+        ev(i).meta      = rmfield(metaData, duplicateFields);
+    end
+    
     
 end
 

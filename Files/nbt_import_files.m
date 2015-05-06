@@ -138,6 +138,8 @@ if strcmpi(doReadLoc,'y')
     ReadLocFilename = input('Channel location filename: ', 's');
 end
 
+% reference field
+Reference = input('Please input the reference (e.g. M1/average/...). If you do not know, press enter ', 's');
 
 if (~(strcmp(extension,'.txt') || strcmp(extension,'.dat')  || strcmp(extension,'.raw') || strcmp(extension,'.set') || strcmp(extension,'.mat')) && ~exist('LoadHandle','var'))
     LoadHandle = eval(input('Please specify a load handle for your signal (with @ in front!): ','s'));
@@ -319,12 +321,38 @@ for i=1:length(directory)
                         EEG=pop_loadset('filepath',[sourcedirectory,filesep,directory(i).name]);
                         EEG.setname = filename;
                         EEG = eeg_checkset(EEG);
+                        
                         try
                             Signal=double(EEG.data');
                         catch
                             EEG = eeg_epoch2continuous(EEG);
                             Signal = double(EEG.data');
                         end
+                        
+                        if(strcmpi(doReadLoc,'y'))
+                            % reorder channels according to the template
+                            subject_chanlocs = EEG.chanlocs;
+                            subject_labels = {subject_chanlocs.labels};
+                            
+                            EEG.chanlocs = readlocs(ReadLocFilename);
+                            
+                            template_chanlocs = EEG.chanlocs;
+                            template_labels = {template_chanlocs.labels};                         
+                            
+                            NewSignal = nan(size(Signal,1),length(template_chanlocs));
+                            
+                            for j=1:length(template_labels)                                
+                                chan_name = template_labels{j};                               
+                                index = find(strcmp(cellstr(subject_labels), chan_name));
+                                
+                                if ~isempty(index)
+                                    NewSignal(:,j) = Signal(:,index);
+                                end                                
+                            end
+                            Signal = NewSignal;
+                        end
+                                               
+                        
                         EEG=rmfield(EEG,'data');
                         Fs=EEG.srate;
                     case '.dat' %BCI2000 .dat files
@@ -400,6 +428,10 @@ for i=1:length(directory)
                     SignalInfo.originalSamplingFrequency = Fs;
                     SignalInfo.convertedSamplingFrequency = resamplefreq;
                 end
+            end
+            
+            if(exist('Reference','var'))
+               SignalInfo.reference = Reference; 
             end
             
             if (exist('EEG','var'))

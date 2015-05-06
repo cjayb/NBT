@@ -57,15 +57,19 @@ for evItr = 1:nbEvents
     this        = split(char(10), res{evItr});    
     evTime      = this{1};
     duration    = this{2};
-    code        = this{3};
-    
-    % Custom event properties
-    this(1:3) = [];
-    for i = 1:2:numel(this)
-        this{i} = regexprep(this{i}, '[^\w]', '');
-        evArray(evItr) = set_meta(evArray(evItr), this{i}, ...
-            str2double(this{i+1}));
-    end   
+    try
+        code        = this{5};
+    catch
+        code        = this{3}; 
+    end
+warning('not adding meta event info')    
+%     % Custom event properties
+%     this(1:3) = [];
+%     for i = 1:2:numel(this)
+%         this{i} = regexprep(this{i}, '[^\w]', '');
+%         evArray(evItr) = set_meta(evArray(evItr), this{i}, ...
+%             str2double(this{i+1}));
+%     end   
     
     if isempty(beginTime),
         continue;

@@ -43,6 +43,7 @@ function [Pindex, pOut] = nbt_MCcorrect(p,Type,varargin)
     
     if(isempty(p))
         Pindex = [];
+        pOut = [];
         return
     end
     switch Type

@@ -55,7 +55,7 @@ classdef nbt_spiderplot < nbt_Visualization
                             
                             data_group = Data_groups{i};
                             
-                            if strcmp(obj.group{1}.biomarkers,'NBTe_nbt_ARSQ')
+                            if strcmp(obj.group{1}.biomarkers,'NBTe_nbt_ARSQ') || strcmp(obj.group{1}.biomarkers,'NBTe_nbt_rsq')
                                 data_group = computeFactors(data_group{bID,1}); % n_subjects x n_factors
                             end
                             
@@ -101,7 +101,7 @@ classdef nbt_spiderplot < nbt_Visualization
                             % p = kruskalwallis()
                         end
                         
-                        if strcmp(obj.group{1}.biomarkers,'NBTe_nbt_ARSQ')
+                        if strcmp(obj.group{1}.biomarkers,'NBTe_nbt_ARSQ') || strcmp(obj.group{1}.biomarkers,'NBTe_nbt_rsq')
                             bioms_name = 'ARSQ';
                             load ARSQfactors
                             dimension_names = ARSQfactors.factorLabels;
