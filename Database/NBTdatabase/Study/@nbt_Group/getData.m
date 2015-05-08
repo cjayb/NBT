@@ -142,6 +142,8 @@ function  DataObj = getData(GrpObj,StatObj)
 
             end
             
+            DataObj.subjectList{bID,1} = unique(DataObj.subjectList{bID,1});
+            
             if (ChansOrRegs == 2) % regions
                 n_chans = size(GrpObj.chanLocs,2);
                 regions = GrpObj.listRegData;

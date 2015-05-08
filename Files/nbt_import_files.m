@@ -344,22 +344,19 @@ for i=1:length(directory)
                             indexv = find(strcmp(cellstr(template_labels), 'VEOG'));
                             eye_chans = [indexh, indexv];
                             
-                            % bad channels
-                            bad_chans = setdiff(template_labels,subject_labels);
-                            
                             NewSignal = nan(size(Signal,1),length(template_chanlocs));
                             
                             for j=1:length(template_labels)                                
                                 chan_name = template_labels{j};                               
                                 index = find(strcmp(cellstr(subject_labels), chan_name));
+                                bad_chans(j) = isempty(index);
                                 
                                 if ~isempty(index)
                                     NewSignal(:,j) = Signal(:,index);
                                 end                                
                             end
                             Signal = NewSignal;
-                        end
-                        
+                        end                       
                         
                         
                         EEG=rmfield(EEG,'data');
