@@ -337,21 +337,27 @@ for i=1:length(directory)
                             EEG.chanlocs = readlocs(ReadLocFilename);
                             
                             template_chanlocs = EEG.chanlocs;
-                            template_labels = {template_chanlocs.labels};                         
+                            template_labels = {template_chanlocs.labels};
+                            
+                            % find eye channels
+                            indexh = find(strcmp(cellstr(template_labels), 'HEOG'));
+                            indexv = find(strcmp(cellstr(template_labels), 'VEOG'));
+                            eye_chans = [indexh, indexv];
                             
                             NewSignal = nan(size(Signal,1),length(template_chanlocs));
                             
                             for j=1:length(template_labels)                                
                                 chan_name = template_labels{j};                               
                                 index = find(strcmp(cellstr(subject_labels), chan_name));
+                                bad_chans(j) = isempty(index);
                                 
                                 if ~isempty(index)
                                     NewSignal(:,j) = Signal(:,index);
                                 end                                
                             end
                             Signal = NewSignal;
-                        end
-                                               
+                        end                       
+                        
                         
                         EEG=rmfield(EEG,'data');
                         Fs=EEG.srate;
@@ -442,6 +448,16 @@ for i=1:length(directory)
             if strcmp(NameConvention,'n')
                 SignalInfo.signalOrigin = directory(i).name;
             end
+            
+            if(~isempty(eye_chans))
+                SignalInfo.nonEEGch = eye_chans;
+                SignalInfo.eyeCh = eye_chans;
+            end  
+            
+            if(~isempty(bad_chans))
+                SignalInfo.badChannels = bad_chans;
+            end             
+            
             
             %% save NBT Signal and info
             
