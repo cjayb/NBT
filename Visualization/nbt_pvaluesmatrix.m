@@ -2,9 +2,9 @@ function nbt_pvaluesmatrix(StatObj)
 global NBTstudy
     
     % ---------compare p-values test results
-    x = nan(size(StatObj.pValues,1),size(StatObj.pValues,2));
-    for k = 1:size(StatObj.pValues,2)
-        x(:,k)  = log10(StatObj.pValues(:,k));
+    x = nan(size(StatObj.pValues{1},2),size(StatObj.pValues{1},1));
+    for k = 1:size(StatObj.pValues{1},1)
+        x(:,k)  = log10(StatObj.pValues{:,k})';
     end
     y =  x;
     

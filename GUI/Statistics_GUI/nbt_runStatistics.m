@@ -63,14 +63,19 @@ if strcmp(class(S),'nbt_lssvm')
 end
 
 if isa(S,'nbt_PairedStat') || isa(S,'nbt_UnPairedStat')
-    NBTstudy.settings.visual.mcpCorrection = input('Input desired multiple comparison correction: "holm", "hochberg", "bino", "bonfi" or "fdr" ', 's');
+    NBTstudy.settings.visual.mcpCorrection = input('Input desired multiple comparison correction: "holm", "hochberg", "binomial", "bonfi" or "fdr" ', 's');
 end
     
 S = S.calculate(NBTstudy);
 
 NBTstudy.statAnalysis{length(NBTstudy.statAnalysis)+1} = S;
 disp('Statistics done.')
-if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot')
+if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot') && ~strcmp(class(S),'nbt_ttest')
     nbt_plot_2conditions_topoAll(S)
 end
+
+if strcmp(class(S),'nbt_ttest')&& strcmp(bioms_name{bioms_ind},'NBTe_nbt_rsq.Answers')
+    nbt_pvaluesmatrix(S)
+end
+
 end
