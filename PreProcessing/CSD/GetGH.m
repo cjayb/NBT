@@ -93,7 +93,7 @@ if ~ismember(m,[2:10])                    % verify m constant
    return
 end
 disp(sprintf('Spline flexibility:  m = %d',[m])); 
-N = 50;                                  % set N iterations
+N = 15;                                  % set N iterations
 G(nElec,nElec) = 0; H(nElec,nElec) = 0;  % claim memory for G- and H-matrices
 fprintf('%d iterations for %d sites [',N,nElec); % intialize progress bar
 for i = 1:nElec; for j = 1:nElec;

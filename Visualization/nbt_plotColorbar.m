@@ -73,7 +73,7 @@ function nbt_plotColorbar(subplotIndex, cmin, cmax, maxTicks, units, maxColumns,
     
     %%% Round the ticks to 2 decimals
     %%% Except if values are smaller than 0.01
-    if abs(cmin) >= 0.01 | abs(cmax) >= 0.01
+    if abs(cmin) > 0.01 | abs(cmax) > 0.01
         
         if((abs(cmax) - abs(cmin))/maxTicks<=1)
             cmin = round(cmin/0.01)*0.01;
@@ -93,37 +93,36 @@ function nbt_plotColorbar(subplotIndex, cmin, cmax, maxTicks, units, maxColumns,
     caxis([min(cticks)-0.00000000001 max(cticks)+0.00000000001]);
     set(cbar,'YTick',cticks);
 
-    if((abs(cmax) - abs(cmin))/maxTicks<=1)
-        cticks = round(cticks/0.01)*0.01;
-    else
-        cticks = round(cticks);
+    if abs(cmin) > 0.01 | abs(cmax) > 0.01
+        if((abs(cmax) - abs(cmin))/maxTicks<=1)
+            cticks = round(cticks/0.01)*0.01;
+        else
+            cticks = round(cticks);
+        end
     end
     
     %%% Make sure that the number of decimals is the same for all labels
     %%% Convert the ticks to string
-    tickStringOriginal = num2str(cticks');
-    
-    for k = 1 : size(tickStringOriginal,1)
-        %%% If the tick is not rounded to an int, look for the dot
-        if ~isempty(strfind(tickStringOriginal(k,:),'.'))
-            [head, tail] = strtok(tickStringOriginal(k,:),'.');
-            if numel(tail) ~= 3
-                %%% Remove the space at the beginning
-                head = head(2:end);
+        tickStringOriginal = num2str(cticks');
+        for k = 1 : size(tickStringOriginal,1)
+            %%% If the tick is not rounded to an int, look for the dot
+            if ~isempty(strfind(tickStringOriginal(k,:),'.'))
+                [head, tail] = strtok(tickStringOriginal(k,:),'.');
+                if numel(tail) ~= 3
+                    %%% Remove the space at the beginning
+                    head = head(2:end);
 
-                %%% And add the zero at the end
-                tickString(k,:) = [head tail '0'];
+                    %%% And add the zero at the end
+                    tickString(k,:) = [head tail '0'];
+                else
+                    tickString(k,:) = [head tail];
+                end
             else
-                tickString(k,:) = [head tail];
+                %%% If there is no dot, take the original
+                tickString(k,:) = tickStringOriginal(k,:);
             end
-        else
-            %%% If there is no dot, take the original
-            tickString(k,:) = tickStringOriginal(k,:);
         end
-    end
-
-    set(cbar,'YTickLabel',tickString,'FontName','Helvetica');    
-%      set(cbar,'YTickLabel',tickString,'FontName','FixedWidth');
+        set(cbar,'YTickLabel',tickString,'FontName','Helvetica');
 
     %%% Freeze the colorbar colors
     cbar = cbfreeze(cbar);
