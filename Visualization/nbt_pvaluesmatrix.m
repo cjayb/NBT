@@ -2,9 +2,9 @@ function nbt_pvaluesmatrix(StatObj)
 global NBTstudy
     
     % ---------compare p-values test results
-    x = nan(size(StatObj.pValues{1},2),size(StatObj.pValues{1},1));
-    for k = 1:size(StatObj.pValues{1},1)
-        x(:,k)  = log10(StatObj.pValues{:,k})';
+    x = nan(size(StatObj.pValues{1},2),size(StatObj.pValues,2));
+    for n = 1:size(StatObj.pValues,2)
+        x(:,n)  = log10(StatObj.pValues{n})';
     end
     y =  x;
     
@@ -14,9 +14,9 @@ global NBTstudy
     %--- adapt to screen resolution
     nbt_movegui(h2);
     %---
-    hh=uicontextmenu;
+    hh  = uicontextmenu;
     hh2 = uicontextmenu;
-    bh=bar3(x);
+    bh  = bar3(x);
     for i=1:length(bh)
         zdata = get(ah(i),'Zdata');
         set(bh(i),'cdata',zdata);
@@ -62,8 +62,7 @@ global NBTstudy
             set(gca,'XTick',[])
             set(gca,'XTickLabel','','Fontsize',10)
             ylabel('Channels')
-        case 2 %regions
-            
+        case 2 %regions  
             for i = 1:length(biomarkerNames)
                 umenu = text(i,-0.3,biomarkerNames{i},'horizontalalignment','left','fontsize',10,'fontweight','bold');
                 set(umenu,'uicontextmenu',hh);
@@ -80,10 +79,40 @@ global NBTstudy
     set(bh,'uicontextmenu',hh2);
     title(['p-values of biomarkers for ', StatObj.testName, ' for ''', NBTstudy.groups{StatObj.groups(1)}.groupName,''' vs ''', NBTstudy.groups{StatObj.groups(2)}.groupName ,''''],'fontweight','bold','fontsize',12)
     
-    uimenu(hh,'label','Plot topoplot','callback',{@plot_test2Groups,x,stat_results,regs,Group1,Group2});
-    uimenu(hh2,'label','Plot boxplot','callback',{@plot_subj_vs_subj,x,stat_results,regs,Group1,Group2,regs_or_chans_name});
-    uicontrol(h2, 'Style', 'pushbutton', 'string', 'Plot topoplots of all biomarkers', 'position', [20 400 200 20],'callback',{@plot_test2GroupsAll,x, stat_results, regs, Group1, Group2});
+    %uimenu(hh,'label','Plot topoplot','callback',{@plot_test2Groups,x,StatObj,regs,Group1,Group2});
+    %uimenu(hh2,'label','Plot boxplot','callback',{@plot_subj_vs_subj,x,stat_results,regs,Group1,Group2,regs_or_chans_name});
+    %uicontrol(h2, 'Style', 'pushbutton', 'string', 'Plot topoplots of all biomarkers', 'position', [20 400 200 20],'callback',{@plot_test2GroupsAll,x, stat_results, regs, Group1, Group2});
     close(h1)
-    nbt_plotMCcorrection(s,stat_results,bioms_name,nameG1,nameG2);
-    
+    %nbt_plotMCcorrection(s,stat_results,bioms_name,nameG1,nameG2); 
 end
+
+ function plot_test2Groups(d1,d2,x,StatObj,regs,Group1,Group2)
+        pos_cursor_unitfig = get(gca,'currentpoint');
+        biomarker = round(pos_cursor_unitfig(1,1));
+        if  biomarker>0 && biomarker<= size(x,2)
+            s = stat_results(biomarker);
+            chanloc = Group1.chansregs.chanloc;
+            biom = s.biom_name;
+            unit = s.unit;
+            nbt_plot_2conditions_topo(StatObj);
+        end
+        %
+ end
+
+    
+     function plot_test2GroupsAll(d1,d2,x,stat_results,regs,Group1,Group2)
+        %This function plots full overview of all biomarkers
+        fontsize = 10;
+        fig1 = figure('name',['NBT: Statistics (Channels) for all selected biomarkers'],...
+            'NumberTitle','off','position',[10          80       1500      500]); %128
+        fig1=nbt_movegui(fig1);
+        hold on;
+        NR_Biomarkers = length(stat_results);
+        for biomIndex = 1:NR_Biomarkers
+            %FIXME
+            s = stat_results(biomIndex);
+            biom = s.biom_name;
+            unit = s.unit;
+            nbt_plot_2conditions_topoAll(Group1, Group2, Group1.chansregs.chanloc,s,unit,biom,biomIndex, NR_Biomarkers);
+        end
+    end
