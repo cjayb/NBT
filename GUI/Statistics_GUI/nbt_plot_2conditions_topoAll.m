@@ -58,7 +58,8 @@
 % 3. Fix visualization
 % 4. Fix title for each biomarker
 
-function nbt_plot_2conditions_topoAll(StatObj)
+function nbt_plot_2conditions_topoAll(StatObj,biomarkersToPlot)
+narginchk(1,2);
 global NBTstudy
     %%% Get groups NBTstudy
     Group1 = NBTstudy.groups{StatObj.groups(1)};
@@ -85,9 +86,14 @@ global NBTstudy
     chanLocs = Group1.chanLocs;
     
     % For all biomarkers, plot the topoplots
-    nBioms = DataGroup1.numBiomarkers;
-   
-    for biomID = 1:nBioms
+    if(~exist('biomarkersToPlot','var'))
+        biomarkersToPlot = 1:DataGroup1.numBiomarkers;
+    end
+    nBioms = length(biomarkersToPlot);
+    biomIdx = 0;
+    
+    for biomID = biomarkersToPlot
+        biomIdx = biomIdx +1;
         %%% Values for all channels for selected biomarker
         chanValuesGroup1 = DataGroup1{biomID,1};
         chanValuesGroup2 = DataGroup2{biomID,1};
@@ -103,15 +109,15 @@ global NBTstudy
                 warning('Different amount of channels for Group 1 and Group 2');
                 else %%% este else fica
                     diffGrp2Grp1 = StatObj.groupStatHandle((chanValuesGroup2 - chanValuesGroup1)');
-                               end
+            end
              else
            statType = 'unpaired';
            diffGrp2Grp1 = meanGroup2 - meanGroup1;
-end
+        end
 
         %%% pValues - corrected for multiple comparision
-        pValues = StatObj.pValues(:,biomID);
-        [~, pValues] = nbt_MCcorrect(pValues{1}, NBTstudy.settings.visual.mcpCorrection);
+        pValues = StatObj.pValues{biomID};
+        [~, pValues] = nbt_MCcorrect(pValues, NBTstudy.settings.visual.mcpCorrection);
    
         
         %%% Properties for plotting
@@ -136,21 +142,21 @@ end
         
         %%% Plot the subplots
         %%% Subplot for grand average of group 1
-        subplot(4, nBioms, biomID);
+        subplot(4, nBioms, biomIdx);
         text(0,0.7,biomarkerNames{biomID},'horizontalalignment','center','fontWeight','bold');
-        plotGrandAvgTopo(1,meanGroup1,biomID,statType);
+        plotGrandAvgTopo(1,meanGroup1,biomIdx,statType);
         cbfreeze
         freezeColors
 
         %%% Subplot for grand average of group 2
-        subplot(4, nBioms, biomID+nBioms);
-        plotGrandAvgTopo(2,meanGroup2,biomID,statType);
+        subplot(4, nBioms, biomIdx+nBioms);
+        plotGrandAvgTopo(2,meanGroup2,biomIdx,statType);
         cbfreeze
         freezeColors
 
         %%% Subplot for grand average difference group 2 minus group 1
-        subplot(4, nBioms, biomID+2*nBioms);
-        plotGrandAvgDiffTopo(biomID);
+        subplot(4, nBioms, biomIdx+2*nBioms);
+        plotGrandAvgDiffTopo(biomIdx);
         cbfreeze
         freezeColors
 
@@ -171,8 +177,8 @@ end
         pLog(pLog<minPValue) = minPValue;
         pLog(pLog> maxPValue) = maxPValue;
 
-        subplot(4, nBioms, biomID+3*nBioms);
-        plot_pTopo(biomID);
+        subplot(4, nBioms, biomIdx+3*nBioms);
+        plot_pTopo(biomIdx);
         
         cbfreeze;
         drawnow;
