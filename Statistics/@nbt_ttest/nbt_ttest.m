@@ -1,11 +1,12 @@
 classdef nbt_ttest < nbt_PairedStat
-    properties
-    end
+    properties      
+    end 
     
     methods
         function obj = nbt_ttest(obj)
             obj.testOptions.tail = 'both';
             obj.groupStatHandle = @nanmean;
+            obj.testName = 'paired t-test';
         end
         
         

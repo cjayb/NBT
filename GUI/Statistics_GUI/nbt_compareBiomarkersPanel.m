@@ -10,13 +10,13 @@ hp = uipanel(StatSelection,'Title','Select Channels,Regions,Components','FontSiz
 ListRegion = uicontrol(hp,'Units', 'pixels','style','listbox','Max',1,'Units', 'pixels','Position',[5 5 290 30],'fontsize',8,'String',reglist);
 % biomarkers
 hp2 = uipanel(StatSelection,'Title','Biomarker to split on','FontSize',8,'Units','pixels','Position',[325 410 300 150]);
-ListBiom2 = uicontrol(hp2,'Units', 'pixels','style','listbox','Max',1,'Units', 'pixels','Position',[5 5 290 130],'fontsize',8,'String',G(1).biomarkerslist);
+ListBiom2 = uicontrol(hp2,'Units', 'pixels','style','listbox','Max',1,'Units', 'pixels','Position',[5 5 290 130],'fontsize',8,'String',StatObj.getBiomarkerNames);
 % tests
 hp3 = uipanel(StatSelection,'Title','Select Biomarker to compare','FontSize',8,'Units','pixels','Position',[5 410 300 150]);
-ListBiom1 = uicontrol(hp3,'Units', 'pixels','style','listbox','Max',1,'Units', 'pixels','Position',[5 5 290 130],'fontsize',8,'String',G(1).biomarkerslist);
+ListBiom1 = uicontrol(hp3,'Units', 'pixels','style','listbox','Max',1,'Units', 'pixels','Position',[5 5 290 130],'fontsize',8,'String',StatObj.getBiomarkerNames);
 % select Group
-for i = 1:length(G)
-    gname = G(i).fileslist(1).group_name;
+for i = 1:length(NBTstudy.groups)
+    gname = NBTstudy.groups{i}.groupName;
     groupList{i} = ['Group ' num2str(i) ' : ' gname];    
 end
 
