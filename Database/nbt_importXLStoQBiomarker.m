@@ -1,32 +1,36 @@
-function QBiomarker = nbt_importXLStoQBiomarker(fileName, SubjectColumn)
+function nbt_importXLStoQBiomarker(startpath,XLSfileName, subjectIDcolumn)
 
 %First we load the xls file
-[dummy, dummy, raw] = xlsread(fileName);
+[dummy, dummy, rawXLS] = xlsread(XLSfileName);
 
+%generate SubjectID index
+ii = 1;
+SubjectIDList = cell(size(rawXLS,1)-1,1);
+for i=2:size(rawXLS,1)
+    SubjectIDList{ii} = rawXLS{i,subjectIDcolumn};
+    ii = ii+1;
+end
+% Index of columns to add
+QIndex = nbt_negSearchVector(1:size(rawXLS,2),subjectIDcolumn);
+
+%loop innerLoop
+nbt_fileLooper(startpath,'.mat', 'analysis', @innerLoop, 0, 0)
 
 %% nested function
 function innerLoop(fileName)
-
-QBiomarker = nbt_ARSQ(size(raw,2)-1);
+bvalBiomarker = nbt_bval(size(rawXLS,2)-1);
 
 %% Match subject with xls
-% Generate subject list
-SubjectList = cell(size(raw,1)-1,1);
-for i=2:size(raw,1)
-    SubjectList{i,1} = raw{i,SubjectColumn};
-end
-if(ischar(SignalInfo.subjectID))
-    SubjectIndex = find(strcmp(SubjectList, SignalInfo.subjectID));
-else
-    SubjectIndex = find(SubjectList == SignalInfo.subjectID);
-end
-QIndex = nbt_negSearchVector(1:size(raw,2),SubjectColumn);
-%% Insert 'questions' and Answers
+fileNameID = nbt_extractFilename(fileName);
+subjectIndex = nbt_searchvector(SubjectIDList,{fileNameID})+1;
+
+%% Insert 'parameters' and values
 for m=1:length(QIndex)
-    QBiomarker.Questions{m,1} = raw{1,QIndex(m)};
-    QBiomarker.Answers(m) = raw{SubjectIndex,QIndex(m)};
+    bvalBiomarker.parameter{m,1} = rawXLS{1,QIndex(m)};
+    bvalBiomarker.values(m) = rawXLS{subjectIndex,QIndex(m)};
 end
-
+bvalBiomarker.qVersion = nbt_getHash(bvalBiomarker.parameter);
+bvalBiomarker=nbt_UpdateBiomarkerInfo(bvalBiomarker, [fileNameID '_info']);
+save(fileName,'bvalBiomarker','-append');
 end
-
 end
