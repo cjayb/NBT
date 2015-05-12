@@ -70,11 +70,11 @@ S = S.calculate(NBTstudy);
 
 NBTstudy.statAnalysis{length(NBTstudy.statAnalysis)+1} = S;
 disp('Statistics done.')
-if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot') && ~strcmp(class(S),'nbt_ttest')
+if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot') && ~strcmp(class(S),'nbt_comparebiomarkers') % && ~strcmp(class(S),'nbt_ttest')
     nbt_plot_2conditions_topoAll(S)
 end
 
-if strcmp(class(S),'nbt_ttest')&& strcmp(bioms_name{bioms_ind},'NBTe_nbt_rsq.Answers')
+if strcmp(class(S),'nbt_ttest')&& ismember('rsq.Answers',S.getBiomarkerNames)
     nbt_pvaluesmatrix(S)
 end
 

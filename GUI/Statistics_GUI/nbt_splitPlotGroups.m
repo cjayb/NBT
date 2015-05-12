@@ -1,4 +1,4 @@
-function nbt_splitPlotGroups(d1,d2,ListSplit,ListSplitValue,ListBiom1, ListBiom2, ListRegion, ListGroup,G)
+function nbt_splitPlotGroups(d1,d2,ListSplit,ListSplitValue,ListBiom1, ListBiom2, ListRegion, ListGroup, StatObj)
 global Factors
 global Questionnaire
 splt = get(ListSplit,'Value');
