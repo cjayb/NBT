@@ -1,63 +1,3 @@
-%  nbt_plot_2conditions_topoALL - plots an overview of all selected biomarkers - topoplot for statistics with two groups or conditions
-%
-% Usage:
-% nbt_plot_2conditions_topoALL(Group1,Group2,chanloc,s,unit,biomarker,regions)
-%
-% Inputs:
-%   Group1,
-%   Group2,
-%   chanloc,
-%   s,
-%   unit,
-%   biomarker,
-%   regions
-%
-% Outputs:
-%
-%
-% Example:
-%
-%
-% References:
-%
-% See also:
-%  nbt_plot_EEG_channels, nbt_plot_stat
-
-%------------------------------------------------------------------------------------
-% Originally created by Simon-Shlomo Poil (2011), see NBT website for current email address
-%------------------------------------------------------------------------------------
-%
-% ChangeLog - see version control log at NBT website for details.
-%
-%
-% Copyright (C) 2011  Simon-Shlomo Poil  (Neuronal Oscillations and Cognition group,
-% Department of Integrative Neurophysiology, Center for Neurogenomics and Cognitive Research,
-% Neuroscience Campus Amsterdam, VU University Amsterdam)
-%
-% This program is free software; you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation; either version 3 of the License, or
-% (at your option) any later version.
-%
-% This program is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program; if not, write to the Free Software
-% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-%
-% See Readme.txt for additional copyright information.
-% -------------------------------------------------------------------------
-% ---------------------------------------------------------------------------------------
-
-% Todo:
-% 1. Fix cmin and cmax
-% 2. Combine topoplot functions?
-% 3. Fix visualization
-% 4. Fix title for each biomarker
-
 function nbt_plot_2conditions_topoAll(StatObj,biomarkersToPlot)
 narginchk(1,2);
 global NBTstudy
@@ -65,7 +5,6 @@ global NBTstudy
 Group1 = NBTstudy.groups{StatObj.groups(1)};
 Group2 = NBTstudy.groups{StatObj.groups(2)};
 
-<<<<<<< HEAD
 %%% Group names
 nameGroup1 = Group1.groupName;
 nameGroup2 = Group2.groupName;
@@ -73,67 +12,11 @@ nameGroup2 = Group2.groupName;
 %%% Get Biomarker names
 biomarkerNames = StatObj.getBiomarkerNames;
 
-=======
-    %%% Get data for both groups
-    DataGroup1 = getData(Group1,StatObj);
-    DataGroup2 = getData(Group2,StatObj);
-    
-    %%% Group sample sizes
-    nSubjectsGroup1 = DataGroup1.numSubjects;
-    nSubjectsGroup2 = DataGroup2.numSubjects;
-    
- 
-    %%% Get the channel locations from one of the two groups
-    chanLocs = Group1.chanLocs;
-    
-    % For all biomarkers, plot the topoplots
-    if(~exist('biomarkersToPlot','var'))
-        biomarkersToPlot = 1:DataGroup1.numBiomarkers;
-    end
-    nBioms = length(biomarkersToPlot);
-    biomIdx = 0;
-    
-    for biomID = biomarkersToPlot
-        biomIdx = biomIdx +1;
-        %%% Values for all channels for selected biomarker
-        chanValuesGroup1 = DataGroup1{biomID,1};
-        chanValuesGroup2 = DataGroup2{biomID,1};
-
-        %%% Group means
-        meanGroup1 = StatObj.groupStatHandle(chanValuesGroup1');
-        meanGroup2 = StatObj.groupStatHandle(chanValuesGroup2');
-        
-        %%% Check whether the statistics test is paired or unpaired
-        if (isa(StatObj, 'nbt_PairedStat'))
-            statType = 'paired';
-            if (size(chanValuesGroup1) ~= size(chanValuesGroup2))
-                warning('Different amount of channels for Group 1 and Group 2');
-                else %%% este else fica
-                    diffGrp2Grp1 = StatObj.groupStatHandle((chanValuesGroup2 - chanValuesGroup1)');
-            end
-             else
-           statType = 'unpaired';
-           diffGrp2Grp1 = meanGroup2 - meanGroup1;
-        end
-
-        %%% pValues - corrected for multiple comparision
-        pValues = StatObj.pValues{biomID};
-        [~, pValues] = nbt_MCcorrect(pValues, NBTstudy.settings.visual.mcpCorrection);
-   
-        
-        %%% Properties for plotting
-        % Set the range [cmin cmax] for the colorbars later on
-        vmax=max([meanGroup1 meanGroup2]);
-        vmin=min([meanGroup1 meanGroup2]);
-        cmax = max(vmax);
-        cmin = min(vmin);
->>>>>>> 29a648f02f52954cb9099ac5bc2cc08e3c0a403a
 
 %%% Get data for both groups
 DataGroup1 = getData(Group1,StatObj);
 DataGroup2 = getData(Group2,StatObj);
 
-<<<<<<< HEAD
 %%% Group sample sizes
 nSubjectsGroup1 = DataGroup1.numSubjects;
 nSubjectsGroup2 = DataGroup2.numSubjects;
@@ -141,43 +24,18 @@ nSubjectsGroup2 = DataGroup2.numSubjects;
 
 %%% Get the channel locations from one of the two groups
 chanLocs = Group1.chanLocs;
-=======
-        % Number of contours on the colorbars
-        NumberOfContours = 6;
-        levs = linspace(cmin, cmax, NumberOfContours + 2);
-        MinLevelIndex1 = find(levs > min(meanGroup1),1,'first');
-        MinLevelIndex2 = find(levs > min(meanGroup2),1,'first');
-        NumberOfContours1 = 6-(MinLevelIndex1-1);
-        NumberOfContours2 = 6-(MinLevelIndex2-1);
-        
-        %%% Plot the subplots
-        %%% Subplot for grand average of group 1
-        subplot(4, nBioms, biomIdx);
-        text(0,0.7,biomarkerNames{biomID},'horizontalalignment','center','fontWeight','bold');
-        plotGrandAvgTopo(1,meanGroup1,biomIdx,statType);
-        cbfreeze
-        freezeColors
-
-        %%% Subplot for grand average of group 2
-        subplot(4, nBioms, biomIdx+nBioms);
-        plotGrandAvgTopo(2,meanGroup2,biomIdx,statType);
-        cbfreeze
-        freezeColors
-
-        %%% Subplot for grand average difference group 2 minus group 1
-        subplot(4, nBioms, biomIdx+2*nBioms);
-        plotGrandAvgDiffTopo(biomIdx);
-        cbfreeze
-        freezeColors
->>>>>>> 29a648f02f52954cb9099ac5bc2cc08e3c0a403a
 
 % For all biomarkers, plot the topoplots
-nBioms = DataGroup1.numBiomarkers;
+if(~exist('biomarkersToPlot','var'))
+    biomarkersToPlot = 1:DataGroup1.numBiomarkers;
+end
+nBioms = length(biomarkersToPlot);
+biomIdx = 0;
 
 q = input('Specify the desired false discovery rate: (default = 0.05) ');
 
-<<<<<<< HEAD
-for biomID = 1:nBioms
+for biomID = biomarkersToPlot
+    biomIdx = biomIdx +1;
     %%% Values for all channels for selected biomarker
     chanValuesGroup1 = DataGroup1{biomID,1};
     chanValuesGroup2 = DataGroup2{biomID,1};
@@ -197,18 +55,11 @@ for biomID = 1:nBioms
     else
         statType = 'unpaired';
         diffGrp2Grp1 = meanGroup2 - meanGroup1;
-=======
-        subplot(4, nBioms, biomIdx+3*nBioms);
-        plot_pTopo(biomIdx);
-        
-        cbfreeze;
-        drawnow;
->>>>>>> 29a648f02f52954cb9099ac5bc2cc08e3c0a403a
     end
     
     %%% pValues - corrected for multiple comparision
-    pValues = StatObj.pValues(:,biomID);
-    [~, pValues] = nbt_MCcorrect(pValues{1}, NBTstudy.settings.visual.mcpCorrection, q);
+    pValues = StatObj.pValues{biomID};
+    [~, pValues] = nbt_MCcorrect(pValues, NBTstudy.settings.visual.mcpCorrection, q);
     
     
     %%% Properties for plotting
@@ -233,21 +84,21 @@ for biomID = 1:nBioms
     
     %%% Plot the subplots
     %%% Subplot for grand average of group 1
-    subplot(4, nBioms, biomID);
+    subplot(4, nBioms, biomIdx);
     text(0,0.7,biomarkerNames{biomID},'horizontalalignment','center','fontWeight','bold');
-    plotGrandAvgTopo(1,meanGroup1,biomID,statType);
+    plotGrandAvgTopo(1,meanGroup1,biomIdx,statType);
     cbfreeze
     freezeColors
     
     %%% Subplot for grand average of group 2
-    subplot(4, nBioms, biomID+nBioms);
-    plotGrandAvgTopo(2,meanGroup2,biomID,statType);
+    subplot(4, nBioms, biomIdx+nBioms);
+    plotGrandAvgTopo(2,meanGroup2,biomIdx,statType);
     cbfreeze
     freezeColors
     
     %%% Subplot for grand average difference group 2 minus group 1
-    subplot(4, nBioms, biomID+2*nBioms);
-    plotGrandAvgDiffTopo(biomID);
+    subplot(4, nBioms, biomIdx+2*nBioms);
+    plotGrandAvgDiffTopo(biomIdx);
     cbfreeze
     freezeColors
     
@@ -268,8 +119,8 @@ for biomID = 1:nBioms
     pLog(pLog<minPValue) = minPValue;
     pLog(pLog> maxPValue) = maxPValue;
     
-    subplot(4, nBioms, biomID+3*nBioms);
-    plot_pTopo(biomID);
+    subplot(4, nBioms, biomIdx+3*nBioms);
+    plot_pTopo(biomIdx);
     
     cbfreeze;
     drawnow;
