@@ -1,7 +1,12 @@
-function QBiomarker = nbt_importXLStoQBiomarker(fileName, SubjectColumn, SignalInfo)
+function QBiomarker = nbt_importXLStoQBiomarker(fileName, SubjectColumn)
 
 %First we load the xls file
 [dummy, dummy, raw] = xlsread(fileName);
+
+
+%% nested function
+function innerLoop(fileName)
+
 QBiomarker = nbt_ARSQ(size(raw,2)-1);
 
 %% Match subject with xls
@@ -20,6 +25,8 @@ QIndex = nbt_negSearchVector(1:size(raw,2),SubjectColumn);
 for m=1:length(QIndex)
     QBiomarker.Questions{m,1} = raw{1,QIndex(m)};
     QBiomarker.Answers(m) = raw{SubjectIndex,QIndex(m)};
+end
+
 end
 
 end

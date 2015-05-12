@@ -141,9 +141,7 @@ function  DataObj = getData(GrpObj,StatObj)
                [DataObj.subjectList{bID,1}] = evalin('base', 'constant{nbt_searchvector(constant , {''Subject''}),2};');
 
             end
-            
-            DataObj.subjectList{bID,1} = unique(DataObj.subjectList{bID,1});
-            
+
             if (ChansOrRegs == 2) % regions
                 n_chans = size(GrpObj.chanLocs,2);
                 regions = GrpObj.listRegData;

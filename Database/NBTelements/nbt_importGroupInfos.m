@@ -210,8 +210,8 @@ for i=1:length(FileList)
             
             %Add biomarker Info
             eval([NBTelementName '.Biomarkers = ' BiomarkerList{m} '.biomarkers;'])
-            eval([NBTelementName '.BiomarkerType = ' BiomarkerList{m} '.biomarkerType'])        
-            eval([NBTelementName '.BiomarkerUnit = ' BiomarkerList{m} '.units'])         
+            eval([NBTelementName '.BiomarkerType = ' BiomarkerList{m} '.biomarkerType;'])        
+            eval([NBTelementName '.BiomarkerUnit = ' BiomarkerList{m} '.units;'])         
         end
     end
 end

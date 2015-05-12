@@ -39,20 +39,24 @@ function nbt_importSubjectInfo(infoPath, XLSfilename, subjectIDcolumn, importPar
 [dummy,dummy,rawXLS] = xlsread(XLSfilename);
 %generate SubjectID index
 ii = 1;
-SubjectIDList = nan(size(rawXLS,1)-1,1);
+SubjectIDList = cell(size(rawXLS,1)-1,1);
 for i=2:size(rawXLS,1)
-    SubjectIDList(ii) = rawXLS{i,subjectIDcolumn};
-    ii= ii+1;
+    SubjectIDList{ii} = rawXLS{i,subjectIDcolumn};
+    ii = ii+1;
 end
 subjectsMissing = [];
 subjectsAdded = [];
 
 fileTree = nbt_ExtractTree(infoPath, 'mat', 'info');
+fileNames = cellfun(@nbt_extractFilename,fileTree,'UniformOutput',false);
+%Identify the matching file to each subjectIndex
+
+
 for m = 1:length(fileTree)
     clear SubjectInfo
     disp(['Importing subject info from ' fileTree{1,m} ])
-    load(fileTree{1,m},'SubjectInfo')
-    subjectIndex = find(SubjectIDList == SubjectInfo.subjectID)+1;
+    load(fileTree{m},'SubjectInfo')
+    subjectIndex = nbt_searchvector(SubjectIDList,{fileNames{m}})+1;
     if (length(subjectIndex) ~=1)
        subjectsMissing = [subjectsMissing; SubjectInfo.subjectID];
        disp('Subject not found or subject numbers not correct, in:') 
@@ -66,7 +70,7 @@ for m = 1:length(fileTree)
             SubjectInfo.info.(importParameters{ip,1}) = rawXLS{subjectIndex,importParameters{ip,2}};
         end
     end
-    save(fileTree{1,m},'SubjectInfo','-append')
+    save(fileTree{m},'SubjectInfo','-append')
 end
 disp('Following subjects were missing or do not have consistent IDs')
 disp(unique(subjectsMissing));

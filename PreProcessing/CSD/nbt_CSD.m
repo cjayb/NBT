@@ -70,9 +70,10 @@ function [CSDSignal, CSDSignalInfo] = nbt_CSD(Signal,SignalInfo)
     
     %%% CSD parameters
     %%% Spline flexibility, smoothingConstant and headRadius
-    splineFlexibility = 4;          % (default = 4)
-    smoothingConstant = 1.0e-5;     %(default = 1.0e-5)
-    headRadius = 1.0;
+    %%% Get the channel information
+    splineFlexibility = 3;
+    smoothingConstant = 1e-5;
+    headRadius = 1;
     
     tic
     %%% Compute G and H using CSD toolbox 'GetGH.m'
