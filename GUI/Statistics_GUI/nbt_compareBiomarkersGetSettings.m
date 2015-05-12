@@ -1,7 +1,10 @@
-function nbt_compareBiomarkersGetSettings(d1,d2,ListBiom1, ListBiom2, ListRegion, ListGroup,ListTest,ListDisplay,ListSplit,ListSplitValue,G)
+function nbt_compareBiomarkersGetSettings(d1,d2,ListBiom1, ListBiom2, ListRegion, ListGroup,ListTest,ListDisplay,ListSplit,ListSplitValue,StatObj)
 disp('Computing biomarkers comparison ...')
+global NBTstudy
 global Questionnaire
 global Factors
+
+bioms_name = get(findobj('Tag','ListBiomarker'),'String');
 
 % --- get statistics test (one)
 bioms_ind1 = get(ListBiom1,'Value');
@@ -29,16 +32,33 @@ display_ind = get(ListDisplay,'Value');
 splitType = get(ListSplit,'Value');
 splitValue = str2num(get(ListSplitValue,'String'));
 
+% statTestList = NBTstudy.getStatisticsTests(0);
+% statTestIdx = 24;
+% S = NBTstudy.getStatisticsTests(statTestIdx);
+
+StatObj.groups = group_ind;
+
+bioms_ind = [bioms_ind1 bioms_ind2];
+
+StatObj.channelsRegionsSwitch  = regs_or_chans_index;
+
+for gp = 1:length(StatObj.groups)
+    for i = 1:length(bioms_ind)
+        [StatObj.group{gp}.biomarkers{i}, StatObj.group{gp}.biomarkerIdentifiers{i}, StatObj.group{gp}.subBiomarkers{i}, StatObj.group{gp}.classes{i}, StatObj.group{gp}.units{i}] = nbt_parseBiomarkerIdentifiers(bioms_name{bioms_ind(i)});
+    end
+end
+
+
 group_diffexist = 0;
 
 if length(group_ind) == 1
-    [B_values1,B_values2, bioms1,bioms2, Group] = getCompareBiomarkerData(G,bioms_name1,bioms_name2,group_ind);
+    [B_values1,B_values2, bioms1,bioms2, Group] = getCompareBiomarkerData(bioms_name1,bioms_name2,group_ind,StatObj);
     
 else
-    [B_values1,B_values2, bioms1,bioms2, Grop1,Grop2] = getCompareBiomarkerData(G,bioms_name1,bioms_name2,group_ind);
+    [B_values1,B_values2, bioms1,bioms2, Group1,Group2] = getCompareBiomarkerData(bioms_name1,bioms_name2,group_ind,StatObj);
 end
 
-[B_values1, B_values2] = getCompareBiomarkerRegions(G,regs_or_chans_name,bioms_name1,bioms_name2,B_values1,B_values2,group_ind);
+[B_values1, B_values2] = getCompareBiomarkerRegions(regs_or_chans_name,bioms_name1,bioms_name2,B_values1,B_values2,group_ind,StatObj);
 
 
 
@@ -600,16 +620,18 @@ end
 end
 
 %%
-function [B_values1,B_values2, bioms1,bioms2, Grop1,Grop2] = getCompareBiomarkerData(G,bioms_name1,bioms_name2,group_ind)
+function [B_values1,B_values2, bioms1,bioms2, Group1,Group2] = getCompareBiomarkerData(bioms_name1,bioms_name2,group_ind,StatObj)
 %need-group_ind, Group
 %returns - B_values1,2, bioms1,2, Group or Grop1,Grop2
 %%  If more than one group then has to be paired and make sure that
 %  both have the same subjects.
+global NBTstudy
+
 if length(group_ind) == 1
     
-    Group = G(group_ind);
+    Group = NBTstudy.groups{group_ind};
     Grop1 = Group;
-    if ~isempty(Group.group_difference)
+    if ~isempty(Group.groupDifference) % strcmp(Group.groupType,'difference')
         group_diffexist = 1;
         path = Group.fileslist.path;
         n_files = length(Group.fileslist);
@@ -660,102 +682,130 @@ if length(group_ind) == 1
     end
     
 elseif length(group_ind) == 2
-    Grop1 = G(group_ind(1));
-    Grop2 = G(group_ind(2));
+    
+    Group1 = NBTstudy.groups{group_ind(1)};
+    Group2 = NBTstudy.groups{group_ind(2)};
     bioms1 = bioms_name1;
     bioms2 = bioms_name2;
     
-    if ~isempty(Grop1.group_difference)
-        
-        path = Grop1.fileslist.path;
-        n_files = length(Grop1.fileslist);
-        [B_values_cell1,Sub,Proj,unit] = nbt_checkif_groupdiff(Grop1,G,n_files,bioms_name1,path);
-        [B_values_cell2,Sub,Proj,unit] = nbt_checkif_groupdiff(Grop1,G,n_files,bioms_name2,path);
-        
-        NCHANNELS = length(Grop1.chansregs.chanloc);
-        [dimens_diff1,biomPerChans1,IndexbiomNotPerChans1] = nbt_dimension_check(B_values_cell1,NCHANNELS);
-        
-        [dimens_diff2,biomPerChans2,IndexbiomNotPerChans2] = nbt_dimension_check(B_values_cell2,NCHANNELS);
-        if ~isempty(biomPerChans1)
-            B1_values1 = nbt_extractBiomPerChans(biomPerChans1,B_values_cell1);
-        else
-            dimBio = IndexbiomNotPerChans1{1};
-            B1_values1 = nbt_extractBiomNotPerChans(dimBio,B_values_cell1);
-        end
-        
-        if ~isempty(biomPerChans2)
-            B1_values2 = nbt_extractBiomPerChans(biomPerChans2,B_values_cell2);
-        else
-            
-            dimBio = IndexbiomNotPerChans2{1};
-            B1_values2 = nbt_extractBiomNotPerChans(dimBio,B_values_cell2);
-        end
-        
-    else
+%     if ~isempty(Group1.groupDifference) % strcmp(Group1.groupType,'difference')
+%         
+%         path = Grop1.fileslist.path;
+%         n_files = length(Grop1.fileslist);
+%         [B_values_cell1,Sub,Proj,unit] = nbt_checkif_groupdiff(Grop1,G,n_files,bioms_name1,path);
+%         [B_values_cell2,Sub,Proj,unit] = nbt_checkif_groupdiff(Grop1,G,n_files,bioms_name2,path);
+%         
+%         NCHANNELS = length(Grop1.chansregs.chanloc);
+%         [dimens_diff1,biomPerChans1,IndexbiomNotPerChans1] = nbt_dimension_check(B_values_cell1,NCHANNELS);
+%         
+%         [dimens_diff2,biomPerChans2,IndexbiomNotPerChans2] = nbt_dimension_check(B_values_cell2,NCHANNELS);
+%         if ~isempty(biomPerChans1)
+%             B1_values1 = nbt_extractBiomPerChans(biomPerChans1,B_values_cell1);
+%         else
+%             dimBio = IndexbiomNotPerChans1{1};
+%             B1_values1 = nbt_extractBiomNotPerChans(dimBio,B_values_cell1);
+%         end
+%         
+%         if ~isempty(biomPerChans2)
+%             B1_values2 = nbt_extractBiomPerChans(biomPerChans2,B_values_cell2);
+%         else
+%             
+%             dimBio = IndexbiomNotPerChans2{1};
+%             B1_values2 = nbt_extractBiomNotPerChans(dimBio,B_values_cell2);
+%         end
+%         
+%     else
         bioms1 = bioms_name1;
-        nameG1 = Grop1.fileslist.group_name;
-        path1 = Grop1.fileslist.path;
-        n_files1 = length(Grop1.fileslist);
+        nameG1 = Group1.groupName;
         % load biomarkers
-        for j = 1:n_files1 % subject
-            for l = 1:length(bioms2) % biomarker
-                namefile = Grop1.fileslist(j).name;
-                biomarker1 = bioms1{1};
-                biomarker2 = bioms2{l};
-                [B1_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path1,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
-                [B1_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path1,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
-                
-            end
+        
+%         obj = nbt_PairedStat();
+%         obj.group{1} = Group1;
+%         obj.group{2} = Group2;
+%         obj.groups = get(findobj('Tag', 'ListGroup'),'Value');
+
+        StudyObj = NBTstudy;
+        
+        Data1 = StudyObj.groups{StatObj.groups(group_ind(1))}.getData(StatObj); %with parameters);
+        
+        G1B1 = Data1.dataStore{1}; 
+        G1B2 = Data1.dataStore{2};
+        for j=1:size(Data1.dataStore{1})
+            B1_values1(:,j) = G1B1{j};
+            B1_values2(:,j) = G1B2{j};
         end
         
+             
+%         for j = 1:n_files1 % subject
+%             for l = 1:length(bioms2) % biomarker
+%                 namefile = Grop1.fileslist(j).name;
+%                 biomarker1 = bioms1{1};
+%                 biomarker2 = bioms2{l};
+%                 [B1_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path1,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
+%                 [B1_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path1,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
+%                 
+%             end
+%         end
         
-    end
-    
-    if ~isempty(Grop2.group_difference)
-        bioms1 = bioms_name1;
+        
+%     end
+%     
+%     if ~isempty(Grop2.group_difference)
+%         bioms1 = bioms_name1;
+%         bioms2 = bioms_name2;
+%         
+%         path = Grop2.fileslist.path;
+%         n_files = length(Grop2.fileslist);
+%         [B_values_cell1,Sub,Proj,unit] = nbt_checkif_groupdiff(Grop2,G,n_files,bioms_name1,path);
+%         [B_values_cell2,Sub,Proj,unit] = nbt_checkif_groupdiff(Grop2,G,n_files,bioms_name2,path);
+%         
+%         NCHANNELS = length(Grop2.chansregs.chanloc);
+%         [dimens_diff1,biomPerChans1,IndexbiomNotPerChans1] = nbt_dimension_check(B_values_cell1,NCHANNELS);
+%         
+%         [dimens_diff2,biomPerChans2,IndexbiomNotPerChans2] = nbt_dimension_check(B_values_cell2,NCHANNELS);
+%         if ~isempty(biomPerChans1)
+%             B2_values1 = nbt_extractBiomPerChans(biomPerChans1,B_values_cell1);
+%         else
+%             dimBio = IndexbiomNotPerChans1{1};
+%             B2_values1 = nbt_extractBiomNotPerChans(dimBio,B_values_cell1);
+%         end
+%         
+%         if ~isempty(biomPerChans2)
+%             B2_values2 = nbt_extractBiomPerChans(biomPerChans2,B_values_cell2);
+%         else
+%             
+%             dimBio = IndexbiomNotPerChans2{1};
+%             B2_values2 = nbt_extractBiomNotPerChans(dimBio,B_values_cell2);
+%         end
+%         
+%     else
         bioms2 = bioms_name2;
+        nameG2 = Group2.groupName;
         
-        path = Grop2.fileslist.path;
-        n_files = length(Grop2.fileslist);
-        [B_values_cell1,Sub,Proj,unit] = nbt_checkif_groupdiff(Grop2,G,n_files,bioms_name1,path);
-        [B_values_cell2,Sub,Proj,unit] = nbt_checkif_groupdiff(Grop2,G,n_files,bioms_name2,path);
+        Data2 = StudyObj.groups{StatObj.groups(group_ind(2))}.getData(StatObj); %with parameters);
         
-        NCHANNELS = length(Grop2.chansregs.chanloc);
-        [dimens_diff1,biomPerChans1,IndexbiomNotPerChans1] = nbt_dimension_check(B_values_cell1,NCHANNELS);
-        
-        [dimens_diff2,biomPerChans2,IndexbiomNotPerChans2] = nbt_dimension_check(B_values_cell2,NCHANNELS);
-        if ~isempty(biomPerChans1)
-            B2_values1 = nbt_extractBiomPerChans(biomPerChans1,B_values_cell1);
-        else
-            dimBio = IndexbiomNotPerChans1{1};
-            B2_values1 = nbt_extractBiomNotPerChans(dimBio,B_values_cell1);
+        G2B1 = Data2.dataStore{1}; 
+        G2B2 = Data2.dataStore{2};
+        for j=1:size(Data2.dataStore{1})
+            B2_values1(:,j) = G2B1{j};
+            B2_values2(:,j) = G2B2{j};
         end
         
-        if ~isempty(biomPerChans2)
-            B2_values2 = nbt_extractBiomPerChans(biomPerChans2,B_values_cell2);
-        else
-            
-            dimBio = IndexbiomNotPerChans2{1};
-            B2_values2 = nbt_extractBiomNotPerChans(dimBio,B_values_cell2);
-        end
-        
-    else
-        bioms2 = bioms_name2;
-        nameG2 = Grop2.fileslist.group_name;
-        path2 = Grop2.fileslist.path;
-        n_files2 = length(Grop2.fileslist);
-        for j = 1:n_files2 % subject
-            for l = 1:length(bioms2) % biomarker
-                namefile = Grop2.fileslist(j).name;
-                biomarker1 = bioms1{1};
-                biomarker2 = bioms2{l};
-                [B2_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path2,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
-                [B2_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path2,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
-            end
-        end
+               
+%         path2 = Grop2.fileslist.path;
+%         n_files2 = length(Grop2.fileslist);
+%         for j = 1:n_files2 % subject
+%             for l = 1:length(bioms2) % biomarker
+%                 namefile = Grop2.fileslist(j).name;
+%                 biomarker1 = bioms1{1};
+%                 biomarker2 = bioms2{l};
+%                 [B2_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path2,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
+%                 [B2_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path2,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
+%             end
+%         end
         
         
-    end
+%     end
     B_values1 = B1_values1-B2_values1;
     B_values2 = B1_values2-B2_values2;
     
@@ -763,7 +813,7 @@ end
 
 end
 %%
-function [B_values1, B_values2] = getCompareBiomarkerRegions(G,regs_or_chans_name,bioms_name1,bioms_name2,B_values1,B_values2,group_ind)
+function [B_values1, B_values2] = getCompareBiomarkerRegions(regs_or_chans_name,bioms_name1,bioms_name2,B_values1,B_values2,group_ind,StatObj)
 
 if strcmp(regs_or_chans_name,'Regions')
     if isempty(strfind(bioms_name1{1},'Answers'))
