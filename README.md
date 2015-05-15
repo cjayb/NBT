@@ -20,6 +20,9 @@ If you want to contribute to NBT then please see here: http://www.nbtwiki.net/do
 NBT is developed on two core branches:
  * release - the stable branch (use this branch if you are not an expert user). 
  * master  - the development branch, please target your contributions to this branch. 
+
+# Outsource your EEG Analysis
+Outsource part of your EEG Analysis to the team behind the Neurophysiological Biomarker Toolbox (NBT). We can provide you with processing of your EEG data from raw recordings to final results. Alternatively, you perform part of the analysis with the NBT toolbox, and contract us for hotline support or for programming additional functionalities. Read more at: https://www.nbt-analytics.com/doku.php?id=nbtanalytics:outsource
  
  
  
