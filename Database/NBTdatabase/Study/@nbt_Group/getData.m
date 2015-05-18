@@ -142,20 +142,22 @@ function  DataObj = getData(GrpObj,StatObj)
 
             end
 
-            if (ChansOrRegs == 2) % regions
-                n_chans = size(GrpObj.chanLocs,2);
-                regions = GrpObj.listRegData;
-                DataMat = DataObj{bID,1}; % n_chans x n_subjects
-                RegData = [];
-                for j=1:length(regions)
-                    RegData = [RegData; nanmean(DataMat(regions(j).reg.channel_nr,:),1)];    
+            if ~strcmp(DataObj.classes{bID},'nbt_QBiomarker')
+                if (ChansOrRegs == 2) % regions
+                    n_chans = size(GrpObj.chanLocs,2);
+                    regions = GrpObj.listRegData;
+                    DataMat = DataObj{bID,1}; % n_chans x n_subjects
+                    RegData = [];
+                    for j=1:length(regions)
+                        RegData = [RegData; nanmean(DataMat(regions(j).reg.channel_nr,:),1)];    
+                    end
+                    n_subjects = size(RegData,2);
+                    Regs = cell(n_subjects,1);
+                    for k=1:n_subjects
+                        Regs{k} = RegData(:,k);
+                    end
+                    DataObj.dataStore{bID} = Regs;
                 end
-                n_subjects = size(RegData,2);
-                Regs = cell(n_subjects,1);
-                for k=1:n_subjects
-                    Regs{k} = RegData(:,k);
-                end
-                DataObj.dataStore{bID} = Regs;
             end
                 
     end

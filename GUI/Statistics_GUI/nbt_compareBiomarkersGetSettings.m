@@ -4,6 +4,11 @@ global NBTstudy
 global Questionnaire
 global Factors
 
+load Questions
+
+load ARSQfactors
+ARSQfactors.arsqLabels = Questions;
+
 bioms_name = get(findobj('Tag','ListBiomarker'),'String');
 
 % --- get statistics test (one)
@@ -58,7 +63,7 @@ else
     [B_values1,B_values2, bioms1,bioms2, Group1,Group2] = getCompareBiomarkerData(bioms_name1,bioms_name2,group_ind,StatObj);
 end
 
-[B_values1, B_values2] = getCompareBiomarkerRegions(regs_or_chans_name,bioms_name1,bioms_name2,B_values1,B_values2,group_ind,StatObj);
+%[B_values1, B_values2] = getCompareBiomarkerRegions(regs_or_chans_name,bioms_name1,bioms_name2,B_values1,B_values2,group_ind,StatObj);
 
 
 
@@ -172,7 +177,8 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
     if isempty(strfind(bioms_name1{1},'Answers'))
         for j = 1: size(B_values1,1)
             if strcmp(regs_or_chans_name,'Regions')
-                umenu = text(size(B_values2,1)+1,j,[num2str(j) '. ' G(1).chansregs.listregdata(j).reg.name],'horizontalalignment','left','fontsize',8,'interpreter','none','rotation',-30);
+                reg = NBTstudy.groups{1}.listRegData;
+                umenu = text(size(B_values2,1)+1,j,[num2str(j) '. ' reg(j).reg.name],'horizontalalignment','left','fontsize',8,'interpreter','none','rotation',-30);
             else
                 umenu = text(size(B_values2,1)+1,j,['Channel '  num2str(j)],'horizontalalignment','left','fontsize',8,'rotation',-30);
             end
@@ -186,11 +192,11 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
             
             
             if isempty(strfind(bioms_name1{1},'Factors'));
-                varQuest = Questionnaire;
-                umenu = text(size(B_values2,1)+1,j,[varQuest.Questions{j} ' ' num2str(j)],'horizontalalignment','left','fontsize',8,'rotation',-90);
+                varQuest = ARSQfactors;
+                umenu = text(size(B_values2,1)+1,j,[varQuest.arsqLabels{j} ' ' num2str(j)],'horizontalalignment','left','fontsize',8,'rotation',-90);
             else
-                varQuest = Factors;
-                umenu = text(size(B_values2,1)+1,j,[varQuest.Questions{j} ' ' num2str(j)],'horizontalalignment','left','fontsize',8,'rotation',-90);
+                varQuest = ARSQfactors;
+                umenu = text(size(B_values2,1)+1,j,[varQuest.factorLabels{j} ' ' num2str(j)],'horizontalalignment','left','fontsize',8,'rotation',-90);
             end
             set(umenu,'uicontextmenu',hh);
         end
@@ -204,19 +210,20 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
     set(cbh,'Position',[pos(1)-0.5*pos(1) pos(2)-0.6*pos(2) 0.1 0.03])
     for j = 1: size(B_values2,1)
         if ~isempty(strfind(bioms_name2{1},'Answers'))
-            if isempty(strfind(bioms_name2{1},'Factors'));
-                varQuest = Questionnaire;
+            if isempty(strfind(bioms_name2{1},'Factors'));                
+                varQuest = ARSQfactors;
                 limx = get(gca,'xlim');
-                umenu = text(j,limx(1),[varQuest.Questions{j} ' ' num2str(j)],'horizontalalignment','right','fontsize',8);
+                umenu = text(j,limx(1),[varQuest.arsqLabels{j} ' ' num2str(j)],'horizontalalignment','right','fontsize',8);
             else
-                 varQuest = Factors;
+                 varQuest = ARSQfactors;
                  limx = get(gca,'xlim');
-                umenu = text(j,limx(1),[varQuest.Questions{j} ' ' num2str(j)],'horizontalalignment','right','fontsize',8);
+                umenu = text(j,limx(1),[varQuest.factorLabels{j} ' ' num2str(j)],'horizontalalignment','right','fontsize',8);
             end
             set(umenu,'uicontextmenu',hh);
         else
             if strcmp(regs_or_chans_name,'Regions')
-                umenu = text(j,-5,[num2str(j) '. ' G(1).chansregs.listregdata(j).reg.name],'horizontalalignment','left','fontsize',8,'interpreter','none');
+                reg = NBTstudy.groups{1}.listRegData;
+                umenu = text(j,-5,[num2str(j) '. ' reg(j).reg.name],'horizontalalignment','left','fontsize',8,'interpreter','none');
             else
                 umenu = text(j,-12,['Channel '  num2str(j)],'horizontalalignment','left','fontsize',8);
             end
@@ -226,7 +233,7 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
     title(['Correlation between groups difference of ',regexprep(bioms2,'_',' '), ' and difference ', regexprep(bioms1,'_',' ')],'fontweight','bold','fontsize',12)
     set(bh,'uicontextmenu',hh2);
     
-    uimenu(hh,'label','Correlation topoplot','callback',{@nbt_compareBiomarkersPlotTopos,G,B_values1,B_values2,bioms1,bioms2,1,Pvalues',rho',length(group_ind),splitType,splitValue,regs_or_chans_name,test_ind});
+    uimenu(hh,'label','Correlation topoplot','callback',{@nbt_compareBiomarkersPlotTopos,B_values1,B_values2,bioms1,bioms2,1,Pvalues',rho',length(group_ind),splitType,splitValue,regs_or_chans_name,test_ind});
     uimenu(hh2,'label','plottest','callback',{@nbt_compareBiomarkersPlotChansComp,B_values1,B_values2,bioms1,bioms2,1,length(group_ind),splitType,splitValue,Pvalues,test_ind});
     
     
@@ -306,10 +313,10 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                             text(-3,-1.2514,origTitle(3),'P-value');
                             origTitle(1) = -2.7;
                         end
-                        if isempty(strfind(bioms_name2{1},'Factors'))
-                            varQuest = Questionnaire;
-                            if (length(varQuest.Questions{i}) > 20)
-                                bs = varQuest.Questions{i};
+                        if isempty(strfind(bioms_name2{1},'Factors')) 
+                            varQuest = ARSQfactors;
+                            if (length(varQuest.arsqLabels{i}) > 20)
+                                bs = varQuest.arsqLabels{i};
                                 [ab, cd] = strtok(bs(15:end));
                                 ad = length(ab);
                                 
@@ -319,12 +326,12 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                     title({[num2str(i) '. ' bs(1:14 + ad)], cd},'FontWeight','Bold');
                                 end
                             else
-                                title([num2str(i) '. ' varQuest.Questions{i}],'FontWeight','Bold');
+                                title([num2str(i) '. ' varQuest.arsqLabels{i}],'FontWeight','Bold');
                             end
                         else
-                             varQuest = Factors;
-                            if (length(varQuest.Questions{i}) > 20)
-                                bs = varQuest.Questions{i};
+                             varQuest = ARSQfactors;
+                            if (length(varQuest.factorLabels{i}) > 20)
+                                bs = varQuest.factorLabels{i};
                                 [ab, cd] = strtok(bs(15:end));
                                 ad = length(ab);
                                 
@@ -334,7 +341,7 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                     title({[num2str(i) '. ' bs(1:14 + ad)], cd},'FontWeight','Bold');
                                 end
                             else
-                                title([num2str(i) '. ' varQuest.Questions{i}],'FontWeight','Bold');
+                                title([num2str(i) '. ' varQuest.factorLabels{i}],'FontWeight','Bold');
                             end
                         end
                         set(get(gca,'title'),'position',origTitle);

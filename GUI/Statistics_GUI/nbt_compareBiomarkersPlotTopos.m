@@ -1,14 +1,21 @@
-function nbt_compareBiomarkersPlotTopos(d1,d2,G,B_values1,B_values2,bioms1,bioms2,biomindex,Pvalues,rho,noGroups,splitType,splitValue,regs_or_chans_name,test_ind)
+function nbt_compareBiomarkersPlotTopos(d1,d2,B_values1,B_values2,bioms1,bioms2,biomindex,Pvalues,rho,noGroups,splitType,splitValue,regs_or_chans_name,test_ind)
 
 global Questionnaire
 global Factors
 
+global NBTstudy
+
+load Questions
+
+load ARSQfactors
+ARSQfactors.arsqLabels = Questions;
+
 pos_cursor_unitfig = get(gca,'currentpoint');
 
 if ~isempty(strfind(bioms1{1},'Factors.Answers')) ||  ~isempty(strfind(bioms2{1},'Factors.Answers'))
-    quest = Factors;
+    quest = ARSQfactors.factorLabels;
 else
-    quest = Questionnaire;
+    quest = ARSQfactors.arsqLabels;
 end
 
 clear Pvalues
@@ -39,9 +46,9 @@ end
     end
     
     if ~isempty(strfind(bioms1{1},'Answers'))
-        figure('Name',['Topoplots: P-values and Rho values for Question  ' num2str(question) '. ''' quest.Questions{question} ''' and Biomarker ' bioms2{1}],'NumberTitle','off')
+        figure('Name',['Topoplots: P-values and Rho values for Question  ' num2str(question) '. ''' quest{question} ''' and Biomarker ' bioms2{1}],'NumberTitle','off')
     else
-        figure('Name',['Topoplots: P-values and Rho values for Question  ' num2str(question) '. ' quest.Questions{question} ' and Biomarker ' bioms1{1}],'NumberTitle','off')
+        figure('Name',['Topoplots: P-values and Rho values for Question  ' num2str(question) '. ' quest{question} ' and Biomarker ' bioms1{1}],'NumberTitle','off')
     end
     
     set(gcf,'position',[10          80       700      500])
@@ -51,8 +58,8 @@ end
     subplot(2,2,3)
     if strcmp(regs_or_chans_name,'Regions')
         nbt_plot_subregions_hack(log10(Pvalues(question,:)),-2.6,0);
-    else
-        topoplot(log10(Pvalues(question,:)), G(1).chansregs.chanloc,'headrad','rim','electrodes','on');
+    else  
+        topoplot(log10(Pvalues(question,:)), NBTstudy.groups{1}.listRegData,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
         set(bh,'markersize',5);
@@ -83,10 +90,10 @@ end
     axis off
     if ~isempty(strfind(bioms1{1},'Answers'))
         
-        textThis = sprintf(['P-values and Rho values for Question ' num2str(question) '. ' quest.Questions{question} ' and Biomarker ' regexprep(bioms2{1},'_',' ')]);
+        textThis = sprintf(['P-values and Rho values for Question ' num2str(question) '. ' quest{question} ' and Biomarker ' regexprep(bioms2{1},'_',' ')]);
         
     else
-        textThis = sprintf(['P-values and Rho values for Question ' num2str(question) '. ' quest.Questions{question} ' and Biomarker ' regexprep(bioms1{1},'_',' ')]);
+        textThis = sprintf(['P-values and Rho values for Question ' num2str(question) '. ' quest{question} ' and Biomarker ' regexprep(bioms1{1},'_',' ')]);
     end
     nbt_split_title([1 0.5],textThis,200,11);
     
@@ -172,9 +179,9 @@ end
     end
     
     if ~isempty(strfind(bioms1{1},'Answers'))
-        figure('Name',['Unpaired ttest between Top and bottom group split on ' regexprep(bioms2{biomindex},'_',' ') ' Compared with Question ' num2str(question) '. ' quest.Questions{question}]);
+        figure('Name',['Unpaired ttest between Top and bottom group split on ' regexprep(bioms2{biomindex},'_',' ') ' Compared with Question ' num2str(question) '. ' quest{question}]);
     else
-        figure('Name',['Unpaired ttest between Top and bottom group split on Question ' num2str(question) '. ' quest.Questions{question} ' Compared with biomarker ' regexprep(bioms1{biomindex},'_',' ')]);
+        figure('Name',['Unpaired ttest between Top and bottom group split on Question ' num2str(question) '. ' quest{question} ' Compared with biomarker ' regexprep(bioms1{biomindex},'_',' ')]);
     end
     
     
@@ -256,9 +263,9 @@ end
     
     
     if ~isempty(strfind(bioms1{1},'Answers'))
-        textThis = sprintf(['Unpaired ttest between Top and bottom group split on ' regexprep(bioms2{biomindex},'_',' ') ' Compared with Question ' num2str(question) '. ' quest.Questions{question}]);
+        textThis = sprintf(['Unpaired ttest between Top and bottom group split on ' regexprep(bioms2{biomindex},'_',' ') ' Compared with Question ' num2str(question) '. ' quest{question}]);
     else
-        textThis = sprintf(['Unpaired ttest between Top and bottom group split on Question ' num2str(question) '. ' quest.Questions{question} ' Compared with biomarker ' regexprep(bioms1{biomindex},'_',' ')]);
+        textThis = sprintf(['Unpaired ttest between Top and bottom group split on Question ' num2str(question) '. ' quest{question} ' Compared with biomarker ' regexprep(bioms1{biomindex},'_',' ')]);
     end
     
     nbt_suptitle(textThis);
