@@ -59,7 +59,7 @@ end
     if strcmp(regs_or_chans_name,'Regions')
         nbt_plot_subregions_hack(log10(Pvalues(question,:)),-2.6,0);
     else  
-        topoplot(log10(Pvalues(question,:)), NBTstudy.groups{1}.listRegData,'headrad','rim','electrodes','on');
+        topoplot(log10(Pvalues(question,:)), NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
         set(bh,'markersize',5);
@@ -77,7 +77,7 @@ end
         mxRho = max(abs(rho(question,:)));
         nbt_plot_subregions_hack((rho(question,:)),-mxRho,mxRho);
     else
-        topoplot((rho(question,:)), G(1).chansregs.chanloc,'headrad','rim','electrodes','on');
+        topoplot((rho(question,:)), NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
         set(bh,'markersize',5);
@@ -193,7 +193,7 @@ end
     if strcmp(regs_or_chans_name,'Regions')
         nbt_plot_subregions_hack(MeanB1,minCL,maxCL);
     else
-        topoplot( MeanB1, G(1).chansregs.chanloc,'headrad','rim','electrodes','on');
+        topoplot( MeanB1, NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
         set(bh,'markersize',5);
@@ -210,7 +210,7 @@ end
     if strcmp(regs_or_chans_name,'Regions')
         nbt_plot_subregions_hack(MeanB2,minCL,maxCL);
     else
-        topoplot(MeanB2, G(1).chansregs.chanloc,'headrad','rim','electrodes','on');
+        topoplot(MeanB2, NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
         set(bh,'markersize',5);
@@ -228,7 +228,7 @@ end
     if strcmp(regs_or_chans_name,'Regions')
         nbt_plot_subregions_hack(log10(p),-2.6,-0);
     else
-        topoplot(log10(p), G(1).chansregs.chanloc,'headrad','rim','electrodes','on');
+        topoplot(log10(p), NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
         set(bh,'markersize',5);
@@ -250,7 +250,7 @@ end
     if strcmp(regs_or_chans_name,'Regions')
         nbt_plot_subregions_hack(diffmean,minDCL,maxDCL);
     else
-        topoplot(diffmean, G(1).chansregs.chanloc,'headrad','rim','electrodes','on');
+        topoplot(diffmean, NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
         set(bh,'markersize',5);
