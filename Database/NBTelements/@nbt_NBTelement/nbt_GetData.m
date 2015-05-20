@@ -27,7 +27,7 @@
 %   NBT_SETDATA, NBT_NBTELEMENT, NBT_CONNECTNBTELEMENTS, NBT_SEARCHSTRING
 
 % Copyright (C) 2010 Simon-Shlomo Poil
-% 
+%
 % Part of the Neurophysiological Biomarker Toolbox (NBT)
 %
 % This program is free software; you can redistribute it and/or modify
@@ -50,8 +50,12 @@
 % ChangeLog - see version control log for details
 % First version written by Simon-Shlomo Poil
 
-function [Data, Pool, PoolKey, Units] = nbt_GetData(NBTelement, Parameters, SubBiomarker)
-narginchk(2,3);
+function [Data, Pool, PoolKey, Units] = nbt_GetData(NBTelement, Parameters, SubBiomarker,lazySwitch)
+narginchk(2,4);
+if(~exist('lazySwitch','var'))
+   lazySwitch = 0; 
+end
+
 %% First find structure.
 StructureTable = cell(1,1);
 % Find main branch
@@ -107,8 +111,8 @@ for i=stepdown:size(StructureTable,1)
             else
                 [Pool, PoolKey] = nbt_LimitPool(Parameters{index(ii),1}, Pool, PoolKey, Parameters{index(ii),2});
                 if(isempty(Pool))
-                StopLoop = 1;
-                break;
+                    StopLoop = 1;
+                    break;
                 end
             end
         end
@@ -127,11 +131,22 @@ if(isempty(Pool))
     return
 end
 
+
+
 %Return Data
-if(exist('SubBiomarker','var'))
-    [Data, Pool, PoolKey, Units]=nbt_returnData(NBTelement,Pool,PoolKey, SubBiomarker);
+if(lazySwitch)
+    Data = [];
 else
-    [Data, Pool, PoolKey, Units]=nbt_returnData(NBTelement,Pool,PoolKey);
-end
+    isSubBiomarker = 0;
+    if(exist('SubBiomarker','var'))
+        if(~isempty(SubBiomarker))
+            isSubBiomarker = 1;
+        end
+    end
+    if(isSubBiomarker)
+        [Data, Pool, PoolKey, Units]=nbt_returnData(NBTelement,Pool,PoolKey, SubBiomarker);
+    else
+        [Data, Pool, PoolKey, Units]=nbt_returnData(NBTelement,Pool,PoolKey);
+    end
 end
 
