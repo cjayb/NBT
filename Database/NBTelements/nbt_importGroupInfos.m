@@ -116,9 +116,8 @@ for i=1:length(FileList)
         if(NumBiomarkers ~=0)
             for dd = 1:NumBiomarkers
                 eval( ['DataString = nbt_cellc(' subjectBiomarkerFields{m} '.biomarkers,dd);']);
-                eval(['Data{dd,1} = ' subjectBiomarkerFields{m} '.' DataString ';']);
+                eval(['Data{dd,1} = single(' subjectBiomarkerFields{m} '.' DataString ');']);
                 eval([NBTelementName '.Biomarkers{ dd ,1} = DataString; '])
-                
             end
             eval([NBTelementName ' = nbt_SetData(' NBTelementName ', Data, {Condition, SubjectInfo.conditionID; Subject, SubjectInfo.subjectID;Project, SubjectInfo.projectInfo(1:end-4)});']);
             
@@ -199,7 +198,7 @@ for i=1:length(FileList)
             if(NumBiomarkers ~=0)
                 for dd = 1:NumBiomarkers
                     eval( ['DataString = nbt_cellc(' BiomarkerList{m} '.biomarkers,dd);']);
-                    eval(['Data{dd,1} = ' BiomarkerList{m} '.' DataString ';']);
+                    eval(['Data{dd,1} = single(' BiomarkerList{m} '.' DataString ');']);
                     if(size(Data{dd,1},2) > size(Data{dd,1},1)) %to fix bug with biomarkers with wrong dimension
                        Data{dd,1} = Data{dd,1}';  
                     end
