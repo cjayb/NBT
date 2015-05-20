@@ -32,6 +32,7 @@ end
 nBioms = length(biomarkersToPlot);
 biomIdx = 0;
 
+
 q = input('Specify the desired false discovery rate: (default = 0.05) ');
 
 for biomID = biomarkersToPlot
@@ -59,9 +60,9 @@ for biomID = biomarkersToPlot
     
     %%% pValues - corrected for multiple comparision
     pValues = StatObj.pValues{biomID};
+
     [~, pValues] = nbt_MCcorrect(pValues, NBTstudy.settings.visual.mcpCorrection, q);
-    
-    
+
     %%% Properties for plotting
     % Set the range [cmin cmax] for the colorbars later on
     vmax=max([meanGroup1 meanGroup2]);
@@ -109,8 +110,6 @@ for biomID = biomarkersToPlot
     % % %red white blue color scale
     minPValue = log10(0.0005);
     maxPValue = -log10(0.0005);
-    
-    
     
     pLog = log10(pValues); % to make it log scaled
     
@@ -190,8 +189,6 @@ end
             cmin = -1*climit;
             cmax = 0;
         else
-            
-            
             RedBlue_cbrewer10colors = load('RedBlue_cbrewer10colors','RedBlue_cbrewer10colors');
             RedBlue_cbrewer10colors = RedBlue_cbrewer10colors.RedBlue_cbrewer10colors;
             colormap(RedBlue_cbrewer10colors);
@@ -201,17 +198,12 @@ end
         %%% Plot the topoplot: check whether test statistic is a ttest or signrank
         chans_Psignificant = find(pValues<0.05);
         nbt_topoplot(diffGrp2Grp1,chanLocs,'headrad','rim','numcontour',0,'electrodes','on','emarker2',{[chans_Psignificant],'o','w',4,1});
-        
-        
-        
+     
         %%% Plot the colorbar
         caxis([cmin cmax]);
         plot_colorbar();
         
-        %%% Labels for the rows
-        
-        
-        
+        %%% Labels for the rows       
         if(subplotIndex == 1)
             if (strcmp(statType,'paired'))
                 rowLabel = sprintf('Grand average for condition %s minus incondition %s ',nameGroup2,nameGroup1);
