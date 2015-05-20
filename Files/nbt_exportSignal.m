@@ -65,6 +65,6 @@ else
 end
 
 %--- Set bad channels to NaN
-ExSignal(:,SignalInfo.badChannels) = nan;
+ExSignal(:,logical(SignalInfo.badChannels)) = nan;
 disp('Signal exported as a matrix in ExSignal')
 end
