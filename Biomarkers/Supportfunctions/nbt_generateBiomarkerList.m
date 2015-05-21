@@ -49,16 +49,11 @@
 % See Readme.txt for additional copyright information.
 % ---------------------------------------------------------------------------------------
 
-function obj = nbt_generateBiomarkerList(NBTstudy,signal,grpNumber)
-    % Create a new analysis object
-    obj = nbt_Analysis;
+function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx)
+    %Get the biomarkerlist from NBTstudy
+    biomarkerList = GroupObject.biomarkerList;
     
-    % Get the biomarkerlist from NBTstudy
-    Group = NBTstudy.groups{grpNumber};
-    biomarkerList = Group.biomarkerList;
-    
-    obj.groups = grpNumber;
-    obj.group{1}.biomarkerIndex = zeros(1,50);
+    obj.group{grpIdx}.biomarkerIndex = zeros(1,50);
     
     % Specify the fixed order for the NBT Print plots
     freqBandsFixedOrder = {'1  4', '4  8', '8  13', '13  30', '30  45'};
@@ -103,14 +98,14 @@ function obj = nbt_generateBiomarkerList(NBTstudy,signal,grpNumber)
                     freqIndex = find(ismember(freqBandsFixedOrder,freqRange));
 
                     %%% Store the biomarker in the analysis object
-                    obj.group{1}.originalBiomNames{i} = currentBiom;
-                    obj.group{1}.biomarkers{i} = biomName;
-                    obj.group{1}.subBiomarkers{i} = subBiomName;
+                    obj.group{grpIdx}.originalBiomNames{i} = currentBiom;
+                    obj.group{grpIdx}.biomarkers{i} = biomName;
+                    obj.group{grpIdx}.subBiomarkers{i} = subBiomName;
 
-                    obj.group{1}.biomarkerIdentifiers{i} = {'frequencyRange' freqRange};
-                    obj.group{1}.classes{i} = biomarkerClass;
-                    obj.group{1}.biomarkerIndex((biomIndex-1)*5 + freqIndex) = i;
-                    obj.group{1}.units{(biomIndex-1)*5 + freqIndex} = biomarkerUnit;
+                    obj.group{grpIdx}.biomarkerIdentifiers{i} = {'frequencyRange' freqRange};
+                    obj.group{grpIdx}.classes{i} = biomarkerClass;
+                    obj.group{grpIdx}.biomarkerIndex((biomIndex-1)*5 + freqIndex) = i;
+                    obj.group{grpIdx}.units{(biomIndex-1)*5 + freqIndex} = biomarkerUnit;
 
                     i = i + 1;
                 elseif ismember(freqRange,freqBandsFixedOrderNames)
@@ -118,14 +113,14 @@ function obj = nbt_generateBiomarkerList(NBTstudy,signal,grpNumber)
                     freqIndex = find(ismember(freqBandsFixedOrderNames,freqRange));
 
                     %%% Store the biomarker in the analysis object
-                    obj.group{1}.originalBiomNames{i} = currentBiom;
-                    obj.group{1}.biomarkers{i} = biomName;
-                    obj.group{1}.subBiomarkers{i} = [subBiomName '_' freqRange];
+                    obj.group{grpIdx}.originalBiomNames{i} = currentBiom;
+                    obj.group{grpIdx}.biomarkers{i} = biomName;
+                    obj.group{grpIdx}.subBiomarkers{i} = [subBiomName '_' freqRange];
 
-                    obj.group{1}.biomarkerIdentifiers{i} = [];
-                    obj.group{1}.classes{i} = biomarkerClass;
-                    obj.group{1}.biomarkerIndex((biomIndex-1)*5 + freqIndex) = i;
-                    obj.group{1}.units{(biomIndex-1)*5 + freqIndex} = biomarkerUnit;
+                    obj.group{grpIdx}.biomarkerIdentifiers{i} = [];
+                    obj.group{grpIdx}.classes{i} = biomarkerClass;
+                    obj.group{grpIdx}.biomarkerIndex((biomIndex-1)*5 + freqIndex) = i;
+                    obj.group{grpIdx}.units{(biomIndex-1)*5 + freqIndex} = biomarkerUnit;
 
                     i = i + 1;
                 end
