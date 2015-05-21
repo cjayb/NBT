@@ -99,14 +99,30 @@ end
                         evalin('base','clear tmpPoolKey2')
                 end
             case 'File'
-                
+                switch nargin
+                    case 1 % normal group
+                        assignin('base', 'tmpPool', DataObj.pool)
+                        assignin('base', 'tmpPoolKey', DataObj.poolKey)
+                        DataObj=returnDatafromFile(DataObj);
+                        evalin('base','clear tmpPool');
+                        evalin('base','clear tmpPoolKey')
+                    case 2 % difference group
+                        assignin('base', 'tmpPool', DataObj.pool)
+                        assignin('base', 'tmpPoolKey', DataObj.poolKey)
+                        assignin('base', 'tmpPool2', DataObj2.pool)
+                        assignin('base', 'tmpPoolKey2', DataObj2.poolKey)
+                        DataObj=returnDatafromFile(DataObj, DataObj2);
+                        evalin('base','clear tmpPool');
+                        evalin('base','clear tmpPoolKey')
+                        evalin('base','clear tmpPool2');
+                        evalin('base','clear tmpPoolKey2')
+                end
         end
         
         
         for bID = 1:numBiomarkers
             if ~strcmp(DataObj.classes{bID},'nbt_QBiomarker')
                 if (StatObj.channelsRegionsSwitch == 2) % regions
-                    n_chans = size(GrpObj.chanLocs,2);
                     regions = GrpObj.listRegData;
                     DataMat = DataObj{bID,1}; % n_chans x n_subjects
                     RegData = [];
@@ -126,9 +142,18 @@ end
 end
 
 
-function DataObj=returnDatafromFile(DataObj)
-disp('break')
+function DataObj=returnDatafromFile(DataObj,DataObj2)
+narginchk(1,2)
 
+disp('break')
+%First we construct the file names to load
+
+%Then we load first file and find the name of the biomarker to load 
+% using the unique identifiers
+
+%Then we start loading analysis files and check uniqueIDs
+%if unique IDs do not match we load the full file and search
+%
 
 end
 
