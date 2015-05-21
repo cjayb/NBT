@@ -67,8 +67,8 @@ classdef nbt_PhaseLocking < nbt_CrossChannelBiomarker
     IndexF_in_time
     end
     properties (Constant)
-         biomarkerType = {'nbt_CrossChannelBiomarker','nbt_CrossChannelBiomarker'};
-         units = {' ', ' '};
+         biomarkerType = {'nbt_CrossChannelBiomarker'};
+         units = {' '};
     end
     
     methods
@@ -99,7 +99,7 @@ classdef nbt_PhaseLocking < nbt_CrossChannelBiomarker
             BiomarkerObject.IndexF_in_time = [];
             
             BiomarkerObject.primaryBiomarker = 'PLV';
-            BiomarkerObject.biomarkers = {}; % {'PLV','Instphase'};
+            BiomarkerObject.biomarkers = {'PLV'}; % {'PLV','Instphase'};
            
             
         end
