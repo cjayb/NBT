@@ -449,12 +449,12 @@ for i=1:length(directory)
                 SignalInfo.signalOrigin = directory(i).name;
             end
             
-            if(~isempty(eye_chans))
+            if (exist('eye_chans','var'))&&(~isempty(eye_chans))
                 SignalInfo.nonEEGch = eye_chans;
                 SignalInfo.eyeCh = eye_chans;
             end  
             
-            if(~isempty(bad_chans))
+            if (exist('bad_chans','var'))&&(~isempty(bad_chans))
                 SignalInfo.badChannels = bad_chans;
             end             
             
