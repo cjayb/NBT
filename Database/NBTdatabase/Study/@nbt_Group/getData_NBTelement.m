@@ -4,7 +4,7 @@ global NBTstudy
 %We loop over DataObj.biomarkers and generate a cell
 numBiomarkers       = length(DataObj.biomarkers);
 
-if isempty(GrpObj.groupDifference) % regular group
+if ~isa(GrpObj,'nbt_DiffGroup') % regular group
     DataObj = prepareDataObj(DataObj,GrpObj);
     DataObj = fetchDataObj(DataObj);
 else
