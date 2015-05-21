@@ -119,7 +119,7 @@ for i=1:length(FileList)
             else
                 for dd = 1:NumBiomarkers
                     eval( ['DataString = nbt_cellc(' subjectBiomarkerFields{m} '.biomarkers,dd);']);
-                    eval(['Data{dd,1} = single(' subjectBiomarkerFields{m} '.' DataString ');']);
+                    eval(['Data{dd,1} = nbt_convertToSingle(' subjectBiomarkerFields{m} '.' DataString ');']);
                     eval([NBTelementName '.Biomarkers{ dd ,1} = DataString; '])
                 end
             end
@@ -205,7 +205,7 @@ for i=1:length(FileList)
                 else
                     for dd = 1:NumBiomarkers
                         eval( ['DataString = nbt_cellc(' BiomarkerList{m} '.biomarkers,dd);']);
-                        eval(['Data{dd,1} = single(' BiomarkerList{m} '.' DataString ');']);
+                        eval(['Data{dd,1} = nbt_convertToSingle(' BiomarkerList{m} '.' DataString ');']);
                         if(size(Data{dd,1},2) > size(Data{dd,1},1)) %to fix bug with biomarkers with wrong dimension
                             Data{dd,1} = Data{dd,1}';
                         end
