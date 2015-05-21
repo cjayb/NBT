@@ -134,17 +134,12 @@ downButton = uicontrol(StatSelection,'Style','pushbutton','String','\/','Positio
                 % if (size(Data1.subjectList{1},2) == size(Data2.subjectList{1},2))
                 % SH: Changed class to difference group
                 DiffGroup = nbt_DiffGroup;
-                DiffGroup.databaseType = 'NBTelement';
                 DiffGroup.grpNumber = length(NBTstudy.groups) + 1;
                 DiffGroup.groupDifference = group_ind;
-                DiffGroup.fileList = NBTstudy.groups{group_ind(1)}.fileList;
-                DiffGroup.parameters = NBTstudy.groups{group_ind(1)}.parameters;
                 DiffGroup.biomarkerList = NBTstudy.groups{group_ind(1)}.biomarkerList;
-                DiffGroup.identList = NBTstudy.groups{group_ind(1)}.identList;
                 DiffGroup.chanLocs = NBTstudy.groups{group_ind(1)}.chanLocs;
                 DiffGroup.ref = NBTstudy.groups{group_ind(1)}.ref;
                 DiffGroup.listRegData = NBTstudy.groups{group_ind(1)}.listRegData;
-                DiffGroup.DataObj = NBTstudy.groups{group_ind(1)}.DataObj;
                 
                 % Put the group in the NBTstudy object
                 NBTstudy.groups{end+1} = DiffGroup;
