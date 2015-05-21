@@ -17,7 +17,8 @@ for i = maxLevel:-1:0
     for j = 1:length(leaves)
         leaf = leaves(j);
         leafTypes(leaf) = eval(['length(elements.' flds{leaf} '.Data);']);
-        if leafTypes(leaf) > 1
+        isBiomarker = eval(['elements.' flds{leaf} '.isBiomarker;']);
+        if leafTypes(leaf) > 1 || isBiomarker
             disp(['keeping node ' flds{leaf}]);
         else
             disp(['pruning node ' flds{leaf}]);

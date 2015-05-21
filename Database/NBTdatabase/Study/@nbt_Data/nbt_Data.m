@@ -1,4 +1,4 @@
-classdef nbt_Data
+classdef nbt_Data < handle
     %nbt_Data contains collections of biomarker data and is mainly produced
     %by the getData method of the nbt_Group object
     

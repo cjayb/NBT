@@ -202,6 +202,9 @@ classdef nbt_NBTelement %< handle
                     UpPool = nbt_TrimCellStr(UpPool);
                 end
                 
+                %Avoid redundant UpPool.
+                UpPool = unique(UpPool,'stable');
+                
                 %% % Match UpPool
                 [StripOff, NewPoolIDstpup] = strtok(NewPoolID,'.');
                 NewPoolIDstpup=nbt_TrimCellStr(NewPoolIDstpup);

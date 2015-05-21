@@ -104,6 +104,7 @@ catch
             idx = idx +1;
         end
     end
+    if (idx == 0) idx = 1; end;
     InfoToLoad = Infofields{idx};
     clear Loaded Infofields;
     SignalInfo = load([path name],InfoToLoad);

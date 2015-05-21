@@ -55,8 +55,32 @@
 % --------------
 
 
-function nbt_plot_2conditions_topo(Group1,Group2,chanloc,s,unit,biomarker,regions)
+function nbt_plot_2conditions_topo(StatObj, biomarkerToPlot)
+narginchk(1,2);
+global NBTstudy
+    %%% Get groups NBTstudy
+    Group1 = NBTstudy.groups{StatObj.groups(1)};
+    Group2 = NBTstudy.groups{StatObj.groups(2)};
+ 
+    %%% Group names
+    nameGroup1 = Group1.groupName;
+    nameGroup2 = Group2.groupName;
+    
+    %%% Get Biomarker names 
+    biomarkerNames = StatObj.getBiomarkerNames;
+    
+    %%% Get data for both groups
+    DataGroup1 = getData(Group1,StatObj);
+    DataGroup2 = getData(Group2,StatObj);
+    
+    %%% Group sample sizes
+    nSubjectsGroup1 = DataGroup1.numSubjects;
+    nSubjectsGroup2 = DataGroup2.numSubjects;
+    
+    %%% Get the channel locations from one of the two groups
+    chanLocs = Group1.chanLocs;
 
+%%old stuff
 condition1 = Group1.selection.group_name;
 condition2 = Group2.selection.group_name;
 
