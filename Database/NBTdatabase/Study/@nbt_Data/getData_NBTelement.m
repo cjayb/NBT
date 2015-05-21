@@ -1,4 +1,4 @@
-function DataObj = getData_NBTelement(GrpObj,StatObj, DataObj)
+function DataObj = getData_NBTelement(DataObj,GrpObj,StatObj)
 global NBTstudy
 %In this case we load the data directly from the NBTelements in base.
 %We loop over DataObj.biomarkers and generate a cell
@@ -111,7 +111,7 @@ end
                         assignin('base', 'tmpPoolKey', DataObj.poolKey)
                         assignin('base', 'tmpPool2', DataObj2.pool)
                         assignin('base', 'tmpPoolKey2', DataObj2.poolKey)
-                        DataObj=returnDatafromFile(DataObj, DataObj2);
+                        DataObj=returnDatafromFile(DataObj, DataObj2, GrpObj.groupDifferenceType);
                         evalin('base','clear tmpPool');
                         evalin('base','clear tmpPoolKey')
                         evalin('base','clear tmpPool2');
@@ -142,19 +142,109 @@ end
 end
 
 
-function DataObj=returnDatafromFile(DataObj,DataObj2)
-narginchk(1,2)
+function DataObj=returnDatafromFile(DataObj,DataObj2, DiffFun)
+narginchk(1,3)
 
-disp('break')
-%First we construct the file names to load
-
-%Then we load first file and find the name of the biomarker to load 
-% using the unique identifiers
-
-%Then we start loading analysis files and check uniqueIDs
-%if unique IDs do not match we load the full file and search
-%
-
+if(nargin == 1)
+    DataObj = loadData(DataObj);
+else
+    DiffFunH = nbt_getDiffFun(DiffFun);
+    DataObj = loadData(DataObj);
+    DataObj2 = loadData(DataObj2);
+    for bId = 1:length(DataObj.biomarkers) 
+            DataObj.dataStore{bId,1} = cellfun(DiffFunH, DataObj.dataStore{bId,1},DataObj2.dataStore{bId,1},'UniformOutPut',false);
+    end
+end
+    function DataObj=loadData(DataObj)
+        %% First we construct the file names to load
+        %projectIds
+        ProjectIDs = evalin('base',['nbt_returnData(Project, tmpPool{1},tmpPoolKey{1});']);
+        %SubjectIds
+        SubjectIDs = evalin('base',['nbt_returnData(Subject, tmpPool{1},tmpPoolKey{1});']);
+        strToAdd = '0000';
+        SubjectStrIDs = cell(length(SubjectIDs),1);
+        for mm=1:length(SubjectIDs)
+            SubStr = num2str(SubjectIDs(mm));
+            lToAdd = 4 - length(SubStr);
+            SubjectStrIDs{mm,1} =  ['S' strToAdd(1:lToAdd) SubStr];
+        end
+        %DateofRec
+        try
+            DateOfRec = evalin('base',['nbt_returnData(NBTe_dateOfRecording, tmpPool{1},tmpPoolKey{1});']);
+        catch %in case no dates are given
+            DateOfRec = 'yyyymmdd';
+        end
+        %ConditionIDs
+        ConditionIDs = evalin('base',['nbt_returnData(Condition, tmpPool{1},tmpPoolKey{1});']);
+        
+        fileNames = strcat(ProjectIDs,'.',SubjectStrIDs','.',DateOfRec,'.',ConditionIDs,'_analysis.mat');
+        
+        %% Then we load first file and find the name of the biomarker to load
+        % using the unique identifiers
+        [DataObj,BiomarkerLoadName]=sandboxLoad(DataObj,fileNames{1,1},[]);
+        %% Then we start loading analysis files and check uniqueIDs
+        %if unique IDs do not match we load the full file and search
+        %
+        for fIdx = 2:length(fileNames)
+            [DataObj]=sandboxLoad(DataObj,fileNames{fIdx},BiomarkerLoadName);
+        end
+    end
 end
 
+
+function ident=changeSignalsName(ident)
+for i=1:size(ident,1)
+    if(strcmp(ident{i,1},'Signals'))
+        ident{i,1} = 'signalName';
+    end
+end
+end
+
+
+
+function [DataObj, BiomarkerLoadName] = sandboxLoad(DataObj,fileName,BiomarkerLoadName)
+if(isempty(BiomarkerLoadName))
+    %we need to identify the load name
+    load(fileName)
+    %We load each biomarker, and test conditions
+    
+    for bId = 1:length(DataObj.biomarkers)
+        objectName = DataObj.biomarkers{bId};
+        objectName = objectName(6:end);
+        SearchList = nbt_ExtractObject(objectName);
+        Identifiers = changeSignalsName(DataObj.biomarkerIdentifiers{bId});
+        for lbId = 1:length(SearchList)
+            ToTest = eval(SearchList{lbId});
+            ok =1;
+            for Iidx = 1:size(Identifiers,1)
+                if(~strcmp(num2str(ToTest.(Identifiers{Iidx,1})),Identifiers{Iidx,2}))
+                    ok = 0;
+                    break;
+                end
+            end
+            if(ok)
+                BiomarkerLoadName{bId} = SearchList{lbId};
+                break;
+            end
+        end
+    end
+else
+    for bId = 1:length(DataObj.biomarkers)
+        load(fileName,BiomarkerLoadName{bId})
+    end
+end
+for bId = 1:length(DataObj.biomarkers)
+    if(isempty(DataObj.dataStore{bId,1})) %we need to insert data at the right subject spot
+        subjIdx = 1;
+        DataObj.dataStore{bId,1} = cell(0,0);
+    else
+        subjIdx = length(DataObj.dataStore{bId,1})+1;
+    end
+    DataObj.dataStore{bId,1}{subjIdx,1} = eval([BiomarkerLoadName{bId} '.(DataObj.subBiomarkers{bId});']);
+    if(size(DataObj.dataStore{bId,1}{subjIdx,1},2) > size(DataObj.dataStore{bId,1}{subjIdx,1},1)) %to fix bug with biomarkers with wrong dimension
+        DataObj.dataStore{bId,1}{subjIdx,1} = DataObj.dataStore{bId,1}{subjIdx,1}';
+    end
+    DataObj.units{bId,1} = eval([BiomarkerLoadName{bId} '.units;']);
+end
+end
 
