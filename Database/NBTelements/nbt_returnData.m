@@ -15,7 +15,7 @@ if(exist('SubBiomarker','var'))
 end
 if(nargin > 4)
     calcDifferenceGroup = true;
-    DiffFun = getDiffFun(DiffFun); %get difference function
+    DiffFun = nbt_getDiffFun(DiffFun); %get difference function
 else
     calcDifferenceGroup = false;
 end
@@ -127,14 +127,4 @@ end
     end
 end
 
-function DiffFunH=getDiffFun(DiffFun)
-switch DiffFun
-    case 'regular'
-        DiffFunH = @(d1,d2) d1-d2;
-    case 'absolute'
-        DiffFunH = @(d1,d2) abs(d1-d2); % abs difference
-    case 'squared'
-        DiffFunH = @(d1,d2) (d1-d2).^2; % square difference
-end
-end
 

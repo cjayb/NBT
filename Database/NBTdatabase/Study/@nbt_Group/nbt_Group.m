@@ -16,7 +16,7 @@ classdef nbt_Group %NBT GroupObject - contains group definitions + Database poin
     
     methods (Access = public)
         function GrpObj = nbt_Group %object contructor
-            GrpObj.databaseType = 'NBTelement'; % 'NBTelement' or 'File'
+            GrpObj.databaseType = 'File'; % 'NBTelement' or 'File'
             GrpObj.biomarkerList = [];
         end
                 
@@ -32,7 +32,6 @@ classdef nbt_Group %NBT GroupObject - contains group definitions + Database poin
        nbt_GroupObject = defineSubjectGroupGUI(nbt_GroupObject, InfoCell, BioCell, IdentCell);
     end 
     methods (Access = private)
-        nbt_DataObject = getData_NBTelement(nbt_GroupObject, StatObj, nbt_DataObject, fileSwitch)
         [InfoCell, BioCell, IdentCell]  = getSubjectInfo_NBTelement(nbt_GroupObject,fileSwitch) %Returns a cell with information about the database.
     end
     

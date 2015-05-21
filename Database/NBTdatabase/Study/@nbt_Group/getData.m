@@ -44,9 +44,9 @@ function  DataObj = getData(GrpObj,StatObj)
         switch GrpObj.databaseType
             %switch database type - for clarity this switch is still here.
             case 'NBTelement'
-               DataObj = getData_NBTelement(GrpObj, StatObj, DataObj);
+               DataObj = getData_NBTelement(DataObj, GrpObj, StatObj);
             case 'File'
-               DataObj = getData_NBTelement(GrpObj, StatObj, DataObj);
+               DataObj = getData_NBTelement(DataObj,GrpObj, StatObj);
         end
 
         DataObj.numSubjects = length(DataObj.subjectList{1,1}); %we assume there not different number of subjects per biomarker!
