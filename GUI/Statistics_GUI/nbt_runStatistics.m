@@ -1,5 +1,12 @@
 function nbt_runStatistics(GUIswitch)
 global NBTstudy
+
+%First clean the cache
+nrStatsInStudy = length(NBTstudy.statAnalysis);
+if(nrStatsInStudy > 1)
+    NBTstudy.statAnalysis{length(NBTstudy.statAnalysis)}.data = [];
+end
+
 if(GUIswitch)
     disp('Waiting for statistics ...')
     HrunStat = findobj( 'Tag', 'NBTstatRunButton');

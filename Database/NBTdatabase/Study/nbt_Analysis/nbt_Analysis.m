@@ -1,4 +1,4 @@
-classdef nbt_Analysis
+classdef nbt_Analysis < handle
     
     properties
         groupStatHandle % e.g. @nanmedian or @median to produce group statistics.

@@ -16,10 +16,19 @@ function  DataObj = getData(GrpObj,StatObj)
     grpNumber = GrpObj.grpNumber;
 
     if ~isempty(StatObj.data)
-        DataObj = StatObj.data{grpNumber};
+        try
+            DataObj = StatObj.data{grpNumber};
+        catch
+            loadData();
+        end
     else
+        loadData();
+    end
+           
+  function loadData()
         %%% Get the data
         DataObj = nbt_Data;
+        StatObj.data{grpNumber} = DataObj;
 
         if ~exist('StatObj','var')
             for i=1:length(GrpObj.biomarkerList)
