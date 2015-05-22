@@ -12,6 +12,7 @@ fidx = strfind(fileName,filesep);
 [subjectID,leftover] = strtok(leftover,'.');
 subjectID = str2double(subjectID(2:end));
 [dateRecord,leftover] = strtok(leftover,'.');
+SubjectInfo.info.dateOfRecording = dateRecord;
 [conditionID] = strtok(leftover,'.');
 conditionID = strtok(conditionID,'_');
 SubjectInfo.projectInfo = [ projectID '.mat'];

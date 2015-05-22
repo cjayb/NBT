@@ -205,7 +205,7 @@ else
     %% Menu in EEGLAB
     FileSub = uimenu(NBTMenu, 'label', 'File');
     uimenu( FileSub, 'label', 'Load NBT Signal', 'callback', ['[ALLEEG EEG CURRENTSET]= eeg_store(ALLEEG, EEG,CURRENTSET);[EEG SignalPath]=nbt_NBTsignal2EEGlab(); [ALLEEG EEG CURRENTSET]= eeg_store(ALLEEG, EEG); eeglab redraw']);
-    uimenu( FileSub, 'label', 'Save as NBT Signal', 'callback', ['nbt_EEGlab2NBTsignal(EEG,1);']);
+    uimenu( FileSub, 'label', 'Save as NBT Signal', 'callback', ['[Signal, SignalInfo, SignalPath, SubjectInfo] = nbt_EEGtoNBT(EEG, [], [], []);']);
     uimenu( FileSub, 'label', 'Import files into NBT format', 'callback', ['nbt_import_files;']);
     FileSubImportSub = uimenu(FileSub, 'label', ' &Import options');
     uimenu( FileSubImportSub, 'label', 'Import BrainVision Analyzer files', 'callback', 'nbt_import_files([],[], @nbt_loadbv);');
