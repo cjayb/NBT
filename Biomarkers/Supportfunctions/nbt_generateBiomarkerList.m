@@ -68,7 +68,7 @@ function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx)
     % in the fixed NBT Print order.
     i = 1;
     for presentBiomarker = 1 : length(biomarkerList)
-        currentBiom = biomarkerList{presentBiomarker};
+        currentBiom = biomarkerList{presentBiomarker}
         [biomName, identifiers, subBiomName, biomarkerClass, biomarkerUnit] = nbt_parseBiomarkerIdentifiers(currentBiom);
         
         if ~ismember('Signals',identifiers)
