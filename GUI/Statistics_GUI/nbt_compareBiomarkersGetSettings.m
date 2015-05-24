@@ -188,9 +188,7 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
         set(gca,'yTick',[],'yticklabel',[],'fontsize',8)
     else
         for j = 1: size(B_values1,1)
-            
-            
-            
+                        
             if isempty(strfind(bioms_name1{1},'Factors'));
                 varQuest = ARSQfactors;
                 umenu = text(size(B_values2,1)+1,j,[varQuest.arsqLabels{j} ' ' num2str(j)],'horizontalalignment','left','fontsize',8,'rotation',-90);
@@ -234,7 +232,7 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
     set(bh,'uicontextmenu',hh2);
     
     uimenu(hh,'label','Correlation topoplot','callback',{@nbt_compareBiomarkersPlotTopos,B_values1,B_values2,bioms1,bioms2,1,Pvalues',rho',length(group_ind),splitType,splitValue,regs_or_chans_name,test_ind});
-    uimenu(hh2,'label','plottest','callback',{@nbt_compareBiomarkersPlotChansComp,B_values1,B_values2,bioms1,bioms2,1,length(group_ind),splitType,splitValue,Pvalues,test_ind});
+    uimenu(hh2,'label','plottest','callback',{@nbt_compareBiomarkersPlotChansComp,B_values1,B_values2,bioms1,bioms2,1,length(group_ind),splitType,splitValue,Pvalues,test_ind,regs_or_chans_index});
     
     
 else if ( test_ind ~= 5 && test_ind ~=6 )
@@ -636,57 +634,73 @@ global NBTstudy
 
 if length(group_ind) == 1
     
-    Group = NBTstudy.groups{group_ind};
-    Grop1 = Group;
-    if ~isempty(Group.groupDifference) % strcmp(Group.groupType,'difference')
-        group_diffexist = 1;
-        path = Group.fileslist.path;
-        n_files = length(Group.fileslist);
-        [B_values_cell1,Sub,Proj,unit] = nbt_checkif_groupdiff(Group,G,n_files,bioms_name1,path);
-        [B_values_cell2,Sub,Proj,unit] = nbt_checkif_groupdiff(Group,G,n_files,bioms_name2,path);
-        group_diffexist;
-        NCHANNELS = length(Group.chansregs.chanloc);
-        [dimens_diff1,biomPerChans1,IndexbiomNotPerChans1] = nbt_dimension_check(B_values_cell1,NCHANNELS);
+    Group1 = NBTstudy.groups{group_ind};
+    
+    bioms1 = bioms_name1;
+    bioms2 = bioms_name2;
+    nameG1 = Group1.groupName;
+     
+    Data1 = NBTstudy.groups{StatObj.groups(1)}.getData(StatObj); %with parameters);
         
-        [dimens_diff2,biomPerChans2,IndexbiomNotPerChans2] = nbt_dimension_check(B_values_cell2,NCHANNELS);
-        if ~isempty(biomPerChans1)
-            B_values1 = nbt_extractBiomPerChans(biomPerChans1,B_values_cell1);
-        else
-            dimBio = IndexbiomNotPerChans1{dim};
-            B_values1 = nbt_extractBiomNotPerChans(dimBio,B_values_cell1);
-        end
-        
-        if ~isempty(biomPerChans2)
-            B_values2 = nbt_extractBiomPerChans(biomPerChans2,B_values_cell2);
-        else
-            
-            dimBio = IndexbiomNotPerChans2{1};
-            B_values2 = nbt_extractBiomNotPerChans(dimBio,B_values_cell2);
-            
-        end
-        
-        bioms1 = bioms_name1;
-        bioms2 = bioms_name2;
-        
-        
-    else
-        group_diffexist = 0;
-        path = Group.fileslist.path;
-        n_files = length(Group.fileslist);
-        
-        bioms1 = bioms_name1;
-        bioms2 = bioms_name2;
-        % load biomarkers
-        for j = 1:n_files % subject
-            for l = 1:length(bioms2) % biomarker
-                namefile = Group.fileslist(j).name;
-                biomarker1 = bioms1{1};
-                biomarker2 = bioms2{l};
-                [B_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
-                [B_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
-            end
-        end
+    B1 = Data1.dataStore{1}; 
+    B2 = Data1.dataStore{2};
+    for j=1:size(Data1.dataStore{1})
+        B_values1(:,j) = B1{j};
+        B_values2(:,j) = B2{j};
     end
+    
+%    
+%     Group = NBTstudy.groups{group_ind};
+%     Grop1 = Group;
+%     if ~isempty(Group.groupDifference) % strcmp(Group.groupType,'difference')
+%         group_diffexist = 1;
+%         path = Group.fileslist.path;
+%         n_files = length(Group.fileslist);
+%         [B_values_cell1,Sub,Proj,unit] = nbt_checkif_groupdiff(Group,G,n_files,bioms_name1,path);
+%         [B_values_cell2,Sub,Proj,unit] = nbt_checkif_groupdiff(Group,G,n_files,bioms_name2,path);
+%         group_diffexist;
+%         NCHANNELS = length(Group.chansregs.chanloc);
+%         [dimens_diff1,biomPerChans1,IndexbiomNotPerChans1] = nbt_dimension_check(B_values_cell1,NCHANNELS);
+%         
+%         [dimens_diff2,biomPerChans2,IndexbiomNotPerChans2] = nbt_dimension_check(B_values_cell2,NCHANNELS);
+%         if ~isempty(biomPerChans1)
+%             B_values1 = nbt_extractBiomPerChans(biomPerChans1,B_values_cell1);
+%         else
+%             dimBio = IndexbiomNotPerChans1{dim};
+%             B_values1 = nbt_extractBiomNotPerChans(dimBio,B_values_cell1);
+%         end
+%         
+%         if ~isempty(biomPerChans2)
+%             B_values2 = nbt_extractBiomPerChans(biomPerChans2,B_values_cell2);
+%         else
+%             
+%             dimBio = IndexbiomNotPerChans2{1};
+%             B_values2 = nbt_extractBiomNotPerChans(dimBio,B_values_cell2);
+%             
+%         end
+%         
+%         bioms1 = bioms_name1;
+%         bioms2 = bioms_name2;
+%         
+%         
+%     else
+%         group_diffexist = 0;
+%         path = Group.fileslist.path;
+%         n_files = length(Group.fileslist);
+%         
+%         bioms1 = bioms_name1;
+%         bioms2 = bioms_name2;
+%         % load biomarkers
+%         for j = 1:n_files % subject
+%             for l = 1:length(bioms2) % biomarker
+%                 namefile = Group.fileslist(j).name;
+%                 biomarker1 = bioms1{1};
+%                 biomarker2 = bioms2{l};
+%                 [B_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
+%                 [B_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
+%             end
+%         end
+%     end
     
 elseif length(group_ind) == 2
     

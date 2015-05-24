@@ -1,4 +1,4 @@
-classdef nbt_Data
+classdef nbt_Data < handle
     %nbt_Data contains collections of biomarker data and is mainly produced
     %by the getData method of the nbt_Group object
     
@@ -30,12 +30,13 @@ classdef nbt_Data
       end
         
        Biomarker = getBiomarker(nbt_DataObject, Parameters, OutputFormat);   
+       DataObj = getData_NBTelement(DataObj,GrpObj, StatObj);
        
        function B = subsref(A,S)
            if(strcmp(S(1).type,'.'))
-               try
+               if(length(S) ==1)
                     B = eval(['A' S.type S.subs]);    
-               catch
+               elseif(length(S) == 2)
                    if(length(S(2).subs)==2)
                         B = eval(['A' S(1).type S(1).subs '{' num2str(S(2).subs{1}) ',' num2str(S(2).subs{2}) '};' ]);
                    else

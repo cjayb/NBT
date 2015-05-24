@@ -131,12 +131,23 @@ downButton = uicontrol(StatSelection,'Style','pushbutton','String','\/','Positio
             elseif length(group_ind) == 1
                 warning('Two groups are necessary for difference group creation!')
             elseif length(group_ind) == 2
-
                 % if (size(Data1.subjectList{1},2) == size(Data2.subjectList{1},2))
-                NBTstudy.groups{end+1} = NBTstudy.groups{group_ind(1)};
-                NBTstudy.groups{end}.grpNumber = length(NBTstudy.groups);
-                NBTstudy.groups{end}.groupType = 'difference';
-                NBTstudy.groups{end}.groupDifference = group_ind;
+                % SH: Changed class to difference group
+                DiffGroup = nbt_DiffGroup;
+                DiffGroup.grpNumber = length(NBTstudy.groups) + 1;
+                DiffGroup.groupDifference = group_ind;
+                DiffGroup.biomarkerList = NBTstudy.groups{group_ind(1)}.biomarkerList;
+                DiffGroup.chanLocs = NBTstudy.groups{group_ind(1)}.chanLocs;
+                DiffGroup.ref = NBTstudy.groups{group_ind(1)}.ref;
+                DiffGroup.listRegData = NBTstudy.groups{group_ind(1)}.listRegData;
+                
+                % Put the group in the NBTstudy object
+                NBTstudy.groups{end+1} = DiffGroup;
+                
+                %NBTstudy.groups{end+1} = NBTstudy.groups{group_ind(1)};
+                %NBTstudy.groups{end}.grpNumber = length(NBTstudy.groups);
+                %NBTstudy.groups{end}.groupType = 'difference';
+                %NBTstudy.groups{end}.groupDifference = group_ind;
 
                 scrsz = get(0,'ScreenSize');
                 % fit figure to screen, adapt to screen resolution

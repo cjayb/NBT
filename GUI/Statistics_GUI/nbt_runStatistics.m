@@ -1,5 +1,12 @@
 function nbt_runStatistics(GUIswitch)
 global NBTstudy
+
+%First clean the cache
+nrStatsInStudy = length(NBTstudy.statAnalysis);
+if(nrStatsInStudy > 1)
+    NBTstudy.statAnalysis{length(NBTstudy.statAnalysis)}.data = [];
+end
+
 if(GUIswitch)
     disp('Waiting for statistics ...')
     HrunStat = findobj( 'Tag', 'NBTstatRunButton');
@@ -70,7 +77,7 @@ S = S.calculate(NBTstudy);
 
 NBTstudy.statAnalysis{length(NBTstudy.statAnalysis)+1} = S;
 disp('Statistics done.')
-if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot') && ~strcmp(class(S),'nbt_comparebiomarkers') % && ~strcmp(class(S),'nbt_ttest')
+if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot') && ~strcmp(class(S),'nbt_comparebiomarkers') && ~ismember('rsq.Answers',S.getBiomarkerNames) %&& ~strcmp(class(S),'nbt_ttest')
     nbt_plot_2conditions_topoAll(S)
 end
 

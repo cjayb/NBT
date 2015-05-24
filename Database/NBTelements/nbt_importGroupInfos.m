@@ -1,5 +1,5 @@
 %  Copyright (C) 2010: Simon-Shlomo Poil
-function nbt_importGroupInfos(startpath)
+function nbt_importGroupInfos(startpath,fileSwitch)
 if(~exist('startpath','var'))
     startpath = uigetdir(pwd,'Select folder with NBT analysis files');
 end
@@ -48,7 +48,7 @@ for i=1:length(FileList)
     %we first clear everything from the old file.
     s = whos;
     for ii=1:length(s)
-        if(~strcmp(s(ii).class,'nbt_NBTelement') && ~strcmp(s(ii).name,'s') && ~strcmp(s(ii).name,'FileList') && ~strcmp(s(ii).name,'i') && ~strcmp(s(ii).name,'NextID'))
+        if(~strcmp(s(ii).class,'nbt_NBTelement') && ~strcmp(s(ii).name,'s') && ~strcmp(s(ii).name,'FileList') && ~strcmp(s(ii).name,'i') && ~strcmp(s(ii).name,'NextID') && ~strcmp(s(ii).name,'fileSwitch'))
             clear([s(ii).name])
         end
     end
@@ -114,11 +114,14 @@ for i=1:length(FileList)
         
         eval(['NumBiomarkers = length(' subjectBiomarkerFields{m} '.biomarkers);']);
         if(NumBiomarkers ~=0)
-            for dd = 1:NumBiomarkers
-                eval( ['DataString = nbt_cellc(' subjectBiomarkerFields{m} '.biomarkers,dd);']);
-                eval(['Data{dd,1} = ' subjectBiomarkerFields{m} '.' DataString ';']);
-                eval([NBTelementName '.Biomarkers{ dd ,1} = DataString; '])
-                
+            if(fileSwitch)
+                Data = int8(0);
+            else
+                for dd = 1:NumBiomarkers
+                    eval( ['DataString = nbt_cellc(' subjectBiomarkerFields{m} '.biomarkers,dd);']);
+                    eval(['Data{dd,1} = nbt_convertToSingle(' subjectBiomarkerFields{m} '.' DataString ');']);
+                    eval([NBTelementName '.Biomarkers{ dd ,1} = DataString; '])
+                end
             end
             eval([NBTelementName ' = nbt_SetData(' NBTelementName ', Data, {Condition, SubjectInfo.conditionID; Subject, SubjectInfo.subjectID;Project, SubjectInfo.projectInfo(1:end-4)});']);
             
@@ -197,11 +200,15 @@ for i=1:length(FileList)
             %Create the Data cell
             eval(['NumBiomarkers = length(' BiomarkerList{m} '.biomarkers);']);
             if(NumBiomarkers ~=0)
-                for dd = 1:NumBiomarkers
-                    eval( ['DataString = nbt_cellc(' BiomarkerList{m} '.biomarkers,dd);']);
-                    eval(['Data{dd,1} = ' BiomarkerList{m} '.' DataString ';']);
-                    if(size(Data{dd,1},2) > size(Data{dd,1},1)) %to fix bug with biomarkers with wrong dimension
-                       Data{dd,1} = Data{dd,1}';  
+                if(fileSwitch)
+                    Data = int8(0);
+                else
+                    for dd = 1:NumBiomarkers
+                        eval( ['DataString = nbt_cellc(' BiomarkerList{m} '.biomarkers,dd);']);
+                        eval(['Data{dd,1} = nbt_convertToSingle(' BiomarkerList{m} '.' DataString ');']);
+                        if(size(Data{dd,1},2) > size(Data{dd,1},1)) %to fix bug with biomarkers with wrong dimension
+                            Data{dd,1} = Data{dd,1}';
+                        end
                     end
                 end
                 eval([NBTelementName ' = nbt_SetData(' NBTelementName ', Data, {' connectorKeys '});']);

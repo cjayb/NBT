@@ -1,5 +1,10 @@
 function nbt_SaveSignal(Signal, SignalInfo, directoryname,auto,SignalName,SubjectInfo)
 narginchk(2, 6)
+saveSignal = true;
+if(isempty(Signal))
+    saveSignal = false;
+end
+    
 if(~exist('auto','var'))
     auto = 0;
 end
@@ -51,11 +56,13 @@ if(auto == 1)
             if(exist('SubjectInfo','var'))
                 save([directoryname filesep fn '.mat'],'SubjectInfo','-append')
             end
-        end
-        try
-            save([directoryname filesep fn(1:end-5) '.mat'],name,'-append')
-        catch
-            save([directoryname filesep fn(1:end-5) '.mat'],name)
+        end  
+        if(saveSignal)
+            try
+                save([directoryname filesep fn(1:end-5) '.mat'],name,'-append')
+            catch
+                save([directoryname filesep fn(1:end-5) '.mat'],name)
+            end
         end
     else
         OptionSave = input(['A file named ' fn '.mat does not exist in this directory. Do you want create a new file? [[Y]es [N]o]'],'s'); % e.g. RawSignal, CleanSigna
@@ -64,7 +71,9 @@ if(auto == 1)
             if(exist('SubjectInfo','var'))
                 save([directoryname filesep fn '.mat'],'SubjectInfo','-append')
             end
-            save([directoryname filesep fn(1:end-5) '.mat'],name)
+            if(saveSignal)
+                save([directoryname filesep fn(1:end-5) '.mat'],name)
+            end
         end
     end
     disp('NBT signal saved')

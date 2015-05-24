@@ -1,7 +1,7 @@
 
 function StatObj = nbt_compareBiomarkersPanel(StatObj, StudyObj)
 
-    StatSelection = figure('Units','points', 'name','Biomarkers Comparison' ,'numbertitle','off','Position',[50  100  500  450],...
+    StatSelection = figure('Units','points', 'name','Biomarkers Comparison' ,'numbertitle','off','Position',[50  100  600  550],...
         'MenuBar','none','NextPlot','new','Resize','on');
 
     % regions or channels

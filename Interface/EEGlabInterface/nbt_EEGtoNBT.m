@@ -45,7 +45,7 @@ function [Signal, SignalInfo, SignalPath, SubjectInfo] = nbt_EEGtoNBT(EEG, filen
 narginchk(1,5)
 %initial setup
 if(~exist('filename','var') || isempty(filename))
-    filename = EEG.setname;
+    filename = strtok(EEG.setname,' ');
 end
 
 if(~exist('fileExt','var') || isempty(fileExt))
@@ -100,6 +100,7 @@ if(~exist('saveflag','var') || isempty(saveflag))
     if (strcmpi(input('Do you want to save this signal? ([Y]es/[N]o)','s'),'y'))
         saveflag = 1;
         name = input('Name of NBT Signal? (should contain the word Signal) ','s');
+        SignalInfo.signalName = name;
     end
 else
     auto = 1;
