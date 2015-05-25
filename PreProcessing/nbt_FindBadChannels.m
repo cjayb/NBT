@@ -92,6 +92,7 @@ elseif (strcmp('C',flag) || strcmp('c',flag))
     indelec(find(channelcorr<0.4)) =1;
 else
     disp('This option does not exist!')
+    return
 end
 
 disp('Bad channels:');
