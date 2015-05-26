@@ -83,8 +83,8 @@ for j=3:length(d)
                     eval([ oldInfoFields{i} '= tmp;']);
                     save(d(j).name,(oldInfoFields{i}),'-append')
             
+                end
             end
-        end
     end
 end
 end

@@ -1,6 +1,8 @@
 function nbt_splitPlotGroups(d1,d2,ListSplit,ListSplitValue,ListBiom1, ListBiom2, ListRegion, ListGroup, StatObj)
 global Factors
 global Questionnaire
+global NBTstudy
+
 splt = get(ListSplit,'Value');
 spltVal = str2num(get(ListSplitValue,'String'));
 
@@ -26,61 +28,117 @@ group_name = group_name(group_ind);
 
 %%  If more than one group then has to be paired and make sure that
 %  both have the same subjects.
+
+global NBTstudy
+
 if length(group_ind) == 1
-    Group = G(group_ind);
-    path = Group.fileslist.path;
-    n_files = length(Group.fileslist);
+    
+    Group = NBTstudy.groups{group_ind};
     
     bioms1 = bioms_name1;
     bioms2 = bioms_name2;
-    % load biomarkers
-    for j = 1:n_files % subject
-        for l = 1:length(bioms2) % biomarker
-            namefile = Group.fileslist(j).name;
-            biomarker1 = bioms1{1};
-            biomarker2 = bioms2{l};
-            [B_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
-            [B_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
-        end
+    nameG1 = Group.groupName;
+     
+    Data1 = NBTstudy.groups{StatObj.groups(1)}.getData(StatObj); %with parameters);
+        
+    B1 = Data1.dataStore{1}; 
+    B2 = Data1.dataStore{2};
+    for j=1:size(Data1.dataStore{1})
+        B_values1(:,j) = B1{j};
+        B_values2(:,j) = B2{j};
     end
+    
+
+
+% if length(group_ind) == 1
+%     Group = G(group_ind);
+%     path = Group.fileslist.path;
+%     n_files = length(Group.fileslist);
+%     
+%     bioms1 = bioms_name1;
+%     bioms2 = bioms_name2;
+%     % load biomarkers
+%     for j = 1:n_files % subject
+%         for l = 1:length(bioms2) % biomarker
+%             namefile = Group.fileslist(j).name;
+%             biomarker1 = bioms1{1};
+%             biomarker2 = bioms2{l};
+%             [B_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
+%             [B_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
+%         end
+%     end
     
 elseif length(group_ind) == 2
-    Group1 = G(group_ind(1));
-    Group2 = G(group_ind(2));
-    n_files1 = length(Group1.fileslist);
-    n_files2 = length(Group2.fileslist);
+%     Group1 = G(group_ind(1));
+%     Group2 = G(group_ind(2));
+%     n_files1 = length(Group1.fileslist);
+%     n_files2 = length(Group2.fileslist);
+%     bioms1 = bioms_name1;
+%     bioms2 = bioms_name2;
+%     
+%     nameG2 = Group2.fileslist.group_name;
+%     path2 = Group2.fileslist.path;
+%     n_files2 = length(Group2.fileslist);
+%     nameG1 = Group1.fileslist.group_name;
+%     path1 = Group1.fileslist.path;
+%     n_files1 = length(Group1.fileslist);
+%     % load biomarkers
+%     for j = 1:n_files1 % subject
+%         for l = 1:length(bioms2) % biomarker
+%             namefile = Group1.fileslist(j).name;
+%             biomarker1 = bioms1{1};
+%             biomarker2 = bioms2{l};
+%             [B1_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path1,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
+%             [B1_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path1,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
+%             
+%         end
+%     end
+%     for j = 1:n_files2 % subject
+%         for l = 1:length(bioms2) % biomarker
+%             namefile = Group2.fileslist(j).name;
+%             biomarker1 = bioms1{1};
+%             biomarker2 = bioms2{l};
+%             [B2_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path2,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
+%             [B2_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path2,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
+%         end
+%     end
+%     
+%     B_values1 = B1_values1-B2_values1;% questionnaire
+%     B_values2 = B1_values2-B2_values2;%i.e. amplitude
+
+
+    Group1 = NBTstudy.groups{group_ind(1)};
+    Group2 = NBTstudy.groups{group_ind(2)};
     bioms1 = bioms_name1;
     bioms2 = bioms_name2;
-    
-    nameG2 = Group2.fileslist.group_name;
-    path2 = Group2.fileslist.path;
-    n_files2 = length(Group2.fileslist);
-    nameG1 = Group1.fileslist.group_name;
-    path1 = Group1.fileslist.path;
-    n_files1 = length(Group1.fileslist);
+
+    nameG1 = Group1.groupName;
     % load biomarkers
-    for j = 1:n_files1 % subject
-        for l = 1:length(bioms2) % biomarker
-            namefile = Group1.fileslist(j).name;
-            biomarker1 = bioms1{1};
-            biomarker2 = bioms2{l};
-            [B1_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path1,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
-            [B1_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path1,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
-            
-        end
+
+    StudyObj = NBTstudy;
+
+    Data1 = StudyObj.groups{StatObj.groups(group_ind(1))}.getData(StatObj); %with parameters);
+
+    G1B1 = Data1.dataStore{1};
+    G1B2 = Data1.dataStore{2};
+    for j=1:size(Data1.dataStore{1})
+        B1_values1(:,j) = G1B1{j};
+        B1_values2(:,j) = G1B2{j};
     end
-    for j = 1:n_files2 % subject
-        for l = 1:length(bioms2) % biomarker
-            namefile = Group2.fileslist(j).name;
-            biomarker1 = bioms1{1};
-            biomarker2 = bioms2{l};
-            [B2_values1(:,j),Sub,Proj,unit1{j}]=nbt_load_analysis(path2,namefile,biomarker1,@nbt_get_biomarker,[],[],[]);
-            [B2_values2(:,j,l),Sub,Proj,unit2{j,l}]=nbt_load_analysis(path2,namefile,biomarker2,@nbt_get_biomarker,[],[],[]);
-        end
+
+    nameG2 = Group2.groupName;
+
+    Data2 = StudyObj.groups{StatObj.groups(group_ind(2))}.getData(StatObj); %with parameters);
+
+    G2B1 = Data2.dataStore{1};
+    G2B2 = Data2.dataStore{2};
+    for j=1:size(Data2.dataStore{1})
+        B2_values1(:,j) = G2B1{j};
+        B2_values2(:,j) = G2B2{j};
     end
-    
-    B_values1 = B1_values1-B2_values1;% questionnaire
-    B_values2 = B1_values2-B2_values2;%i.e. amplitude
+
+    B_values1 = B1_values1-B2_values1;
+    B_values2 = B1_values2-B2_values2;
     
 end
 
