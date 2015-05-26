@@ -53,7 +53,7 @@ function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx)
     %Get the biomarkerlist from NBTstudy
     biomarkerList = GroupObject.biomarkerList;
     
-    obj.group{grpIdx}.biomarkerIndex = zeros(1,50);
+    %obj.group{grpIdx}.biomarkerIndex = cell(1,length(biomarkerList));
     
     % Specify the fixed order for the NBT Print plots
     freqBandsFixedOrder = {'1  4', '4  8', '8  13', '13  30', '30  45'};
@@ -104,7 +104,7 @@ function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx)
 
                     obj.group{grpIdx}.biomarkerIdentifiers{i} = {'frequencyRange' freqRange};
                     obj.group{grpIdx}.classes{i} = biomarkerClass;
-                    obj.group{grpIdx}.biomarkerIndex((biomIndex-1)*5 + freqIndex) = i;
+                    obj.group{grpIdx}.biomarkerIndex{(biomIndex-1)*5 + freqIndex} = i;
                     obj.group{grpIdx}.units{(biomIndex-1)*5 + freqIndex} = biomarkerUnit;
 
                     i = i + 1;
@@ -119,8 +119,22 @@ function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx)
 
                     obj.group{grpIdx}.biomarkerIdentifiers{i} = [];
                     obj.group{grpIdx}.classes{i} = biomarkerClass;
-                    obj.group{grpIdx}.biomarkerIndex((biomIndex-1)*5 + freqIndex) = i;
+                    obj.group{grpIdx}.biomarkerIndex{(biomIndex-1)*5 + freqIndex} = i;
                     obj.group{grpIdx}.units{(biomIndex-1)*5 + freqIndex} = biomarkerUnit;
+
+                    i = i + 1;
+                end
+            else
+                if isempty(strfind(currentBiom, 'rsq'))
+                    %%% Store the biomarker in the analysis object
+                    obj.group{grpIdx}.originalBiomNames{i} = currentBiom;
+                    obj.group{grpIdx}.biomarkers{i} = biomName;
+                    obj.group{grpIdx}.subBiomarkers{i} = subBiomName;
+
+                    obj.group{grpIdx}.biomarkerIdentifiers{i} = {'frequencyRange' freqRange};
+                    obj.group{grpIdx}.classes{i} = biomarkerClass;
+                    obj.group{grpIdx}.biomarkerIndex{i} = i;
+                    obj.group{grpIdx}.units{i} = biomarkerUnit;
 
                     i = i + 1;
                 end
