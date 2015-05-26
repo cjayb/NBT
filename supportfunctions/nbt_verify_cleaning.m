@@ -22,7 +22,7 @@ clear L
 Analysis1 = [PathName1 S1_info.subjectInfo(1:end-5),'_analysis.mat'];
 [biomarker_objects1,biomarkers1] = nbt_extractBiomarkers(Analysis1);
 
-Analysis2 = [PathName2 S2_info.subjectInfo,'_analysis.mat'];
+Analysis2 = [PathName2 S2_info.subjectInfo(1:end-5),'_analysis.mat'];
 [biomarker_objects2,biomarkers2] = nbt_extractBiomarkers(Analysis2);
 
 % verify signal length
@@ -101,7 +101,7 @@ for i = 1: length(biom1)
    [B1(:,i),Sub1,Proj1,unit{i}]=nbt_load_analysis(PathName1,[S1_info.subjectInfo(1:end-5),'_analysis.mat'],[biomarker_objects1{biom1(i)},'.Channels'],@nbt_get_biomarker,[],[],[]);
 end
 for i = 1: length(biom2)
-   [B2(:,i),Sub2,Proj2,unit{i}]=nbt_load_analysis(PathName2,[S2_info.subjectInfo,'_analysis.mat'],[biomarker_objects2{biom2(i)},'.Channels'],@nbt_get_biomarker,[],[],[]);
+   [B2(:,i),Sub2,Proj2,unit{i}]=nbt_load_analysis(PathName2,[S2_info.subjectInfo(1:end-5),'_analysis.mat'],[biomarker_objects2{biom2(i)},'.Channels'],@nbt_get_biomarker,[],[],[]);
 end
 % % abs diff
 % for i = 1: length(biom2)
