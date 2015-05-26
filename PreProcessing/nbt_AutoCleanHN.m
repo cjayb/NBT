@@ -50,22 +50,23 @@ function [Signal, SignalInfo] = nbt_AutoCleanHN(Signal, SignalInfo, SignalPath, 
 narginchk(3,5)
 % narginchk(3,3)
 
-% EyeCh = [8, 14, 21, 25, 125, 126, 127, 128];
+EyeCh = [8, 14, 21, 25, 125, 126, 127, 128];
+NonEEGCh = [8, 14, 21, 25, 125, 126, 127, 128];
 
-   if(isempty(SignalInfo.nonEEGch))
-      SignalInfo.nonEEGch = input('Please specify Non-EEG channels: ');
-   end
-
-   if(isempty(SignalInfo.eyeCh))
-     SignalInfo.eyeCh = input('Please specify eye channels: ');
-   end
-   
-if(~exist('NonEEGCh','var'))
-    NonEEGCh = SignalInfo.nonEEGch;
-end
-if(~exist('EyeCh','var'))
-    EyeCh = SignalInfo.eyeCh;
-end
+%    if(isempty(SignalInfo.nonEEGch))
+%       SignalInfo.nonEEGch = input('Please specify Non-EEG channels: ');
+%    end
+% 
+%    if(isempty(SignalInfo.eyeCh))
+%      SignalInfo.eyeCh = input('Please specify eye channels: ');
+%    end
+%    
+% if(~exist('NonEEGCh','var'))
+%     NonEEGCh = SignalInfo.nonEEGch;
+% end
+% if(~exist('EyeCh','var'))
+%     EyeCh = SignalInfo.eyeCh;
+% end
    
 % Protocol
 %. 0. Ref-ref to Cz
@@ -78,7 +79,7 @@ for CzID = 1:SignalInfo.interface.EEG.nbchan
     end
 end
 if(cznotfound)
-    CzID = input('Please specify Cz channel number')
+    CzID = input('Please specify Cz channel number');
 end
 
 % CzID = SignalInfo.interface.EEG.ref;
@@ -87,12 +88,13 @@ end
 %[Signal, SignalInfo] = nbt_EEGLABwrp(@pop_resample, Signal, SignalInfo, [], 0, 250);
 %SignalInfo.convertedSamplingFrequency = 250;
 %Re-reference to Cz
-[Signal, SignalInfo] = nbt_EEGLABwrp(@nbt_ReRef, Signal,SignalInfo,SignalPath,[],0,CzID);
+% [Signal, SignalInfo] = nbt_EEGLABwrp(@nbt_ReRef, Signal,SignalInfo,SignalPath,[],0,CzID);
+[Signal, SignalInfo] = nbt_EEGLABwrp(@nbt_ReRef, Signal,SignalInfo,SignalPath,[],CzID);
 % 1. Filter Data
 [Signal] = nbt_filter_fir(Signal,0.5,45,SignalInfo.convertedSamplingFrequency,2/0.5,1);
 % 2. Mark Bad Channels
 [Signal, SignalInfo] = nbt_EEGLABwrp(@nbt_FindBadChannels, Signal, SignalInfo, [] , 0, 's', NonEEGCh);
-SignalInfo.BadChannels(NonEEGCh) = 1;
+SignalInfo.badChannels(NonEEGCh) = 1;
 % 3. Reject Transient artifacts
 [Signal, SignalInfo] = nbt_AutoRejectTransient(Signal,SignalInfo,NonEEGCh);
 % 4. Run ICA
@@ -101,5 +103,6 @@ SignalInfo.BadChannels(NonEEGCh) = 1;
 [Signal, SignalInfo] = nbt_EEGLABwrp(@nbt_AutoRejectICA,Signal, SignalInfo, [],0, EyeCh,0);
 % 6. Average Ref
 [Signal, SignalInfo] = nbt_EEGLABwrp(@nbt_ReRef,Signal, SignalInfo, [],0,[]);
-nbt_SaveSignal(Signal, SignalInfo, SignalPath,1,'AutoICASignal')
+% nbt_SaveSignal(Signal, SignalInfo, SignalPath,1,'AutoICASignal')
+nbt_SaveSignal(Signal, SignalInfo, SignalPath,1,'FSTR_CleanSignal')
 end
