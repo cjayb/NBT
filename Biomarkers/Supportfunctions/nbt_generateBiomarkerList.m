@@ -59,8 +59,8 @@ function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx)
     freqBandsFixedOrder = {'1  4', '4  8', '8  13', '13  30', '30  45'};
     freqBandsFixedOrderNames = {'Delta', 'Theta', 'Alpha', 'Beta', 'Gamma'};
     
-    biomarkersFixedOrder = {'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_DFA', 'NBTe_nbt_PLI','NBTe_nbt_PeakFit','NBTe_nbt_PeakFit','NBTe_nbt_AmplitudeCorr','NBTe_nbt_Coher','NBTe_nbt_PhaseLocking'};
-    subBiomarkersFixedOrder = {'AbsolutePower', 'RelativePower', 'CentralFreq', 'markerValues', 'pliVal','Bandwidth','SpectralEdge','MarkerValues','Coherence','PLV'};
+    biomarkersFixedOrder = {'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_DFA', 'NBTe_nbt_OscBursts','NBTe_nbt_PeakFit','NBTe_nbt_PeakFit','NBTe_nbt_AmplitudeCorr','NBTe_nbt_Coher','NBTe_nbt_PhaseLocking'};
+    subBiomarkersFixedOrder = {'AbsolutePower', 'RelativePower', 'CentralFreq', 'markerValues', 'CumulativeLifetime','Bandwidth','SpectralEdge','MarkerValues','Coherence','PLV'};
     
     % Iterate along all fixed biomarkers and then check whether a present
     % biomarker corresponds to the fixed biomarker and store it in the
@@ -104,7 +104,7 @@ function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx)
 
                     obj.group{grpIdx}.biomarkerIdentifiers{i} = {'frequencyRange' freqRange};
                     obj.group{grpIdx}.classes{i} = biomarkerClass;
-                    obj.group{grpIdx}.biomarkerIndex{(biomIndex-1)*5 + freqIndex} = i;
+                    obj.group{grpIdx}.biomarkerIndex((biomIndex-1)*5 + freqIndex) = i;
                     obj.group{grpIdx}.units{(biomIndex-1)*5 + freqIndex} = biomarkerUnit;
 
                     i = i + 1;
@@ -119,25 +119,25 @@ function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx)
 
                     obj.group{grpIdx}.biomarkerIdentifiers{i} = [];
                     obj.group{grpIdx}.classes{i} = biomarkerClass;
-                    obj.group{grpIdx}.biomarkerIndex{(biomIndex-1)*5 + freqIndex} = i;
+                    obj.group{grpIdx}.biomarkerIndex((biomIndex-1)*5 + freqIndex) = i;
                     obj.group{grpIdx}.units{(biomIndex-1)*5 + freqIndex} = biomarkerUnit;
 
                     i = i + 1;
                 end
-            else
-                if isempty(strfind(currentBiom, 'rsq'))
-                    %%% Store the biomarker in the analysis object
-                    obj.group{grpIdx}.originalBiomNames{i} = currentBiom;
-                    obj.group{grpIdx}.biomarkers{i} = biomName;
-                    obj.group{grpIdx}.subBiomarkers{i} = subBiomName;
-
-                    obj.group{grpIdx}.biomarkerIdentifiers{i} = {'frequencyRange' freqRange};
-                    obj.group{grpIdx}.classes{i} = biomarkerClass;
-                    obj.group{grpIdx}.biomarkerIndex{i} = i;
-                    obj.group{grpIdx}.units{i} = biomarkerUnit;
-
-                    i = i + 1;
-                end
+%             else
+%                 if isempty(strfind(currentBiom, 'rsq'))
+%                     %%% Store the biomarker in the analysis object
+%                     obj.group{grpIdx}.originalBiomNames{i} = currentBiom;
+%                     obj.group{grpIdx}.biomarkers{i} = biomName;
+%                     obj.group{grpIdx}.subBiomarkers{i} = subBiomName;
+% 
+%                     obj.group{grpIdx}.biomarkerIdentifiers{i} = {'frequencyRange' freqRange};
+%                     obj.group{grpIdx}.classes{i} = biomarkerClass;
+%                     obj.group{grpIdx}.biomarkerIndex{i} = i;
+%                     obj.group{grpIdx}.units{i} = biomarkerUnit;
+% 
+%                     i = i + 1;
+%                 end
             end
         end
     end
