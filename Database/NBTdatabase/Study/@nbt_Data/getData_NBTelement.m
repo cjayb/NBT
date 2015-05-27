@@ -81,7 +81,7 @@ end
                         assignin('base', 'tmpPool', DataObj.pool)
                         assignin('base', 'tmpPoolKey', DataObj.poolKey)
                         for bId = 1:numBiomarkers
-                            [DataObj.dataStore{bId,1}, ~, ~, DataObj.units{bId,1}] = evalin('base',['nbt_returnData(' DataObj.biomarkers{bId} ', tmpPool{' num2str(bId) '}, tmpPoolKey{' num2str(bId) '},' '''' DataObj.subBiomarkers{bId} '''' ');']);
+                            [DataObj.dataStore{bId,1}, ~, ~, DataObj.units{bId,1}, DataObj.biomarkerMetaInfo{bId,1}] = evalin('base',['nbt_returnData(' DataObj.biomarkers{bId} ', tmpPool{' num2str(bId) '}, tmpPoolKey{' num2str(bId) '},' '''' DataObj.subBiomarkers{bId} '''' ');']);
                         end
                         evalin('base','clear tmpPool');
                         evalin('base','clear tmpPoolKey')
@@ -91,7 +91,7 @@ end
                         assignin('base', 'tmpPool2', DataObj2.pool)
                         assignin('base', 'tmpPoolKey2', DataObj2.poolKey)
                         for bId = 1:numBiomarkers
-                            [DataObj.dataStore{bId,1}, ~, ~, DataObj.units{bId,1}] = evalin('base',['nbt_returnData(' DataObj.biomarkers{bId} ', tmpPool{' num2str(bId) '}, tmpPoolKey{' num2str(bId) '},' '''' DataObj.subBiomarkers{bId} '''' ', tmpPool2{' num2str(bId) '}, tmpPoolKey2{' num2str(bId) '},' ''''  GrpObj.groupDifferenceType '''' ');']);
+                            [DataObj.dataStore{bId,1}, ~, ~, DataObj.units{bId,1}, DataObj.biomarkerMetaInfo{bId,1}] = evalin('base',['nbt_returnData(' DataObj.biomarkers{bId} ', tmpPool{' num2str(bId) '}, tmpPoolKey{' num2str(bId) '},' '''' DataObj.subBiomarkers{bId} '''' ', tmpPool2{' num2str(bId) '}, tmpPoolKey2{' num2str(bId) '},' ''''  GrpObj.groupDifferenceType '''' ');']);
                         end
                         evalin('base','clear tmpPool');
                         evalin('base','clear tmpPoolKey')
@@ -251,6 +251,7 @@ for bId = 1:length(DataObj.biomarkers)
         DataObj.dataStore{bId,1}{subjIdx,1} = DataObj.dataStore{bId,1}{subjIdx,1}';
     end
     DataObj.units{bId,1} = eval([BiomarkerLoadName{bId} '.units;']);
+    DataObj.biomarkerMetaInfo{bId} = eval([BiomarkerLoadName{bId} '.biomarkerMetaInfo;']);
 end
 end
 

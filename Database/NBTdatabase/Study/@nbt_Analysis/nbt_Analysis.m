@@ -37,9 +37,10 @@ classdef nbt_Analysis < handle
                 end
                 biomarkerNames{m} = strrep(biomarkerNames{m},'_','.');
             end
-            
         end
-    end
-    
+       
+        plot(AnalysisObj);
+        
+    end   
 end
 

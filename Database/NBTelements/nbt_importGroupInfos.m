@@ -96,8 +96,8 @@ for i=1:length(FileList)
 %% importing biomarkers not related to signals
     for m = 1:length(subjectBiomarkerFields)
 
-        eval(['QB = ~isa(' subjectBiomarkerFields{m} ',' '''nbt_QBiomarker' ''');']);
-           if(QB)
+        eval(['SB = ~isa(' subjectBiomarkerFields{m} ',' '''nbt_QBiomarker' ''');']);
+           if(SB)
                continue;
            end
         
@@ -131,6 +131,8 @@ for i=1:length(FileList)
          eval([NBTelementName '.Biomarkers = ' subjectBiomarkerFields{m} '.biomarkers;'])
          eval([NBTelementName '.BiomarkerType = ' subjectBiomarkerFields{m} '.biomarkerType;'])        
          eval([NBTelementName '.BiomarkerUnit = ' subjectBiomarkerFields{m} '.units;']) 
+         metaInfoField = eval([subjectBiomarkerFields{m} '.biomarkerMetaInfo;']);
+         eval([NBTelementName '.BiomarkerMetaInfo = ' subjectBiomarkerFields{m} '.' metaInfoField  ';']) 
     end
     
 %% Importing biomarkers related to signals
