@@ -205,6 +205,7 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
     
     %     pos = get(gca,'Position')
     pos = get(cbh,'Position');
+    % p value bar
     set(cbh,'Position',[pos(1)-0.5*pos(1) pos(2)-0.6*pos(2) 0.1 0.03])
     for j = 1: size(B_values2,1)
         if ~isempty(strfind(bioms_name2{1},'Answers'))
