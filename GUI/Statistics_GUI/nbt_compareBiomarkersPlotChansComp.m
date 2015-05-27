@@ -220,8 +220,8 @@ else
             hold on
             plot(1,mean(B1),'s','Markerfacecolor','k')
             plot(2,mean(B2),'s','Markerfacecolor','k')
-            text(1.02,mean(B1),'Mean','fontsize',8)
-            text(2.02,mean(B2),'Mean','fontsize',8)
+            text(1.02,double(mean(B1)),'Mean','fontsize',8)
+            text(2.02,double(mean(B2)),'Mean','fontsize',8)
 %             bar([mean(B1) mean(B2)])
              ylabel(['BoxPlot ' regexprep(bioms1{biomindex},'_',' ') ' in ' chan_reg ' ' num2str(chan_or_reg)])
      

@@ -124,7 +124,13 @@ end
             if ~strcmp(DataObj.classes{bID},'nbt_QBiomarker')
                 if (StatObj.channelsRegionsSwitch == 2) % regions
                     regions = GrpObj.listRegData;
-                    DataMat = DataObj{bID,1}; % n_chans x n_subjects
+                    % the following 6 lines are a hack: replacing DataMat = DataObj{bID,1};
+                    DataObject = DataObj.dataStore{bID};
+%                     DataMat = DataObject{bID,:}; % n_chans x n_subjects
+                    DataMat = []; % n_chans x n_subjects
+                    for subject=1:length(DataObject)
+                        DataMat = [DataMat DataObject{subject}];                       
+                    end
                     RegData = [];
                     for j=1:length(regions)
                         RegData = [RegData; nanmean(DataMat(regions(j).reg.channel_nr,:),1)];
