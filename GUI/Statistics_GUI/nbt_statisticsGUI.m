@@ -120,7 +120,8 @@ downButton = uicontrol(StatSelection,'Style','pushbutton','String','\/','Positio
         
         % Get the groups from the GUI
         groups = get(ListGroup,'Value');
-        nbt_Print(NBTstudy,groups);
+        statTest = get(ListStat,'Value');
+        nbt_Print(NBTstudy,ListStat,groups);
     end
 
         function diff_group(d1,d2)
