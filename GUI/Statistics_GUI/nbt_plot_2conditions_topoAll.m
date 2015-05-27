@@ -33,13 +33,29 @@ nBioms = length(biomarkersToPlot);
 biomIdx = 0;
 
 
-q = input('Specify the desired false discovery rate: (default = 0.05) ');
+% Correct for multiple comparisons
+multiComp = input('Correct for multiple comparisons? (no / fdr / bonfi / holm) ','s');
 
-for biomID = biomarkersToPlot
+if strcmp(multiComp,'fdr')
+    q = input('Specify the desired false discovery rate: (default = 0.05) ');
+end
+
+for biomID = 1 : nBioms
+    if strcmp(multiComp,'fdr')
+        [~, pValues{biomID}] = nbt_MCcorrect(StatObj.pValues{biomarkersToPlot(biomID)},multiComp,q);
+    else
+        [~, pValues{biomID}] = nbt_MCcorrect(StatObj.pValues{biomarkersToPlot(biomID)},multiComp);
+    end
+end
+
+% Create a new figure
+figure
+
+for biomID = 1 : nBioms
     biomIdx = biomIdx +1;
     %%% Values for all channels for selected biomarker
-    chanValuesGroup1 = DataGroup1{biomID,1};
-    chanValuesGroup2 = DataGroup2{biomID,1};
+    chanValuesGroup1 = DataGroup1{biomarkersToPlot(biomID),1};
+    chanValuesGroup2 = DataGroup2{biomarkersToPlot(biomID),1};
     
     %%% Group means
     meanGroup1 = StatObj.groupStatHandle(chanValuesGroup1');
@@ -58,11 +74,6 @@ for biomID = biomarkersToPlot
         diffGrp2Grp1 = meanGroup2 - meanGroup1;
     end
     
-    %%% pValues - corrected for multiple comparision
-    pValues = StatObj.pValues{biomID};
-
-    [~, pValues] = nbt_MCcorrect(pValues, NBTstudy.settings.visual.mcpCorrection, q);
-
     %%% Properties for plotting
     % Set the range [cmin cmax] for the colorbars later on
     vmax=max([meanGroup1 meanGroup2]);
@@ -111,7 +122,7 @@ for biomID = biomarkersToPlot
     minPValue = log10(0.0005);
     maxPValue = -log10(0.0005);
     
-    pLog = log10(pValues); % to make it log scaled
+    pLog = log10(pValues{biomID}); % to make it log scaled
     
     pLog = sign(diffGrp2Grp1)'.*pLog;
     pLog = -1*pLog;
@@ -196,7 +207,7 @@ end
             cmax = climit;
         end
         %%% Plot the topoplot: check whether test statistic is a ttest or signrank
-        chans_Psignificant = find(pValues<0.05);
+        chans_Psignificant = find(pValues{subplotIndex}<0.05);
         nbt_topoplot(diffGrp2Grp1,chanLocs,'headrad','rim','numcontour',0,'electrodes','on','emarker2',{[chans_Psignificant],'o','w',4,1});
      
         %%% Plot the colorbar
