@@ -75,8 +75,10 @@ end
     
 S = S.calculate(NBTstudy);
 
-plot(S)
-
+if ~ismember('nbt_Visualization',superclasses(S))
+    plot(S)
+end
+    
 NBTstudy.statAnalysis{length(NBTstudy.statAnalysis)+1} = S;
 disp('Statistics done.')
 if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot') && ~strcmp(class(S),'nbt_comparebiomarkers') && ~ismember('rsq.Answers',S.getBiomarkerNames) %&& ~strcmp(class(S),'nbt_ttest')
