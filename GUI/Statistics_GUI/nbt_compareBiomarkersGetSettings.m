@@ -229,7 +229,7 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
     set(bh,'uicontextmenu',hh2);
     
     uimenu(hh,'label','Correlation topoplot','callback',{@nbt_compareBiomarkersPlotTopos,B_values1,B_values2,bioms1,bioms2,1,Pvalues',rho',length(group_ind),splitType,splitValue,regs_or_chans_name,test_ind});
-    uimenu(hh2,'label','plottest','callback',{@nbt_compareBiomarkersPlotChansComp,B_values1,B_values2,bioms1,bioms2,1,length(group_ind),splitType,splitValue,Pvalues,test_ind,regs_or_chans_index});
+    uimenu(hh2,'label','plot boxplots and least-squares fit','callback',{@nbt_compareBiomarkersPlotChansComp,B_values1,B_values2,bioms1,bioms2,1,length(group_ind),splitType,splitValue,Pvalues,test_ind,regs_or_chans_index});
     
     
 else if ( test_ind ~= 5 && test_ind ~=6 )
