@@ -142,9 +142,7 @@ if (standalone)
     
     %%% CSD Menu
     CSDMenuSub = uimenu(PreProc, 'label', '&Current source density');
-    uimenu(CSDMenuSub,'label', 'Run CSD for current NBT signal','callback',['[Signal, SignalInfo] = nbt_CSD(Signal,SignalInfo,SignalPath)']);
-    uimenu(CSDMenuSub,'label', 'Run CSD for multiple NBT signals','callback',['nbt_NBTcompute(@nbt_doCSD)']);
-
+    uimenu(CSDMenuSub,'label', 'Run CSD for current NBT signal','callback',['[Signal, SignalInfo] = nbt_computeSurfaceLaplacian(Signal,SignalInfo,SignalPath,SubjectInfo)']);
     
     AutoCleanMenuSub = uimenu(PreProc, 'label', '&Auto Clean functions');
     AutoCleanMenuSetup = uimenu(AutoCleanMenuSub,'label','Setup');

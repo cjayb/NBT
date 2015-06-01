@@ -1,7 +1,5 @@
-function nbt_doCSD(Signal,SignalInfo,SignalName, SignalInfoName, SignalPath)
-    [CSDSignal, CSDSignalInfo] = nbt_CSD(Signal,SignalInfo);
+function nbt_doCSD(Signal, SignalInfo, SignalPath, SubjectInfo, autosave)
+    [CSDSignal, CSDSignalInfo, ~, ~] = nbt_computeSurfaceLaplacian(Signal, SignalInfo, SignalPath, SubjectInfo, autosave, order, m, lambda)
     
-    save(fullfile('..',SignalPath,SignalName),'CSDSignal')
-    save(fullfile('..',SignalPath,SignalInfoName),'CSDSignalInfo');
-    % Does not work: nbt_SaveSignal(CSDSignal, CSDSignalInfo, SignalPath, 1, 'CSDSignal');
+    nbt_SaveSignal(CSDSignal, CSDSignalInfo, SignalPath, 1, 'CSDSignal', SubjectInfo);
 end
