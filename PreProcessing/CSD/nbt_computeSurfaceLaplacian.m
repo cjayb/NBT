@@ -86,9 +86,5 @@ function [CSDSignal, CSDSignalInfo, G, H] = nbt_computeSurfaceLaplacian(Signal, 
     CSDSignalInfo.filterSettings = struct('LegendreOrder', order, 'splineFlexibility', m, 'smoothingConstant', lambda);
     
     %%% Save the signal?
-    if autosave == 1
-        nbt_SaveSignal(CSDSignal, CSDSignalInfo, SignalPath, 1, 'CSDSignal', SubjectInfo);
-    else
-        nbt_SaveSignal(CSDSignal, CSDSignalInfo, SignalPath, 0, 'CSDSignal', SubjectInfo);
-    end
+    nbt_SaveSignal(CSDSignal, CSDSignalInfo, SignalPath, autosave, 'CSDSignal', SubjectInfo);
 end
