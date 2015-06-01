@@ -1,5 +1,5 @@
 %Copyright (C) 2010 Simon-Shlomo Poil
-function [Data, Pool, PoolKey, Units]=nbt_returnData(NBTelement,Pool,PoolKey, SubBiomarker, Pool2, PoolKey2, DiffFun)
+function [Data, Pool, PoolKey, Units, metaInfo]=nbt_returnData(NBTelement,Pool,PoolKey, SubBiomarker, Pool2, PoolKey2, DiffFun)
 narginchk(3,7);
 if(isempty(Pool))
     Data = [];
@@ -103,6 +103,7 @@ end
                 end
             end
         end
+        metaInfo = NBTelement.BiomarkerMetaInfo;
     end
 
     function fetchDataDiff
@@ -123,6 +124,7 @@ end
                     break
                 end
             end
+            metaInfo = NBTelement.BiomarkerMetaInfo;
         end
     end
 end

@@ -29,6 +29,7 @@ classdef nbt_ARSQ < nbt_QBiomarker
      properties (Constant)
         biomarkerType = {'nbt_QBiomarker'};
         units = {' '};
+        biomarkerMetaInfo = 'Questions';
     end
     methods
         function ARSQobject = nbt_ARSQ(NumQ)
