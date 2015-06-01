@@ -34,7 +34,7 @@ biomIdx = 0;
 
 
 % Correct for multiple comparisons
-multiComp = input('Correct for multiple comparisons? (no / fdr / bonfi / holm) ','s');
+multiComp = input('Correct for multiple comparisons? (no / fdr / bonferroni / holm / binomial /hochberg) ','s');
 
 if strcmp(multiComp,'fdr')
     q = input('Specify the desired false discovery rate: (default = 0.05) ');

@@ -27,6 +27,8 @@ function [CSDSignal, CSDSignalInfo, G, H] = nbt_computeSurfaceLaplacian(Signal, 
     
     if (nargin < 8); lambda = 1e-5; end;
     
+    % 0. Remove the bad channels
+    Signal(find(SignalInfo.badChannels)) = NaN;
     
     % 1. Convert electrode coordinates to cartesian using sph2cart
     for i = 1 : nChannels
