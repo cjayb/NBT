@@ -1,6 +1,4 @@
 function nbt_compareBiomarkersPlotChansComp(d1,d2,B_values1,B_values2,bioms1,bioms2,biomindex,BottomGroups,splitType,splitValue,Pvalues,test_ind,regs_or_chans_index)
-global Questionnaire
-global Factors
 
 global NBTstudy
 
