@@ -1,7 +1,9 @@
 function nbt_splitPlotGroups(d1,d2,ListSplit,ListSplitValue,ListBiom1, ListBiom2, ListRegion, ListGroup, StatObj)
-global Factors
-global Questionnaire
+
 global NBTstudy
+
+load ARSQfactors
+load Questions
 
 splt = get(ListSplit,'Value');
 spltVal = str2num(get(ListSplitValue,'String'));
@@ -143,21 +145,23 @@ elseif length(group_ind) == 2
 end
 
 if strcmp(regs_or_chans_name,'Regions')
-    if isempty(strfind(bioms_name1,'.Answers'))
-        regions = G(group_ind(1)).chansregs.listregdata;
+    if isempty(strfind(bioms_name1{1},'.Answers'))
+        regions = NBTstudy.groups{1}.listRegData;
         for j = 1:size(B_values1,2) % subject
             
             B1 = B_values1(:,j);
-            B_gebruik1(:,j) = nbt_compare_getRegions(B1,regions);
+            B_gebruik1(:,j) = B1';
+%             B_gebruik1(:,j) = nbt_compare_getRegions(B1,regions);
         end
         clear B_values1;
         B_values1 = B_gebruik1;
     end
-    if isempty(strfind(bioms_name2,'.Answers'))
-        regions = G(group_ind(1)).chansregs.listregdata;
+    if isempty(strfind(bioms_name2{1},'.Answers'))
+        regions = NBTstudy.groups{1}.listRegData;
         for j = 1:size(B_values2,2) % subject
             B2 = B_values2(:,j);
-            B_gebruik2(:,j) = nbt_compare_getRegions(B2,regions);
+            B_gebruik2(:,j) = B2';
+            % B_gebruik2(:,j) = nbt_compare_getRegions(B2,regions);
         end
         clear B_values2;
         B_values2 = B_gebruik2;
@@ -181,14 +185,14 @@ for k = 1:noFigs
       
         plot(sort(vals(i,:)),1/noSubj:1/noSubj:1);
         
-        if ~isempty(strfind(nm,'.Answers'))
+        if ~isempty(strfind(nm{1},'.Answers'))
             if cellfun(@isempty,(strfind(nm,'Factors')))
-                varQuest = Questionnaire;
+                varQuest = Questions;
             else
-                varQuest = Factors;
+                varQuest = ARSQfactors.factorLabels;
             end
-            if (length(varQuest.Questions{i}) > 20)
-                bs = varQuest.Questions{i};
+            if (length(varQuest{i}) > 20)
+                bs = varQuest{i};
                 [ab, cd] = strtok(bs(15:end));
                 ad = length(ab);
                 
@@ -198,7 +202,7 @@ for k = 1:noFigs
                     title({[num2str(i) '. ' bs(1:14 + ad)], cd},'FontWeight','Bold');
                 end
             else
-                title([num2str(i) '. ' varQuest.Questions{i}],'FontWeight','Bold');
+                title([num2str(i) '. ' varQuest{i}],'FontWeight','Bold');
             end
             if length(group_ind) ==1
                 xlabel([strtok(nm,'.') ' score']);
@@ -209,7 +213,7 @@ for k = 1:noFigs
             
         else
             if strcmp(regs_or_chans_name,'Regions')
-                title([num2str(i) '. ' G(1).chansregs.listregdata(i).reg.name],'interpreter','none');
+                title([num2str(i) '. ' NBTstudy.groups{1}.listRegData(i).reg.name],'interpreter','none');
             else
             title(['Channel ' num2str(i)]);
             end

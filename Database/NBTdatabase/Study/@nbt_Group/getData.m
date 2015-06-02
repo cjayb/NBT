@@ -15,6 +15,8 @@ function  DataObj = getData(GrpObj,StatObj)
     %grpNumber refers to the ordering in the StatObj
     grpNumber = GrpObj.grpNumber;
 
+    if isa(StatObj,'nbt_comparebiomarkers') StatObj.data = []; end
+    
     if ~isempty(StatObj.data)
         try
             DataObj = StatObj.data{grpNumber};

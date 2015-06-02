@@ -124,7 +124,7 @@ end
             if ~strcmp(DataObj.classes{bID},'nbt_QBiomarker')
                 if (StatObj.channelsRegionsSwitch == 2) % regions
                     regions = GrpObj.listRegData;
-                    % the following 6 lines are a hack: replacing DataMat = DataObj{bID,1};
+                    %% the following lines are a hack: replacing DataMat = DataObj{bID,1};
                     DataObject = DataObj.dataStore{bID};
 %                     DataMat = DataObject{bID,:}; % n_chans x n_subjects
                     DataMat = []; % n_chans x n_subjects
@@ -133,8 +133,14 @@ end
                     end
                     RegData = [];
                     for j=1:length(regions)
-                        RegData = [RegData; nanmean(DataMat(regions(j).reg.channel_nr,:),1)];
+                        if isa(DataMat(regions(j).reg.channel_nr,:),'cell')
+                            DataMatTemp = cell2mat(DataMat(regions(j).reg.channel_nr,:));
+                        else
+                            DataMatTemp = DataMat(regions(j).reg.channel_nr,:);
+                        end
+                        RegData = [RegData; nanmean(DataMatTemp,1)];
                     end
+                    %% end of hack
                     n_subjects = size(RegData,2);
                     Regs = cell(n_subjects,1);
                     for kk=1:n_subjects

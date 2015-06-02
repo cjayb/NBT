@@ -2,9 +2,11 @@ function nbt_compareBiomarkersGetSettings(d1,d2,ListBiom1, ListBiom2, ListRegion
 disp('Computing biomarkers comparison ...')
 global NBTstudy
 
+% replace Questions with StatObj.data{1}.biomarkerMetaInfo{2} !!!
 load Questions 
 
-% replace Questions with Questions !!!
+% arsq_biom_index = find(ismember(StatObj.data{1}.biomarkers,'NBTe_nbt_rsq'));
+% Questions = StatObj.data{1}.biomarkerMetaInfo{arsq_biom_index};
 
 load ARSQfactors
 ARSQfactors.arsqLabels = Questions;
@@ -90,26 +92,26 @@ switch (test_ind)
                     if nns > 0
                         quarts = floor((splitValue/100)*(size(B_values2,2)- nns));
                         [valk,inds] = sort(B_values2(n,:));
-                        Group2{n} = inds(1:quarts);
-                        Group1{n} = inds(1+end-quarts-nns:end-nns);
+                        Grp2{n} = inds(1:quarts);
+                        Grp1{n} = inds(1+end-quarts-nns:end-nns);
                     else
                         quarts = floor((splitValue/100)*size(B_values2,2));
                         [indef,inds] = sort(B_values2(n,:));
-                        Group2{n} = inds(1:quarts);
-                        Group1{n} = inds(1+end-quarts:end);
+                        Grp2{n} = inds(1:quarts);
+                        Grp1{n} = inds(1+end-quarts:end);
                     end
                     
-                    B1 = B_values1(m,Group1{n}); % biomarker for yes group
-                    B2 = B_values1(m,Group2{n}); % biomarker for no group
+                    B1 = B_values1(m,Grp1{n}); % biomarker for yes group
+                    B2 = B_values1(m,Grp2{n}); % biomarker for no group
                     [indef,Pvalues(n,m),indef] = ttest2(B1,B2);
                     rho(n,m) = mean(B1)-mean(B2);
                 else
                     %split on value
-                    Group1{n} = find(B_values2(n,:)>splitValue);% yes
-                    Group2{n} = find(B_values2(n,:)<splitValue);% no
+                    Grp1{n} = find(B_values2(n,:)>splitValue);% yes
+                    Grp2{n} = find(B_values2(n,:)<splitValue);% no
                     
-                    B1 = B_values1(m,Group1{n}); % biomarker for yes group
-                    B2 = B_values1(m,Group2{n}); % biomarker for no group
+                    B1 = B_values1(m,Grp1{n}); % biomarker for yes group
+                    B2 = B_values1(m,Grp2{n}); % biomarker for no group
                     [indef,Pvalues(n,m),indef] = ttest2(B1,B2);
                     rho(n,m) = mean(B1)-mean(B2);
                 end
@@ -354,7 +356,9 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                 
                             else
                                 axes;
-                                topoplot(log10(Pvalues(i,:)),G(1).chansregs.chanloc);
+                                % topoplot(log10(Pvalues(i,:)),NBTstudy.groups{1}.listRegData);
+                                topoplot(log10(Pvalues(i,:)),NBTstudy.groups{1}.chanLocs);
+                                %topoplot(log10(Pvalues(i,:)),G(1).chansregs.chanloc);
                                 xidd =  mod(idd-1,4);
                                 yidd = 4-(1 +floor((idd-1)/4));
                                 set(gca,'clim',[-6 0]);
@@ -373,7 +377,8 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                 set(gca,'position',[0.05+ (0.25 * xidd) 0.05 + (0.25 * yidd) 0.1 0.1]);
                                 
                                 axes;
-                                topoplot(rho(i,:),G(1).chansregs.chanloc);
+                                topoplot(rho(i,:),NBTstudy.groups{1}.chanLocs);
+                                %topoplot(rho(i,:),G(1).chansregs.chanloc);
                                 set(gca,'clim',[-mxlim mxlim]);
                                 cbh = colorbar('EastOutside');
                                 oldCBH = get(cbh,'position');
@@ -395,10 +400,10 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                 
                                 set(get(gca,'title'),'position',origTitle);
                             end
-                            if isempty(strfind(bioms_name2,'Factors'))
-                                varQuest = Questionnaire;
-                                if (length(varQuest.Questions{i}) > 20)
-                                    bs = varQuest.Questions{i};
+                            if isempty(strfind(bioms_name2{1},'Factors'))
+                                varQuest = ARSQfactors;
+                                if (length(varQuest.arsqLabels{i}) > 20)
+                                    bs = varQuest.arsqLabels{i};
                                     [ab, cd] = strtok(bs(15:end));
                                     ad = length(ab);
                                     
@@ -408,12 +413,12 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                         title({[num2str(i) '. ' bs(1:14 + ad)], cd},'FontWeight','Bold');
                                     end
                                 else
-                                    title([num2str(i) '. ' varQuest.Questions{i}],'FontWeight','Bold');
+                                    title([num2str(i) '. ' varQuest.arsqLabels{i}],'FontWeight','Bold');
                                 end
                             else
-                                varQuest = Factors;
-                                if (length(varQuest.Questions{i}) > 20)
-                                    bs = varQuest.Questions{i};
+                                varQuest = ARSQfactors;
+                                if (length(varQuest.factorLabels{i}) > 20)
+                                    bs = varQuest.factorLabels{i};
                                     [ab, cd] = strtok(bs(15:end));
                                     ad = length(ab);
                                     
@@ -423,7 +428,7 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                         title({[num2str(i) '. ' bs(1:14 + ad)], cd},'FontWeight','Bold');
                                     end
                                 else
-                                    title([num2str(i) '. ' varQuest.Questions{i}],'FontWeight','Bold');
+                                    title([num2str(i) '. ' varQuest.factorLabels{i}],'FontWeight','Bold');
                                 end
                             end
                             origTitle = get(get(gca,'title'),'position');
@@ -479,9 +484,9 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                     set(cbh,'position',oldCBH);
                                     set(gca,'position',[ 0.05+(0.25 * xidd)+0.07 0.05 + (0.25 * yidd) 0.1 0.1]);
                                     if isempty(strfind(bioms_name1{1},'Factors'))
-                                        varQuest = Questionnaire;
-                                        if (length(varQuest.Questions{i}) > 20)
-                                            bs = varQuest.Questions{i};
+                                        varQuest = ARSQfactors;
+                                        if (length(varQuest.arsqLabels{i}) > 20)
+                                            bs = varQuest.arsqLabels{i};
                                             [ab, cd] = strtok(bs(15:end));
                                             ad = length(ab);
                                             
@@ -491,12 +496,12 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                                 title({[num2str(i) '. ' bs(1:14 + ad)], cd},'FontWeight','Bold');
                                             end
                                         else
-                                            title([num2str(i) '. ' varQuest.Questions{i}],'FontWeight','Bold');
+                                            title([num2str(i) '. ' varQuest.arsqLabels{i}],'FontWeight','Bold');
                                         end
                                     else
-                                        varQuest = Factors;
-                                        if (length(varQuest.Questions{i}) > 20)
-                                            bs = varQuest.Questions{i};
+                                        varQuest = ARSQfactors;
+                                        if (length(varQuest.factorLabels{i}) > 20)
+                                            bs = varQuest.factorLabels{i};
                                             [ab, cd] = strtok(bs(15:end));
                                             ad = length(ab);
                                             
@@ -506,7 +511,7 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                                 title({[num2str(i) '. ' bs(1:14 + ad)], cd},'FontWeight','Bold');
                                             end
                                         else
-                                            title([num2str(i) '. ' varQuest.Questions{i}],'FontWeight','Bold');
+                                            title([num2str(i) '. ' varQuest.factorLabels{i}],'FontWeight','Bold');
                                         end
                                     end
                                     
@@ -554,9 +559,9 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                     
                                     set(gca,'position',[ 0.05+(0.25 * xidd)+0.07 0.05 + (0.25 * yidd) 0.1 0.1]);
                                     if isempty(strfind(bioms_name1{1},'Factors'))
-                                        varQuest = Questionnaire;
-                                        if (length(varQuest.Questions{i}) > 20)
-                                            bs = varQuest.Questions{i};
+                                        varQuest = ARSQfactors;
+                                        if (length(varQuest.arsqLabels{i}) > 20)
+                                            bs = varQuest.arsqLabels{i};
                                             [ab, cd] = strtok(bs(15:end));
                                             ad = length(ab);
                                             
@@ -566,12 +571,12 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                                 title({[num2str(i) '. ' bs(1:14 + ad)], cd},'FontWeight','Bold');
                                             end
                                         else
-                                            title([num2str(i) '. ' varQuest.Questions{i}],'FontWeight','Bold');
+                                            title([num2str(i) '. ' varQuest.arsqLabels{i}],'FontWeight','Bold');
                                         end
                                     else
-                                        varQuest = Factors;
-                                        if (length(varQuest.Questions{i}) > 20)
-                                            bs = varQuest.Questions{i};
+                                        varQuest = ARSQfactors;
+                                        if (length(varQuest.factorLabels{i}) > 20)
+                                            bs = varQuest.factorLabels{i};
                                             [ab, cd] = strtok(bs(15:end));
                                             ad = length(ab);
                                             
@@ -581,7 +586,7 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                                                 title({[num2str(i) '. ' bs(1:14 + ad)], cd},'FontWeight','Bold');
                                             end
                                         else
-                                            title([num2str(i) '. ' varQuest.Questions{i}],'FontWeight','Bold');
+                                            title([num2str(i) '. ' varQuest.factorLabels{i}],'FontWeight','Bold');
                                         end
                                     end
                                     
