@@ -40,11 +40,20 @@ if strcmp(multiComp,'fdr')
     q = input('Specify the desired false discovery rate: (default = 0.05) ');
 end
 
+pValues = StatObj.pValues;
+
+% Correct for multiple comparisons and remove bad channels
 for biomID = 1 : nBioms
+    %%% Take out the bad channels before we compute the
+    %%% significance mask (topoplot function removes the nans
+    %%% which shift the electrode positions)
+    pValuesCurrent = pValues{biomarkersToPlot(biomID)};
+    pValuesCurrent = pValuesCurrent(~isnan(pValuesCurrent));
+
     if strcmp(multiComp,'fdr')
-        [~, pValues{biomID}] = nbt_MCcorrect(StatObj.pValues{biomarkersToPlot(biomID)},multiComp,q);
+        [~, pValues{biomID}] = nbt_MCcorrect(pValuesCurrent,multiComp,q);
     else
-        [~, pValues{biomID}] = nbt_MCcorrect(StatObj.pValues{biomarkersToPlot(biomID)},multiComp);
+        [~, pValues{biomID}] = nbt_MCcorrect(pValuesCurrent,multiComp);
     end
 end
 
@@ -67,11 +76,11 @@ for biomID = 1 : nBioms
         if (size(chanValuesGroup1) ~= size(chanValuesGroup2))
             warning('Different amount of channels for Group 1 and Group 2');
         else %%% este else fica
-            diffGrp2Grp1 = StatObj.groupStatHandle((chanValuesGroup2 - chanValuesGroup1)');
+            diffGrp2Grp1 = StatObj.groupStatHandle((chanValuesGroup1 - chanValuesGroup2)');
         end
     else
         statType = 'unpaired';
-        diffGrp2Grp1 = meanGroup2 - meanGroup1;
+        diffGrp2Grp1 = meanGroup1 - meanGroup2;
     end
     
     %%% Properties for plotting
@@ -122,9 +131,9 @@ for biomID = 1 : nBioms
     minPValue = log10(0.0005);
     maxPValue = -log10(0.0005);
     
-    pLog = log10(pValues{biomID}); % to make it log scaled
+    pLog = log10(StatObj.pValues{biomID}); % to make it log scaled
     
-    pLog = sign(diffGrp2Grp1)'.*pLog;
+    pLog = sign(diffGrp2Grp1).*pLog;
     pLog = -1*pLog;
     pLog(pLog<minPValue) = minPValue;
     pLog(pLog> maxPValue) = maxPValue;
@@ -217,10 +226,10 @@ end
         %%% Labels for the rows       
         if(subplotIndex == 1)
             if (strcmp(statType,'paired'))
-                rowLabel = sprintf('Grand average for condition %s minus incondition %s ',nameGroup2,nameGroup1);
+                rowLabel = sprintf('Grand average for condition %s minus incondition %s ',nameGroup1,nameGroup2);
             else
                 % statType == unpaired
-                rowLabel = sprintf('Grand average for group %s minus group %s',nameGroup2,nameGroup1);
+                rowLabel = sprintf('Grand average for group %s minus group %s',nameGroup1,nameGroup2);
             end
             %% Fit the label onto the y-axis
             nbt_wrapText(xa,ya,rowLabel,15,fontsize);
