@@ -209,6 +209,10 @@ end
     
     cmax = max([vmax, rmax]);
     cmin = min([vmin, rmin]);
+           
+    %%% Set the colormap    
+    CoolWarm = load('nbt_CoolWarm.mat');
+    colormap(CoolWarm.coolWarm);
     
     %% plot grand average per channel:
     xa=-2;
