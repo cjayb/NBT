@@ -49,7 +49,7 @@
 % See Readme.txt for additional copyright information.
 % ---------------------------------------------------------------------------------------
 
-function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx)
+function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx,selectedBiomarkers,courseMode)
     %Get the biomarkerlist from NBTstudy
     biomarkerList = GroupObject.biomarkerList;
     
@@ -60,15 +60,20 @@ function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx)
     freqBandsFixedOrderNames = {'Delta', 'Theta', 'Alpha', 'Beta', 'Gamma'};
     
     % SH FIXME - Only 4 rows of biomarkers for the course
-    %biomarkersFixedOrder = {'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_DFA', '','NBTe_nbt_PeakFit','NBTe_nbt_PeakFit','NBTe_nbt_AmplitudeCorr','NBTe_nbt_Coher','NBTe_nbt_PhaseLocking'};
-    biomarkersFixedOrder = {'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_DFA', '','','','','',''};
-    subBiomarkersFixedOrder = {'AbsolutePower', 'RelativePower', 'CentralFreq', 'markerValues', '','','','','',''};
+    if strcmp(courseMode,'off')
+        biomarkersFixedOrder = {'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_DFA', 'NBTe_nbt_PLI','NBTe_nbt_PeakFit','NBTe_nbt_PeakFit','NBTe_nbt_AmplitudeCorr','NBTe_nbt_Coher','NBTe_nbt_PhaseLocking'};
+        subBiomarkersFixedOrder = {'AbsolutePower', 'RelativePower', 'CentralFreq', 'markerValues', 'pliVal','Bandwidth','SpectralEdge','MarkerValues','Coherence','PLV'};
+    else
+        biomarkersFixedOrder = {'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_PeakFit', 'NBTe_nbt_DFA', '','','','','',''};
+        subBiomarkersFixedOrder = {'AbsolutePower', 'RelativePower', 'CentralFreq', 'markerValues', '','','','','',''};
+    end
     
     % Iterate along all fixed biomarkers and then check whether a present
     % biomarker corresponds to the fixed biomarker and store it in the
     % analysis object. This will make sure that the biomarkers are stored
     % in the fixed NBT Print order.
     i = 1;
+    k = 50;
     for presentBiomarker = 1 : length(biomarkerList)
         currentBiom = biomarkerList{presentBiomarker};
         [biomName, identifiers, subBiomName, biomarkerClass, biomarkerUnit] = nbt_parseBiomarkerIdentifiers(currentBiom);
@@ -127,18 +132,18 @@ function obj = nbt_generateBiomarkerList(obj,GroupObject,signal,grpIdx)
                     i = i + 1;
                 end
 %             else
-%                 if isempty(strfind(currentBiom, 'rsq'))
+%                 if isempty(strfind(currentBiom, 'rsq')) & strfind(biomarkerList{selectedBiomarkers},biomName)
 %                     %%% Store the biomarker in the analysis object
-%                     obj.group{grpIdx}.originalBiomNames{i} = currentBiom;
-%                     obj.group{grpIdx}.biomarkers{i} = biomName;
-%                     obj.group{grpIdx}.subBiomarkers{i} = subBiomName;
+%                     obj.group{grpIdx}.originalBiomNames{k} = currentBiom;
+%                     obj.group{grpIdx}.biomarkers{k} = biomName;
+%                     obj.group{grpIdx}.subBiomarkers{k} = subBiomName;
 % 
-%                     obj.group{grpIdx}.biomarkerIdentifiers{i} = {'frequencyRange' freqRange};
-%                     obj.group{grpIdx}.classes{i} = biomarkerClass;
-%                     obj.group{grpIdx}.biomarkerIndex{i} = i;
-%                     obj.group{grpIdx}.units{i} = biomarkerUnit;
+%                     obj.group{grpIdx}.biomarkerIdentifiers{k} = {'frequencyRange' freqRange};
+%                     obj.group{grpIdx}.classes{k} = biomarkerClass;
+%                     obj.group{grpIdx}.biomarkerIndex(k) = i;
+%                     obj.group{grpIdx}.units{k} = biomarkerUnit;
 % 
-%                     i = i + 1;
+%                     k = k + 1;
 %                 end
             end
         end
