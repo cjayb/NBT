@@ -121,7 +121,8 @@ downButton = uicontrol(StatSelection,'Style','pushbutton','String','\/','Positio
         % Get the groups from the GUI
         groups = get(ListGroup,'Value');
         statTest = get(ListStat,'Value');
-        nbt_Print(statTest,groups);
+        selectedBiomarkers = get(ListBiom,'Value');
+        nbt_Print(statTest,groups,selectedBiomarkers);
     end
 
         function diff_group(d1,d2)
