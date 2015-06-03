@@ -75,7 +75,7 @@ end
     
 S = S.calculate(NBTstudy);
 
-if ~ismember('nbt_Visualization',superclasses(S))
+if ~ismember('nbt_Visualization',superclasses(S)) && ~isa(S,'nbt_comparebiomarkers')
     plot(S)
 end
     

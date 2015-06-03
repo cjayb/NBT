@@ -101,6 +101,8 @@ classdef nbt_spiderplot < nbt_Visualization
                             % p = kruskalwallis()
                         end
                         
+                        significant_dimensions = find(sig_dim==1);
+                        
                         if strcmp(obj.group{1}.biomarkers,'NBTe_nbt_ARSQ') || strcmp(obj.group{1}.biomarkers,'NBTe_nbt_rsq')
                             bioms_name = 'ARSQ';
                             load ARSQfactors
@@ -112,7 +114,7 @@ classdef nbt_spiderplot < nbt_Visualization
                         end
                          
                         title = strcat(bioms_name,' (error measure: ', error_measure,')');
-                        spider_plot(data, title,[0 5], dimension_names, conditions, sig_dim) 
+                        spider_plot(data, title,[0 5], dimension_names, conditions, significant_dimensions) 
                         
             %            [D1, D2]=nbt_MatchVectors(Data1{bID,1}, Data2{bID,1}, getSubjectList(Data1,bID), getSubjectList(Data2,bID), 0, 0);
                      %   [~, obj.qPValues(:,qBios)] = ttest(Data1{bID,1}',Data2{bID,1}','tail',  obj.testOptions.tail);

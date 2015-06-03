@@ -1,8 +1,5 @@
 function nbt_compareBiomarkersPlotTopos(d1,d2,B_values1,B_values2,bioms1,bioms2,biomindex,Pvalues,rho,noGroups,splitType,splitValue,regs_or_chans_name,test_ind)
 
-global Questionnaire
-global Factors
-
 global NBTstudy
 
 load Questions

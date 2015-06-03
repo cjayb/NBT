@@ -196,7 +196,7 @@ for ii = 1:r
         
 	temp = text([cos(ang(ii)) * 1.1 + sin(ang(ii)) * 0], ...
 			[sin(ang(ii)) * 1.1 - cos(ang(ii)) * 0], ...
-			char(lbl(ii,:)), 'fontweight', 'bold');
+			char(lbl(ii,:)),'FontSize',13,'FontWeight', 'bold');
 	% flip the text alignment for right side axes
 	if ang(ii) > pi/2 && ang(ii) < 3*pi/2
 		set(temp,'HorizontalAlignment','right')

@@ -10,10 +10,10 @@ end
 indelec =zeros(EEG.nbchan,1);
 indelec(BadChannel) = 1;
 
-if(~isempty(EEG.NBTinfo.BadChannels))
-    EEG.NBTinfo.BadChannels(find(indelec)) = 1;
+if(~isempty(EEG.NBTinfo.badChannels))
+    EEG.NBTinfo.badChannels(find(indelec)) = 1;
 else
-    EEG.NBTinfo.BadChannels = indelec;
+    EEG.NBTinfo.badChannels = indelec;
 end
 disp('Remember to update ICA')
 end
