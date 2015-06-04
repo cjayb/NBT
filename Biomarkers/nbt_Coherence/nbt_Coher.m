@@ -51,11 +51,19 @@ classdef nbt_Coher < nbt_CrossChannelBiomarker
     properties  
         Coherence
         ICoherence
+        Max
+        Min
+        Median
+        Mean
+        Std
+        IQR
+        Range
+        
         interval
     end
     properties (Constant)
-       biomarkerType = {'nbt_CrossChannelBiomarker', 'nbt_CrossChannelBiomarker'}; 
-       units = {' ', ' '};
+       biomarkerType = {'nbt_CrossChannelBiomarker', 'nbt_CrossChannelBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker'}; 
+       units = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
     end
     methods
         function BiomarkerObject = nbt_Coher(NumChannels)
@@ -65,11 +73,20 @@ classdef nbt_Coher < nbt_CrossChannelBiomarker
             % Define coherence matrix values
             BiomarkerObject.Coherence = nan(NumChannels, NumChannels);
             BiomarkerObject.ICoherence = nan(NumChannels, NumChannels);
+            
+            BiomarkerObject.Max = nan(NumChannels,1);
+            BiomarkerObject.Min = nan(NumChannels,1);
+            BiomarkerObject.Median = nan(NumChannels,1);
+            BiomarkerObject.Mean = nan(NumChannels,1);
+            BiomarkerObject.Std = nan(NumChannels,1);
+            BiomarkerObject.IQR = nan(NumChannels,1);
+            BiomarkerObject.Range = nan(NumChannels,1);
+            
             BiomarkerObject.interval =  nan(1,2); 
             % Define fields for additional information           
             BiomarkerObject.DateLastUpdate = datestr(now);
             BiomarkerObject.PrimaryBiomarker = 'Coherence';
-            BiomarkerObject.biomarkers = {'Coherence', 'ICoherence'};
+            BiomarkerObject.biomarkers = {'Coherence', 'ICoherence', 'Max','Min','Median','Mean','Std','IQR','Range'};
         end
         function plotCoherence(obj)
             figure

@@ -126,10 +126,27 @@ for i=1:NN-1
     end
 end
 
+CoherenceMatrix = triu(CoherenceMatrix);
+CoherenceMatrix = CoherenceMatrix+CoherenceMatrix';
+CoherenceMatrix(eye(size(CoherenceMatrix))~=0)=1;
 
 CoherenceObject.Coherence = CoherenceMatrix;
 CoherenceObject.ICoherence = ICoherenceMatrix;
 CoherenceObject.interval = interval;
+
+for channel = 1 : size(Signal(:,:),2)
+    Coher_chan = CoherenceMatrix(channel,:);
+    CoherenceObject.Max(channel) = max(Coher_chan(Coher_chan ~= 1));
+    CoherenceObject.Min(channel) = min(Coher_chan(Coher_chan ~= 1));
+    CoherenceObject.Median(channel) = nanmedian(Coher_chan(Coher_chan ~= 1));
+    CoherenceObject.Mean(channel) = nanmean(Coher_chan(Coher_chan ~= 1));
+    CoherenceObject.Std(channel) = sqrt(nanvar(Coher_chan));
+    CoherenceObject.IQR(channel) = iqr(Coher_chan(Coher_chan ~= 1));
+    CoherenceObject.Range(channel) = range(Coher_chan(Coher_chan ~= 1));
+end
+
+
+
 SignalInfo.frequencyRange = FrequencyBand;
 %% update biomarker objects (here we used the biomarker template):
 CoherenceObject = nbt_UpdateBiomarkerInfo(CoherenceObject, SignalInfo);

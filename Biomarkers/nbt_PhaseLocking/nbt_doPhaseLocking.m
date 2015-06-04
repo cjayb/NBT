@@ -246,7 +246,7 @@ if ~isempty(windowleng)
 
 else
     PhaseLockingObject =nbt_PhaseLocking(signallength,nchannels);
-    for k=1:nchannels
+    for k=1:nchannels-1
 %         disp([' channel ', num2str(k), ' ...'])
         for j=k+1:nchannels
            disp([' channels ', num2str(k), ' ,' num2str(j), '...'])
@@ -265,7 +265,11 @@ else
         end
     end
     
-end   
+end
+
+PLV = triu(PLV);
+PLV = PLV+PLV';
+PLV(eye(size(PLV))~=0)=1;
 
 PhaseLockingObject.Ratio = [n m];
 PhaseLockingObject.PLV = PLV;
@@ -277,6 +281,7 @@ PhaseLockingObject.interval = interval;
 % PhaseLockingObject.synchlag = synchlag;
 
 
+
 PhaseLockingObject.IndexE = index1nm; %index based on the Shannon entropy
 PhaseLockingObject.IndexCP = index2nm;%based on the conditional probability
 PhaseLockingObject.IndexF = index3nm;%based on the intensity of the first Fourier mode of the distribution 
@@ -285,6 +290,21 @@ PhaseLockingObject.time_int = time_int;
 PhaseLockingObject.IndexE_in_time = index1nm_in_time;
 PhaseLockingObject.IndexCP_in_time = index2nm_in_time;
 PhaseLockingObject.IndexF_in_time = index3nm_in_time;
+
+
+
+for channel = 1 : nchannels
+    PLV_chan = PLV(channel,:);
+    PhaseLockingObject.Max(channel) = max(PLV_chan(PLV_chan ~= 1));
+    PhaseLockingObject.Min(channel) = min(PLV_chan(PLV_chan ~= 1));
+    PhaseLockingObject.Median(channel) = nanmedian(PLV_chan(PLV_chan ~= 1));
+    PhaseLockingObject.Mean(channel) = nanmean(PLV_chan(PLV_chan ~= 1));
+    PhaseLockingObject.Std(channel) = sqrt(nanvar(PLV_chan(PLV_chan ~= 1)));
+    PhaseLockingObject.IQR(channel) = iqr(PLV_chan(PLV_chan ~= 1));
+    PhaseLockingObject.Range(channel) = range(PLV_chan(PLV_chan ~= 1));
+end
+    
+
 
 SignalInfo.frequencyRange = FrequencyBand;
 

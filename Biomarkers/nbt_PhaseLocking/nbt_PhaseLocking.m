@@ -50,25 +50,33 @@
     
 classdef nbt_PhaseLocking < nbt_CrossChannelBiomarker  
     properties    
-    Ratio 
-    PLV 
-    Instphase
-%     frequencyRange 
-    filterorder 
-    interval 
-%     synchlag
-    IndexE %index based on the Shannon entropy
-    IndexF %based on the intensity of the first Fourier mode of the distribution
-    IndexCP %based on the conditional probability
-    PLV_in_time
-    time_int
-    IndexE_in_time
-    IndexCP_in_time
-    IndexF_in_time
+        Ratio 
+        PLV
+        Max
+        Min
+        Median
+        Mean 
+        IQR
+        Std
+        Range
+        
+        Instphase
+    %     frequencyRange 
+        filterorder 
+        interval 
+    %     synchlag
+        IndexE %index based on the Shannon entropy
+        IndexF %based on the intensity of the first Fourier mode of the distribution
+        IndexCP %based on the conditional probability
+        PLV_in_time
+        time_int
+        IndexE_in_time
+        IndexCP_in_time
+        IndexF_in_time
     end
     properties (Constant)
-         biomarkerType = {'nbt_CrossChannelBiomarker'};
-         units = {' '};
+         biomarkerType = {'nbt_CrossChannelBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker'};
+         units = {' ',' ',' ',' ',' ',' ',' ',' '};
     end
     
     methods
@@ -82,6 +90,14 @@ classdef nbt_PhaseLocking < nbt_CrossChannelBiomarker
             %% Define Phase Locking values
             BiomarkerObject.Ratio = nan(NumChannels,NumChannels);
             BiomarkerObject.PLV = nan(NumChannels,NumChannels);
+            BiomarkerObject.Max = nan(NumChannels,1);
+            BiomarkerObject.Min = nan(NumChannels,1);
+            BiomarkerObject.Median = nan(NumChannels,1);
+            BiomarkerObject.Mean = nan(NumChannels,1);
+            BiomarkerObject.Std = nan(NumChannels,1);
+            BiomarkerObject.IQR = nan(NumChannels,1);
+            BiomarkerObject.Range = nan(NumChannels,1);
+            
             BiomarkerObject.Instphase = nan(LengthSign,NumChannels);
             BiomarkerObject.filterorder =  nan(1);
             BiomarkerObject.interval =  nan(1,2); 
@@ -99,7 +115,7 @@ classdef nbt_PhaseLocking < nbt_CrossChannelBiomarker
             BiomarkerObject.IndexF_in_time = [];
             
             BiomarkerObject.primaryBiomarker = 'PLV';
-            BiomarkerObject.biomarkers = {'PLV'}; % {'PLV','Instphase'};
+            BiomarkerObject.biomarkers = {'PLV','Max','Min','Median','Mean','Std','IQR','Range'}; % {'PLV','Instphase'};
            
             
         end

@@ -71,10 +71,13 @@ function PLIobject = nbt_doPLI(Signal, SignalInfo, FrequencyBand, interval, filt
     
     for i = 1 : nChannels
         pli_chan = pli(i,:);
+        PLIobject.Max(i) = max(pli_chan(pli_chan ~= 1));
+        PLIobject.Min(i) = min(pli_chan(pli_chan ~= 1));
         PLIobject.Median(i) = nanmedian(pli_chan(pli_chan ~= 1));
         PLIobject.Mean(i) = nanmean(pli_chan(pli_chan ~= 1));
+        PLIobject.Std(i) = sqrt(nanvar((pli_chan(pli_chan ~= 1))));
         PLIobject.IQR(i) = iqr(pli_chan(pli_chan ~= 1));
-        PLIobject.Std(i) = std(pli_chan(pli_chan ~= 1));
+        PLIobject.Range(i) = range(pli_chan(pli_chan ~= 1));
     end
     
     %%% Save the frequency range

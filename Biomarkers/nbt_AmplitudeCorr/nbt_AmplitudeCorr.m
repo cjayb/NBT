@@ -24,14 +24,14 @@
 
 classdef nbt_AmplitudeCorr < nbt_CrossChannelBiomarker
     properties
-        markerValues
-        MaxCorr
-        MinCorr
-        MedianCorr
-        MeanCorr
-        StdCorr
-        IQRCorr
-        RangeCorr
+        AmpCorr
+        Max
+        Min
+        Median
+        Mean
+        Std
+        IQR
+        Range
     end
     properties (Constant)
         biomarkerType = {'nbt_CrossChannelBiomarker','nbt_SignalBiomarker', 'nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker','nbt_SignalBiomarker'};
@@ -42,17 +42,17 @@ classdef nbt_AmplitudeCorr < nbt_CrossChannelBiomarker
             if nargin == 0
                 NumChannels = 1;
             end
-            BiomarkerObject.MarkerValues = nan(NumChannels,NumChannels);
-            BiomarkerObject.MaxCorr = nan(NumChannels,1);
-            BiomarkerObject.MinCorr = nan(NumChannels,1);
-            BiomarkerObject.MedianCorr = nan(NumChannels,1);
-            BiomarkerObject.MeanCorr = nan(NumChannels,1);
-            BiomarkerObject.StdCorr = nan(NumChannels,1);
-            BiomarkerObject.IQRCorr = nan(NumChannels,1);
-            BiomarkerObject.RangeCorr = nan(NumChannels,1);
+            BiomarkerObject.AmpCorr = nan(NumChannels,NumChannels);
+            BiomarkerObject.Max = nan(NumChannels,1);
+            BiomarkerObject.Min = nan(NumChannels,1);
+            BiomarkerObject.Median = nan(NumChannels,1);
+            BiomarkerObject.Mean = nan(NumChannels,1);
+            BiomarkerObject.Std = nan(NumChannels,1);
+            BiomarkerObject.IQR = nan(NumChannels,1);
+            BiomarkerObject.Range = nan(NumChannels,1);
             BiomarkerObject.lastUpdate = datestr(now);
-            BiomarkerObject.primaryBiomarker = 'MarkerValues';
-            BiomarkerObject.biomarkers ={'MarkerValues','MaxCorr', 'MinCorr','MedianCorr','MeanCorr','StdCorr','IQRCorr','RangeCorr'};
+            BiomarkerObject.primaryBiomarker = 'AmpCorr';
+            BiomarkerObject.biomarkers ={'AmpCorr','Max', 'Min','Median','Mean','Std','IQR','Range'};
             BiomarkerObject = setUniqueIdentifiers(BiomarkerObject);
         end
         
@@ -68,7 +68,7 @@ classdef nbt_AmplitudeCorr < nbt_CrossChannelBiomarker
             % See also AmplitudeCorr, DoAmplitudeCorr
             Output =[];
             for i = SubjectRange
-                temp = AmpCorrObject.MarkerValues{i,1};
+                temp = AmpCorrObject.AmpCorr{i,1};
                 Output = [Output temp(ChId1,ChId2)];
             end
             
