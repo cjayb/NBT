@@ -242,7 +242,11 @@ for bId = 1:length(DataObj.biomarkers)
         DataObj.dataStore{bId,1}{subjIdx,1} = DataObj.dataStore{bId,1}{subjIdx,1}';
     end
     DataObj.units{bId,1} = eval([BiomarkerLoadName{bId} '.units;']);
-    DataObj.biomarkerMetaInfo{bId} = eval([BiomarkerLoadName{bId} '.biomarkerMetaInfo;']);
+    try
+        DataObj.biomarkerMetaInfo{bId} = eval([BiomarkerLoadName{bId} '.biomarkerMetaInfo;']);
+    catch
+        DataObj.biomarkerMetaInfo{bId} = [];
+    end
 end
 end
 
