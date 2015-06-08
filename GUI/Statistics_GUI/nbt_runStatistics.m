@@ -76,6 +76,7 @@ end
 S = S.calculate(NBTstudy);
 
 if ~ismember('nbt_Visualization',superclasses(S)) && ~isa(S,'nbt_comparebiomarkers')
+    % FIX ME: NBT specific plot function with build-in function name
     plot(S)
 end
     
@@ -85,8 +86,8 @@ if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot') && ~strcmp
     nbt_plot_2conditions_topoAll(S)
 end
 
-if strcmp(class(S),'nbt_ttest')&& ismember('rsq.Answers',S.getBiomarkerNames)
-    nbt_pvaluesmatrix(S)
-end
+% if strcmp(class(S),'nbt_ttest')&& ismember('rsq.Answers',S.getBiomarkerNames)
+%     nbt_pvaluesmatrix(S)
+% end
 
 end

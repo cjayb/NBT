@@ -89,7 +89,7 @@ end
  function plot_test2Groups(d1,d2,StatObj)
         pos_cursor_unitfig = get(gca,'currentpoint');
         biomarker = round(pos_cursor_unitfig(1,1));
-        nbt_plot_2conditions_topo(StatObj, biomarker);
+        nbt_plot_2conditions_topoAll(StatObj, biomarker);
  end
 
     
