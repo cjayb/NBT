@@ -85,8 +85,9 @@ if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot') && ~strcmp
     nbt_plot_2conditions_topoAll(S)
 end
 
-if strcmp(class(S),'nbt_ttest')&& ismember('rsq.Answers',S.getBiomarkerNames)
-    nbt_pvaluesmatrix(S)
-end
+% commented for the course
+% if strcmp(class(S),'nbt_ttest')&& ismember('rsq.Answers',S.getBiomarkerNames)
+%     nbt_pvaluesmatrix(S)
+% end
 
 end

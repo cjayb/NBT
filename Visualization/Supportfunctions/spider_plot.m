@@ -102,7 +102,8 @@ end
 % check for figure or axes
 if ~exist('f','var')
 	% no figure or axes requested - generate new ones
-	f = figure; ca = gca(f); cla(ca); hold on; set(f,'color','w')
+	f = figure('name',tle);
+    ca = gca(f); cla(ca); hold on; set(f,'color','w')
 elseif ismember(f,get(0,'children')')
 	% existing figure - clear and set up
 	ca = gca(f); hold on;
