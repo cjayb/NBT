@@ -33,11 +33,15 @@ nBioms = length(biomarkersToPlot);
 biomIdx = 0;
 
 
-% Correct for multiple comparisons
-multiComp = input('Correct for multiple comparisons? (no / fdr / bonferroni / holm / binomial /hochberg) ','s');
+if exist('NBTstudy.settings.visual.mcpCorrection') & ~isempty(NBTstudy.settings.visual.mcpCorrection)
+    multiComp = NBTstudy.settings.visual.mcpCorrection;
+else
+    % Correct for multiple comparisons
+    multiComp = input('Correct for multiple comparisons? (no / fdr / bonferroni / holm / binomial /hochberg) ','s');
 
-if strcmp(multiComp,'fdr')
-    q = input('Specify the desired false discovery rate: (default = 0.05) ');
+    if strcmp(multiComp,'fdr')
+        q = input('Specify the desired false discovery rate: (default = 0.05) ');
+    end
 end
 
 pValues = StatObj.pValues;
