@@ -123,34 +123,29 @@ end
         for bID = 1:numBiomarkers
             if ~strcmp(DataObj.classes{bID},'nbt_QBiomarker')
                 if (StatObj.channelsRegionsSwitch == 2) % regions
-                    regions = GrpObj.listRegData;
-                    %% the following lines are a hack: replacing DataMat = DataObj{bID,1};
-                    DataObject = DataObj.dataStore{bID};
-%                     DataMat = DataObject{bID,:}; % n_chans x n_subjects
-                    DataMat = []; % n_chans x n_subjects
-                    for subject=1:length(DataObject)
-                        DataMat = [DataMat DataObject{subject}];                       
-                    end
-                    RegData = [];
-                    for j=1:length(regions)
-                        if isa(DataMat(regions(j).reg.channel_nr,:),'cell')
-                            DataMatTemp = cell2mat(DataMat(regions(j).reg.channel_nr,:));
-                        else
-                            DataMatTemp = DataMat(regions(j).reg.channel_nr,:);
-                        end
-                        RegData = [RegData; nanmean(DataMatTemp,1)];
-                    end
-                    %% end of hack
-                    n_subjects = size(RegData,2);
-                    Regs = cell(n_subjects,1);
-                    for kk=1:n_subjects
-                        Regs{kk} = RegData(:,kk);
-                    end
-                    DataObj.dataStore{bID} = Regs;
+                 DataObj.dataStore{bID} = cellfun(@calcRegions,DataObj.dataStore{bID},'UniformOutput',0);
                 end
             end
         end
     end
+
+    function newData=calcRegions(data)
+         regions = GrpObj.listRegData;
+         for rID=1:length(regions)
+             
+             if isa(data(regions(rID).reg.channel_nr,:),'cell')
+                 dataTemp = cell2mat(data(regions(rID).reg.channel_nr,:));
+             else
+                 dataTemp = data(regions(rID).reg.channel_nr,:);
+             end
+             
+             newData(rID,:) = nanmean(dataTemp);
+
+           % newData(rID,:) = nanmean(data(regions(rID).reg.channel_nr,:));
+            
+         end
+    end
+
 end
 
 
