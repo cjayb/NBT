@@ -132,7 +132,17 @@ end
     function newData=calcRegions(data)
          regions = GrpObj.listRegData;
          for rID=1:length(regions)
-             newData(rID,:) = nanmean(data(regions(rID).reg.channel_nr,:));
+             
+             if isa(data(regions(rID).reg.channel_nr,:),'cell')
+                 dataTemp = cell2mat(data(regions(rID).reg.channel_nr,:));
+             else
+                 dataTemp = data(regions(rID).reg.channel_nr,:);
+             end
+             
+             newData(rID,:) = nanmean(dataTemp);
+
+           % newData(rID,:) = nanmean(data(regions(rID).reg.channel_nr,:));
+            
          end
     end
 
@@ -242,11 +252,7 @@ for bId = 1:length(DataObj.biomarkers)
         DataObj.dataStore{bId,1}{subjIdx,1} = DataObj.dataStore{bId,1}{subjIdx,1}';
     end
     DataObj.units{bId,1} = eval([BiomarkerLoadName{bId} '.units;']);
-    try
-        DataObj.biomarkerMetaInfo{bId} = eval([BiomarkerLoadName{bId} '.biomarkerMetaInfo;']);
-    catch
-        DataObj.biomarkerMetaInfo{bId} = [];
-    end
+    DataObj.biomarkerMetaInfo{bId} = eval([BiomarkerLoadName{bId} '.biomarkerMetaInfo;']);
 end
 end
 

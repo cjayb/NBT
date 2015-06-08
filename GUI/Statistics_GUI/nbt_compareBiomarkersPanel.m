@@ -10,6 +10,10 @@ function StatObj = nbt_compareBiomarkersPanel(StatObj, StudyObj)
     reglist{3} = 'Components';
 
     biomarkerNames = get(findobj('Tag','ListBiomarker'),'String');
+    
+%     bioms_ind = get(findobj('Tag','ListBiomarker'),'Value');
+%     bioms_name = get(findobj('Tag','ListBiomarker'),'String');
+%     biomarkerNames = bioms_name(bioms_ind); 
 
     hp = uipanel(StatSelection,'Title','Select Channels,Regions,Components','FontSize',8,'Units','pixels','Position',[5 340 300 50]);
     ListRegion = uicontrol(hp,'Units', 'pixels','style','listbox','Max',1,'Units', 'pixels','Position',[5 5 290 30],'fontsize',8,'String',reglist);
