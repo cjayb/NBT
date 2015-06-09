@@ -19,7 +19,11 @@ for i=1:(size(ARSQData.textdata,2))
 end
 %Answers 
 for i=1:(size(ARSQData.textdata,2))
-   ARSQ.Answers(i) = ARSQData.data(i)+1;
+    if ismember(ARSQData.data(i),0:1:4)
+       ARSQ.Answers(i) = ARSQData.data(i)+1;
+    else
+       ARSQ.Answers(i) = NaN; 
+    end
 end
 
 % reorder the questions (and answers) for computing the factors
