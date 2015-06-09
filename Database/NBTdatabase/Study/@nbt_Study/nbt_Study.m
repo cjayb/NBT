@@ -10,6 +10,7 @@ classdef nbt_Study
    methods
        function StudyObject = nbt_Study() 
            StudyObject.settings.visual.mcpCorrection = 'bino';
+           StudyObject.settings.visual.FDRq = 0.05;
            StudyObject.settings.visual.plotQuality = 2;
        end
    end

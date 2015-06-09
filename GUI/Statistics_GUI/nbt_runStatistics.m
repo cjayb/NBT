@@ -70,7 +70,13 @@ if strcmp(class(S),'nbt_lssvm')
 end
 
 if isa(S,'nbt_PairedStat') || isa(S,'nbt_UnPairedStat')
-    NBTstudy.settings.visual.mcpCorrection = input('Input desired multiple comparison correction: "holm", "hochberg", "binomial", "bonfi" or "fdr" ', 's');
+    multiComp = input('Input desired multiple comparison correction: "holm", "hochberg", "binomial", "bonfi" or "fdr" ', 's');
+    NBTstudy.settings.visual.mcpCorrection = multiComp;
+    
+    if strcmp(multiComp,'fdr')
+        q = input('Specify the desired false discovery rate: (default = 0.05) ');
+        NBTstudy.settings.visual.FDRq = q;
+    end
 end
     
 S = S.calculate(NBTstudy);
@@ -87,7 +93,6 @@ if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot') && ~strcmp
 end
 
 % commented for the course
-
 % if strcmp(class(S),'nbt_ttest')&& ismember('rsq.Answers',S.getBiomarkerNames)
 %     nbt_pvaluesmatrix(S)
 % end
