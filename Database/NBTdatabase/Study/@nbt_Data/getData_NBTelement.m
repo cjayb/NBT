@@ -123,7 +123,12 @@ end
         for bID = 1:numBiomarkers
             if ~strcmp(DataObj.classes{bID},'nbt_QBiomarker')
                 if (StatObj.channelsRegionsSwitch == 2) % regions
-                 DataObj.dataStore{bID} = cellfun(@calcRegions,DataObj.dataStore{bID},'UniformOutput',0);
+                    try 
+                        DataObj.dataStore{bID} = cellfun(@calcRegions,DataObj.dataStore{bID},'UniformOutput',0);
+                    catch me
+                        disp([num2str(bID) 'this biomarker is broken']);
+                    end
+                 
                 end
             end
         end
