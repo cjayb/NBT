@@ -82,7 +82,7 @@ function [CSDSignal, CSDSignalInfo] = nbt_CSD(Signal,SignalInfo)
     %%% Compute CSD using CSD toolbox 'CSD.m'
     %%% CSD.m requires transpose of signal
     disp(['Computing scalp current source density for ', num2str(size(Signal,1)), ' time points']);
-    CSDSignal = computeCSD(Signal',G,H,smoothingConstant,headRadius);
+    CSDSignal = CSD(Signal',G,H,smoothingConstant,headRadius);
     
     %%% Transpose it back
     CSDSignal = CSDSignal';

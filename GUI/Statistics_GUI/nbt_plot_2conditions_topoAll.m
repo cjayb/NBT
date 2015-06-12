@@ -80,11 +80,11 @@ for biomID = 1 : nBioms
         if (size(chanValuesGroup1) ~= size(chanValuesGroup2))
             warning('Different amount of channels for Group 1 and Group 2');
         else %%% este else fica
-            diffGrp2Grp1 = StatObj.groupStatHandle((chanValuesGroup1 - chanValuesGroup2)');
+            diffGrp2Grp1 = StatObj.groupStatHandle((chanValuesGroup2 - chanValuesGroup1)');
         end
     else
         statType = 'unpaired';
-        diffGrp2Grp1 = meanGroup1 - meanGroup2;
+        diffGrp2Grp1 = meanGroup2 - meanGroup1;
     end
     
     %%% Properties for plotting
@@ -230,10 +230,10 @@ end
         %%% Labels for the rows       
         if(subplotIndex == 1)
             if (strcmp(statType,'paired'))
-                rowLabel = sprintf('Grand average for condition %s minus incondition %s ',nameGroup1,nameGroup2);
+                rowLabel = sprintf('Grand average for condition %s minus incondition %s ',nameGroup2,nameGroup1);
             else
                 % statType == unpaired
-                rowLabel = sprintf('Grand average for group %s minus group %s',nameGroup1,nameGroup2);
+                rowLabel = sprintf('Grand average for group %s minus group %s',nameGroup2,nameGroup1);
             end
             %% Fit the label onto the y-axis
             nbt_wrapText(xa,ya,rowLabel,15,fontsize);

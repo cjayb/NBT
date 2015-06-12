@@ -1,8 +1,9 @@
-function nbt_plotBoxplots(valuesGroup1,valuesGroup2,biomarkerName,G1name,G2name,subjectList1,subjectList2,p)
+function nbt_plotBoxplots(valuesGroup1,valuesGroup2,biomarkerName,G1name,G2name,subjectList1,subjectList2,p,biomTitle)
     % this plot is valid when using same subject with different
     % conditions--> this implies that groups have same sumber of subject
     figure();
-    
+        title(biomTitle,'FontSize',16);
+        
         sub1 = subjectList1;
         sub2 = subjectList2;
 

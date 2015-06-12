@@ -65,7 +65,7 @@ subjectList2 = StatObj.data{2}.subjectList{1};
 
 
 % Use the working boxplot function:
-nbt_plotBoxplots(StatObj.data{1}(QBidx,Qid)',StatObj.data{2}(QBidx,Qid)',questions{Qid},G1name,G2name,subjectList1,subjectList2,p)
+nbt_plotBoxplots(StatObj.data{1}(QBidx,Qid)',StatObj.data{2}(QBidx,Qid)',questions{Qid},G1name,G2name,subjectList1,subjectList2,p,'')
 end
 
 end
