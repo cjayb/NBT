@@ -232,5 +232,4 @@ downButton = uicontrol(StatSelection,'Style','pushbutton','String','\/','Positio
         set(ListGroup,'Max',length(groupList),'fontsize',10,'String',groupList,'BackgroundColor','w');
         
     end
-
 end

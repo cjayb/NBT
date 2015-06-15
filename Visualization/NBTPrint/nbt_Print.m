@@ -523,18 +523,18 @@
             text(0.5, 0.99,['NBT print for groups ', char(GroupObjects{2}.groupName), ' and ', char(GroupObjects{1}.groupName)],'HorizontalAlignment','center','VerticalAlignment', 'top','FontSize',22,'Interpreter','tex');
             switch dataType
             case 'mean'
-                text(0.5,0.93,['Average difference of ', char(GroupObjects{2}.groupName), ' - ', char(GroupObjects{1}.groupName), ' ({\itn} = ', num2str(nSubjects),'), reference electrode: ',reference],'horizontalalignment','center','FontSize',14,'Interpreter','tex');
+                text(0.5,0.93,['Average difference of ', char(GroupObjects{2}.groupName), ' ({\itn} = ', num2str(size(DataObjects{2}.subjectList{1},2)),') - ', char(GroupObjects{1}.groupName), ' ({\itn} = ', num2str(size(DataObjects{1}.subjectList{1},2)),'), reference electrode: ',reference],'horizontalalignment','center','FontSize',14,'Interpreter','tex');
             case 'raw'
-                text(0.5,0.93,['Raw difference of ', char(GroupObjects{2}.groupName), ' - ', char(GroupObjects{1}.groupName), ' ({\itn} = ', num2str(nSubjects),'), reference electrode: ',reference],'horizontalalignment','center','FontSize',14,'Interpreter','tex');
+                text(0.5,0.93,['Raw difference of ', char(GroupObjects{2}.groupName), ' ({\itn} = ', num2str(size(DataObjects{2}.subjectList{1},2)),') - ', char(GroupObjects{1}.groupName), ' ({\itn} = ', num2str(nSubjects),'), reference electrode: ',reference],'horizontalalignment','center','FontSize',14,'Interpreter','tex');
             end
             
             try
-                text(0.5,0.90,['Multiple comparisons: ', multiComp],'horizontalalignment','center','FontSize',12,'Interpreter','tex');
+                text(0.5,0.90,['Statistics test: ', S.testName,', Multiple comparisons: ', multiComp],'horizontalalignment','center','FontSize',12,'Interpreter','tex');
             catch
             end
         else
             if strcmp(dataType,'mean')
-                text(0.5,0.93,['Average of subjects ({\itn} = ', num2str(nSubjects) ,'), reference electrode: ',reference],'horizontalalignment','center','FontSize',14,'Interpreter','tex');
+                text(0.5,0.93,['Average of subjects ({\itn} = ', num2str(size(DataObjects{1}.subjectList{1},2)) ,'), reference electrode: ',reference],'horizontalalignment','center','FontSize',14,'Interpreter','tex');
             end
             text(0.5, 0.99,strcat('NBT print for group ',{' '},GroupObjects{1}.groupName),'HorizontalAlignment','center','VerticalAlignment', 'top','FontSize',22,'Interpreter','tex');
         end

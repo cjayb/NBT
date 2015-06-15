@@ -6,6 +6,7 @@ function nbt_plotBoxplots(valuesGroup1,valuesGroup2,biom,G1name,G2name,subjectLi
     
     % Clean up biomarker name
     biomTitle = cleanBiomarkerName(biomTitle);
+    biom = cleanBiomarkerName(biom);
     
     title(biomTitle,'FontSize',16);
     
@@ -118,7 +119,22 @@ function nbt_plotBoxplots(valuesGroup1,valuesGroup2,biom,G1name,G2name,subjectLi
     end
     
     
-%     function biomName = cleanBiomarkerName(biomName)
-%         biomName = strrep(biomName,'
-%     end
+    function biomName = cleanBiomarkerName(biomName)
+        try
+            biomName = strrep(biomName,'NBTe nbt ','');
+            biomName = strrep(biomName,'PeakFit','');
+            biomName = strrep(biomName,'frequencyRange ','');
+            biomName = strrep(biomName,'markerValues','');
+            biomName = strrep(biomName,'MarkerValues','');
+            biomName = strrep(biomName,'.',' ');
+            biomName = strrep(biomName,'1  4','Delta');
+            biomName = strrep(biomName,'4  8','Theta');
+            biomName = strrep(biomName,'8  13','Alpha');
+            biomName = strrep(biomName,'13  30','Beta');
+            biomName = strrep(biomName,'30  45','Gamma');
+            biomName = strrep(biomName,'  ',' ');
+        catch
+            disp('Could not clean up biomarker name.');
+        end
+    end
 end
