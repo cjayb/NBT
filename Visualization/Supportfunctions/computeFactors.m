@@ -1,4 +1,4 @@
-function arsq_factors = computeFactors(answers)
+function [arsq_factors,factorNames] = computeFactors(answers)
 
 answers = answers';
 
@@ -23,6 +23,7 @@ for i=1:n_subjects
     
 end
 
+factorNames = ARSQfactors.factorLabels;
 % arsq_factors = round(arsq_factors);
 
 

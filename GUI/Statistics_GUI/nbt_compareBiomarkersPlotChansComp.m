@@ -1,18 +1,35 @@
-function nbt_compareBiomarkersPlotChansComp(d1,d2,B_values1,B_values2,bioms1,bioms2,biomindex,BottomGroups,splitType,splitValue,Pvalues,test_ind,regs_or_chans_index)
+function nbt_compareBiomarkersPlotChansComp(d1,d2,B_values1,B_values2,bioms1,bioms2,biomindex,BottomGroups,splitType,splitValue,Pvalues,test_ind,regs_or_chans_index,GroupName1,GroupName2)
 
 global NBTstudy
 
 load Questions
 
 load ARSQfactors
-ARSQfactors.arsqLabels = Questions;
+class1 = strtok(strtok(bioms1,'.'),'{')
+class2 = strtok(strtok(bioms2,'.'),'{')
+
+classes1 = evalin('base',[class1{1} '.Class']);
+classes2 = evalin('base',[class2{1} '.Class']);
+
+
+if strcmp(classes1,'nbt_QBiomarker')
+    ARSQfactors.arsqLabels = evalin('base',[class1{1} '.BiomarkerMetaInfo'])
+    Questions = evalin('base',[class1{1} '.BiomarkerMetaInfo'])
+else
+    if strcmp(classes2,'nbt_QBiomarker');
+        ARSQfactors.arsqLabels = evalin('base',[class2{1} '.BiomarkerMetaInfo'])
+        Questions = evalin('base',[class2{1} '.BiomarkerMetaInfo'])
+    else
+        
+    end
+end
 
 if regs_or_chans_index==1 chan_reg = 'Channel';
 else chan_reg = 'Region';
 end
 
 pos_cursor_unitfig = get(gca,'currentpoint');
-if ~isempty(strfind(bioms1{1},'Answers'))
+if ~isempty(strfind(bioms1{1},'Answers')) || ~isempty(strfind(bioms1{1},'values'))
     
     if ~isempty(strfind(bioms1{1},'Factors.Answers'))         
             quest = ARSQfactors.factorLabels;
@@ -29,7 +46,7 @@ if ~isempty(strfind(bioms1{1},'Answers'))
             B = B_values2(chan_or_reg,:,biomindex);
             B_Ans = B_values1(question,:);
             %-----
-            if ~isempty(strfind(bioms2{1},'Answers'))
+            if ~isempty(strfind(bioms2{1},'Answers')) || ~isempty(strfind(bioms2{1},'values'))
             
                 figure('Name',['Least-squares fit for Question ' num2str(question) '. ''' quest{question} ''' and Question ' num2str(chan_or_reg)  '. ''' quest{chan_or_reg} ''' of ' regexprep(bioms1{biomindex},'_',' ')],'NumberTitle','off')
                 set(gcf,'position',[10          80       450      700])
@@ -52,15 +69,15 @@ if ~isempty(strfind(bioms1{1},'Answers'))
             [rho,PSpear] = corr(B_Ans',B','type',tst);
             plot(B_Ans,B,'.')
             lsline
-            xlabel(['Answers to Question ' num2str(question) '. ''' quest{question} ''''])
-            if ~isempty(strfind(bioms2{1},'Answers'))
-                 ylabel([regexprep(bioms1{biomindex},'_',' ') ' for Answers to Question ' num2str(chan_or_reg) '. ''' quest{chan_or_reg} ''''])
+            xlabel(['Difference for item ' num2str(question) '. ''' quest{question} ''''])
+            if ~isempty(strfind(bioms2{1},'Answers')) || ~isempty(strfind(bioms2{1},'values'))
+                 ylabel(['Difference of ' regexprep(bioms1{biomindex},'_',' ') ' for Answers to Question ' num2str(chan_or_reg) '. ''' quest{chan_or_reg} ''''])
             title({['Least-squares fit for Question ' num2str(question) '.'],['''' quest{question} ''''],['for Question ' num2str(chan_or_reg) '.'],...
                 ['''' quest{chan_or_reg} ''' of  '] ,...
                 [ regexprep(bioms1{biomindex},'_',' '), '(p = ',sprintf('%.4f',PSpear),', rho = ',sprintf('%.3f',rho) ,')']},'fontweight','bold')
             else
             
-            ylabel([regexprep(bioms1{biomindex},'_',' ') ' for ' chan_reg ' ' num2str(chan_or_reg)])
+            ylabel(['Difference of ' regexprep(bioms1{biomindex},'_',' ') ' for ' chan_reg ' ' num2str(chan_or_reg)])
             title({['Least-squares fit for Question ' num2str(question) '.'],['''' quest{question} ''''],[' and ' chan_reg '' num2str(chan_or_reg) ' of '],...
                 [ regexprep(bioms1{biomindex},'_',' '), '(p = ',sprintf('%.4f',PSpear),', rho = ',sprintf('%.3f',rho) ,')']},'fontweight','bold')
             end
@@ -96,7 +113,7 @@ if ~isempty(strfind(bioms1{1},'Answers'))
             
             [h,p,c] = ttest2(B1,B2);
             diffmean = mean(B2)-mean(B1);
-            if ~isempty(strfind(bioms2{1}, '.Answers'))
+            if ~isempty(strfind(bioms2{1}, '.Answers')) || ~isempty(strfind(bioms2{1},'values'))
                 
             
              figure('Name',['Boxplot of the Top and Bottom group for Question ' num2str(question) '. ''' quest{question} ''' and Question ' num2str(chan_or_reg)  '. ''' quest{chan_or_reg} ''''],'NumberTitle','off')
@@ -115,7 +132,7 @@ if ~isempty(strfind(bioms1{1},'Answers'))
             text(1.02,mean(B1),'Mean','fontsize',8)
             text(2.02,mean(B2),'Mean','fontsize',8)
 %             bar([mean(B1) mean(B2)])
-             if strcmp(bioms2{1},'quest.Answers') == 1
+             if strcmp(bioms2{1},'quest.Answers') == 1 
                  ylabel(['Boxplot ' regexprep(bioms1{biomindex},'_',' ') ' for Question ' num2str(chan_or_reg)  '. ''' quest{chan_or_reg} ''''])
             xlim([0 3])
              else 
@@ -133,7 +150,7 @@ if ~isempty(strfind(bioms1{1},'Answers'))
     
     
 else
-    if ~isempty(strfind(bioms2{1},'Answers'))
+    if ~isempty(strfind(bioms2{1},'Answers')) || ~isempty(strfind(bioms2{1},'values'))
         
         if ~isempty(strfind(bioms2{1},'Factors.Answers')) 
             quest = ARSQfactors.factorLabels;
@@ -168,10 +185,15 @@ else
                 
             [rho,PSpear] = corr(B_Ans',B','type',tst);
 
-            xlabel(['Answers to Question ' num2str(question) '. ''' quest{question} ''''])
-            ylabel([regexprep(bioms1{biomindex},'_',' ') ' for ' chan_reg ' ' num2str(chan_or_reg)])
-            title({['Least-squares fit for Question ' num2str(question) '.'],['''' quest{question} ''''],[' and ' chan_reg ' ' num2str(chan_or_reg) ' of '],...
-                [ regexprep(bioms1{biomindex},'_',' '), '(p = ', sprintf('%.4f',PSpear) ,', rho = ',sprintf('%.3f',rho) ,')']},'fontweight','bold')
+            xlabel(['Difference for item ' num2str(question) '. ''' quest{question} ''''])
+            ylabel(['Difference of ' regexprep(bioms1{biomindex},'_',' ') ' for ' chan_reg ' ' num2str(chan_or_reg)])
+            if strcmp(GroupName2,'')
+                title({['Least-squares fit for item ' num2str(question) '.'],[GroupName1],['''' quest{question} ''''],[' and ' chan_reg ' ' num2str(chan_or_reg) ' of '],...
+                    [ regexprep(bioms1{biomindex},'_',' '), '(p = ', sprintf('%.4f',PSpear) ,', rho = ',sprintf('%.3f',rho) ,')']},'fontweight','bold')
+            else
+                title({['Least-squares fit for item ' num2str(question) '.'],[GroupName1 ' minus ' GroupName2],['''' quest{question} ''''],[' and ' chan_reg ' ' num2str(chan_or_reg) ' of '],...
+                    [ regexprep(bioms1{biomindex},'_',' '), '(p = ', sprintf('%.4f',PSpear) ,', rho = ',sprintf('%.3f',rho) ,')']},'fontweight','bold')
+            end
 %                textThis = sprintf(['Least-squares fit for Question ' num2str(question) '. ''' quest{question} ''' and Channel ' num2str(chan_or_reg) ' of ' regexprep(bioms1{biomindex},'_',' ')]);
 %             puttitley = get(gca,'ylim');
 %             puttitlex = get(gca,'xlim');
@@ -209,7 +231,7 @@ else
             
             [h,p,c] = ttest2(B1,B2);
             diffmean = mean(B2)-mean(B1);
-            figure('Name',['BoxPlot of the Top and Bottom group for Question ' num2str(question) '. ''' quest{question} ''' and ' chan_reg ' ' num2str(chan_or_reg)],'NumberTitle','off')
+            figure('Name',['BoxPlot of the Top and Bottom group for item ' num2str(question) '. ''' quest{question} ''' and ' chan_reg ' ' num2str(chan_or_reg)],'NumberTitle','off')
             set(gcf,'position',[10          80      450      700])
             
             z = [B1 B2];
@@ -225,7 +247,7 @@ else
      
             xlim([0 3])
             set(gca,'xtick',[0 1 2 3 ],'Xticklabel',{''; ['"Top" Group (n = ' num2str(length(B1)) ')']; ['"Bottom" Group (n = ' num2str(length(B2)) ')'];''},'fontsize',8,'fontweight','bold')
-             title({['Mean of the Top and Bottom group for Question ' num2str(question) '.'],['''' quest{question} ''''],[' and ' chan_reg ' ' num2str(chan_or_reg) ' of '],...
+             title({['Mean of the Top and Bottom group for item ' num2str(question) '.'],['''' quest{question} ''''],[' and ' chan_reg ' ' num2str(chan_or_reg) ' of '],...
                  [ regexprep(bioms1{biomindex},'_',' '), '(p = ',sprintf('%.4f',p),')']},'fontweight','bold')
 %          
 %             textThis = sprintf(['Mean of the Top and Bottom group for Question ' num2str(question) '. ''' quest{question} ''' and Channel ' num2str(chan_or_reg)]);

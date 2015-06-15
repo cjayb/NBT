@@ -110,7 +110,7 @@ for biomID = 1 : nBioms
     %%% Plot the subplots
     %%% Subplot for grand average of group 1
     subplot(4, nBioms, biomIdx);
-    text(0,0.7,biomarkerNames{biomID},'horizontalalignment','center','fontWeight','bold');
+    text(0,0.7,biomarkerNames{biomarkersToPlot(biomID)},'horizontalalignment','center','fontWeight','bold');
     plotGrandAvgTopo(1,meanGroup1,biomIdx,statType);
     cbfreeze
     freezeColors
@@ -177,17 +177,17 @@ end
             %%% If the stat test is paired, use 'condition' instead of 'group'
             if (strcmp(statType,'paired'))
                 if (conditionNr == 1)
-                    rowLabel = sprintf('Grand average for condition %s (n = %s)',nameGroup1,num2str(nSubjectsGroup1));
+                    rowLabel = sprintf('Average of %s (n = %s)',nameGroup1,num2str(nSubjectsGroup1));
                 else
-                    rowLabel = sprintf('Grand average for condition %s (n = %s)',nameGroup2,num2str(nSubjectsGroup2));
+                    rowLabel = sprintf('Average of %s (n = %s)',nameGroup2,num2str(nSubjectsGroup2));
                 end
                 
             else
                 % statType == unpaired
                 if (conditionNr == 1)
-                    rowLabel = sprintf('Grand average for group %s (n = %s)',nameGroup1,num2str(nSubjectsGroup1));
+                    rowLabel = sprintf('Average of %s (n = %s)',nameGroup1,num2str(nSubjectsGroup1));
                 else
-                    rowLabel = sprintf('Grand average for group %s (n = %s)',nameGroup2,num2str(nSubjectsGroup2));
+                    rowLabel = sprintf('Average of %s (n = %s)',nameGroup2,num2str(nSubjectsGroup2));
                 end
             end
             
@@ -230,10 +230,10 @@ end
         %%% Labels for the rows       
         if(subplotIndex == 1)
             if (strcmp(statType,'paired'))
-                rowLabel = sprintf('Grand average for condition %s minus incondition %s ',nameGroup2,nameGroup1);
+                rowLabel = sprintf('Average of %s minus %s ',nameGroup2,nameGroup1);
             else
                 % statType == unpaired
-                rowLabel = sprintf('Grand average for group %s minus group %s',nameGroup2,nameGroup1);
+                rowLabel = sprintf('Average of %s minus %s',nameGroup2,nameGroup1);
             end
             %% Fit the label onto the y-axis
             nbt_wrapText(xa,ya,rowLabel,15,fontsize);

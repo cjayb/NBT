@@ -27,20 +27,20 @@ function [CSDSignal, CSDSignalInfo, G, H] = nbt_computeSurfaceLaplacian(Signal, 
     
     if (nargin < 8); lambda = 1e-5; end;
     
-%     % 0. Remove the bad channels
-%     if ~isempty(SignalInfo.badChannels)
-%         Signal(:,find(SignalInfo.badChannels)') = NaN;
-%     end
-%     
-%     % Remove non-EEG channels
-%     if ~isempty(SignalInfo.nonEEGch)
-%         Signal(:,find(SignalInfo.nonEEGch)') = NaN;
-%     end
-%     
-%     % Remove eye channels
+    % 0. Remove the bad channels, non-EEG channels and eye channels
+    % Find the bad channels
+    badChannels = [];
+    if ~isempty(SignalInfo.badChannels)
+        badChannels = [badChannels find(SignalInfo.badChannels)'];
+    end
+    if ~isempty(SignalInfo.nonEEGch)
+        badChannels = [badChannels find(SignalInfo.nonEEGch)'];
+    end
 %     if ~isempty(SignalInfo.eyeCh)
-%         Signal(:,find(SignalInfo.eyeCh)') = NaN;
+%         badChannels = [badChannels find(SignalInfo.eyeCh)'];
 %     end
+    badChannels = unique(badChannels);
+    Signal(:,badChannels) = NaN;
     
     % 1. Convert electrode coordinates to cartesian using sph2cart
     for i = 1 : nChannels

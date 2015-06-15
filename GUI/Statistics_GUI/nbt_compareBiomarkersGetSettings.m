@@ -2,14 +2,19 @@ function nbt_compareBiomarkersGetSettings(d1,d2,ListBiom1, ListBiom2, ListRegion
 disp('Computing biomarkers comparison ...')
 global NBTstudy
 
-% replace Questions with StatObj.data{1}.biomarkerMetaInfo{2} !!!
-load Questions 
+load Questions
 
 % arsq_biom_index = find(ismember(StatObj.data{1}.biomarkers,'NBTe_nbt_rsq'));
 % Questions = StatObj.data{1}.biomarkerMetaInfo{arsq_biom_index};
 
 load ARSQfactors
 ARSQfactors.arsqLabels = Questions;
+
+
+
+% arsq_biom_index = find(ismember(StatObj.data{1}.biomarkers,'NBTe_nbt_rsq'));
+% Questions = StatObj.data{1}.biomarkerMetaInfo{arsq_biom_index};
+
 
 bioms_name = get(findobj('Tag','ListBiomarker'),'String');
 
@@ -55,15 +60,35 @@ end
 group_diffexist = 0;
 
 if length(group_ind) == 1
-    [B_values1,B_values2, bioms1,bioms2, Group] = getCompareBiomarkerData(bioms_name1,bioms_name2,group_ind,StatObj);
-    
+    [B_values1,B_values2, bioms1,bioms2, Group1] = getCompareBiomarkerData(bioms_name1,bioms_name2,group_ind,StatObj);
+    Group2.groupName = '';
 else
     [B_values1,B_values2, bioms1,bioms2, Group1,Group2] = getCompareBiomarkerData(bioms_name1,bioms_name2,group_ind,StatObj);
 end
 
 %[B_values1, B_values2] = getCompareBiomarkerRegions(regs_or_chans_name,bioms_name1,bioms_name2,B_values1,B_values2,group_ind,StatObj);
 
+try
+emptyDats = ~cellfun(@isempty,StatObj.data);
+presentDats = find(emptyDats);
 
+
+% replace Questions with StatObj.data{1}.biomarkerMetaInfo{2} !!!
+classes = StatObj.data{presentDats}.classes;
+if strcmp(classes{1},'nbt_QBiomarker')
+    ARSQfactors.arsqLabels = StatObj.data{presentDats(1)}.biomarkerMetaInfo{1};
+    Questions = StatObj.data{presentDats(1)}.biomarkerMetaInfo{1};
+else
+    if strcmp(classes{2},'nbt_QBiomarker');
+        ARSQfactors.arsqLabels = StatObj.data{presentDats(1)}.biomarkerMetaInfo{2};
+        Questions = StatObj.data{presentDats(1)}.biomarkerMetaInfo{2};
+    else
+        
+    end
+end
+
+catch me
+end
 
 switch (test_ind)
     case 1
@@ -152,7 +177,7 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
     
     subplot(1,1,1)
     %--- bar plot (map of pvalues)
-    minPValue = -2.6;% Plot log10(P-Values) to trick colour bar
+    minPValue = -2.6;% Plot log10(P-values) to trick colour bar
     maxPValue = 0;
     hh=uicontextmenu;
     hh2 = uicontextmenu;
@@ -172,7 +197,7 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
     set(get(cbh,'title'),'String','P-values');
     axis tight
     set(gca,'xticklabel','')
-    if isempty(strfind(bioms_name1{1},'Answers'))
+    if isempty(strfind(bioms_name1{1},'Answers')) || isempty(strfind(bioms_name1{1},'values'))
         for j = 1: size(B_values1,1)
             if strcmp(regs_or_chans_name,'Regions')
                 reg = NBTstudy.groups{1}.listRegData;
@@ -206,7 +231,7 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
     % p value bar
     set(cbh,'Position',[pos(1)-0.5*pos(1) pos(2)-0.6*pos(2) 0.1 0.03])
     for j = 1: size(B_values2,1)
-        if ~isempty(strfind(bioms_name2{1},'Answers'))
+        if ~isempty(strfind(bioms_name2{1},'Answers')) || ~isempty(strfind(bioms_name2{1},'values'))
             if isempty(strfind(bioms_name2{1},'Factors'));
                 varQuest = ARSQfactors;
                 limx = get(gca,'xlim');
@@ -229,10 +254,9 @@ if (display_ind == 1 && test_ind ~= 5  && test_ind ~=6)
     title(['P-values of the correlation between ',regexprep(bioms2,'_',' '), ' and ', regexprep(bioms1,'_',' ')],'fontweight','bold','fontsize',12)
     title(['Correlation between groups difference of ',regexprep(bioms2,'_',' '), ' and difference ', regexprep(bioms1,'_',' ')],'fontweight','bold','fontsize',12)
     set(bh,'uicontextmenu',hh2);
-    
+        
     uimenu(hh,'label','Correlation topoplot','callback',{@nbt_compareBiomarkersPlotTopos,B_values1,B_values2,bioms1,bioms2,1,Pvalues',rho',length(group_ind),splitType,splitValue,regs_or_chans_name,test_ind});
-    uimenu(hh2,'label','plot boxplots and least-squares fit','callback',{@nbt_compareBiomarkersPlotChansComp,B_values1,B_values2,bioms1,bioms2,1,length(group_ind),splitType,splitValue,Pvalues,test_ind,regs_or_chans_index});
-    
+    uimenu(hh2,'label','plot boxplots and least-squares fit','callback',{@nbt_compareBiomarkersPlotChansComp,B_values1,B_values2,bioms1,bioms2,1,length(group_ind),splitType,splitValue,Pvalues,test_ind,regs_or_chans_index,Group1.groupName,Group2.groupName});
     
 else if ( test_ind ~= 5 && test_ind ~=6 )
         %display as topoplots
@@ -241,7 +265,7 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
             disp(['Should view as individual channels instead of components']);
         else
             
-            if ~isempty(strfind(bioms_name2{1},'Answers'))
+            if ~isempty(strfind(bioms_name2{1},'Answers')) || ~isempty(strfind(bioms_name2{1},'values'))
                 %sbp = ceil(size(B_values2,1)^0.5);
                 sbp = 4;
                 mxlim = max([abs(max(max(rho))) abs(min(min(rho)))]);
@@ -438,7 +462,7 @@ else if ( test_ind ~= 5 && test_ind ~=6 )
                     end
                 end
             else
-                if ~isempty(strfind(bioms_name1{1},'Answers'))
+                if ~isempty(strfind(bioms_name1{1},'Answers')) || ~isempty(strfind(bioms_name1{1},'values'))
                     sbp = 4;
                     mxlim = max([abs(max(max(rho))) abs(min(min(rho)))]);
                     noFigs = ceil(size(B_values1,1)/16);
@@ -663,7 +687,9 @@ elseif length(group_ind) == 2
     
     StudyObj = NBTstudy;
     
-    Data1 = StudyObj.groups{StatObj.groups(group_ind(1))}.getData(StatObj); %with parameters);
+    %  Data1 = StudyObj.groups{StatObj.groups(group_ind(1))}.getData(StatObj); %with parameters);
+    Data1 = StudyObj.groups{group_ind(1)}.getData(StatObj); %with parameters);
+    
     
     G1B1 = Data1.dataStore{1};
     G1B2 = Data1.dataStore{2};
@@ -675,7 +701,8 @@ elseif length(group_ind) == 2
     bioms2 = bioms_name2;
     nameG2 = Group2.groupName;
     
-    Data2 = StudyObj.groups{StatObj.groups(group_ind(2))}.getData(StatObj); %with parameters);
+    %Data2 = StudyObj.groups{StatObj.groups(group_ind(2))}.getData(StatObj); %with parameters);
+    Data2 = StudyObj.groups{group_ind(2)}.getData(StatObj); %with parameters);
     
     G2B1 = Data2.dataStore{1};
     G2B2 = Data2.dataStore{2};
@@ -684,8 +711,24 @@ elseif length(group_ind) == 2
         B2_values2(:,j) = G2B2{j};
     end
     
-    B_values1 = B1_values1-B2_values1;
-    B_values2 = B1_values2-B2_values2;
+    try
+        B_values1 = B1_values1-B2_values1;
+        
+    catch me
+        disp('Failed due to unequal Sizes: Trying Pruning Questions')
+        bothGroups = min(size(B1_values1,1),size(B2_values1,1));
+        B_values1 = B1_values1(1:bothGroups,:)-B2_values1(1:bothGroups,:);
+    end
+    
+    try
+        B_values2 = B1_values2-B2_values2;
+    catch me
+        disp('Failed due to unequal Sizes: Trying Pruning Questions')
+        bothGroups = min(size(B1_values2,1),size(B2_values2,1));
+        B_values2 = B1_values2(1:bothGroups,:)-B2_values2(1:bothGroups,:);
+    end
+    
+    
     
 end
 
@@ -694,7 +737,7 @@ end
 function [B_values1, B_values2] = getCompareBiomarkerRegions(regs_or_chans_name,bioms_name1,bioms_name2,B_values1,B_values2,group_ind,StatObj)
 
 if strcmp(regs_or_chans_name,'Regions')
-    if isempty(strfind(bioms_name1{1},'Answers'))
+    if isempty(strfind(bioms_name1{1},'Answers')) || isempty(strfind(bioms_name1{1},'values'))
         regions = G(group_ind(1)).chansregs.listregdata;
         for j = 1:size(B_values1,2) % subject
             
@@ -704,7 +747,7 @@ if strcmp(regs_or_chans_name,'Regions')
         clear B_values1;
         B_values1 = B_gebruik1;
     end
-    if isempty(strfind(bioms_name2{1},'Answers'))
+    if isempty(strfind(bioms_name2{1},'Answers')) || isempty(strfind(bioms_name2{1},'values'))
         regions = G(group_ind(1)).chansregs.listregdata;
         for j = 1:size(B_values2,2) % subject
             B2 = B_values2(:,j);
@@ -716,7 +759,7 @@ if strcmp(regs_or_chans_name,'Regions')
 else
     if strcmp(regs_or_chans_name,'Components')
         noComps = 6;
-        if isempty(strfind(bioms_name1{1},'Answers'))
+        if isempty(strfind(bioms_name1{1},'Answers')) || isempty(strfind(bioms_name1{1},'values'))
             if nnz(B_values1<0) > 0
                 pcComps = pca(B_values1');
             else
@@ -744,7 +787,7 @@ else
             clear B_values1;
             B_values1 = B_gebruik1;
         else
-            if isempty(strfind(bioms_name2{1},'Answers'))
+            if isempty(strfind(bioms_name2{1},'Answers')) || isempty(strfind(bioms_name2{1},'values'))
                 if nnz(B_values2<0) > 0
                     pcComps = pca(B_values2');
                 else

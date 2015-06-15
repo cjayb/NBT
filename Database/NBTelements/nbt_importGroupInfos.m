@@ -131,7 +131,11 @@ for i=1:length(FileList)
          eval([NBTelementName '.Biomarkers = ' subjectBiomarkerFields{m} '.biomarkers;'])
          eval([NBTelementName '.BiomarkerType = ' subjectBiomarkerFields{m} '.biomarkerType;'])        
          eval([NBTelementName '.BiomarkerUnit = ' subjectBiomarkerFields{m} '.units;']) 
+         try
          metaInfoField = eval([subjectBiomarkerFields{m} '.biomarkerMetaInfo;']);
+         catch me
+             metaInfoField = 'parameter';
+         end
          eval([NBTelementName '.BiomarkerMetaInfo = ' subjectBiomarkerFields{m} '.' metaInfoField  ';']) 
     end
     
@@ -201,26 +205,32 @@ for i=1:length(FileList)
                         
             %Create the Data cell
             eval(['NumBiomarkers = length(' BiomarkerList{m} '.biomarkers);']);
+             
             if(NumBiomarkers ~=0)
                 if(fileSwitch)
                     Data = int8(0);
                 else
+                    
+                    useBiomarkers = ones(NumBiomarkers,1);
+                    
                     for dd = 1:NumBiomarkers
                         eval( ['DataString = nbt_cellc(' BiomarkerList{m} '.biomarkers,dd);']);
                         eval(['Data{dd,1} = nbt_convertToSingle(' BiomarkerList{m} '.' DataString ');']);
+                        eval(['useBiomarkers(dd) = ~(iscell(' BiomarkerList{m} '.' DataString '));']);    
                         if(size(Data{dd,1},2) > size(Data{dd,1},1)) %to fix bug with biomarkers with wrong dimension
                             Data{dd,1} = Data{dd,1}';
                         end
                     end
+                    Data = Data(useBiomarkers==1,:);
                 end
                 eval([NBTelementName ' = nbt_SetData(' NBTelementName ', Data, {' connectorKeys '});']);
                 clear Data
             end
             
             %Add biomarker Info
-            eval([NBTelementName '.Biomarkers = ' BiomarkerList{m} '.biomarkers;'])
-            eval([NBTelementName '.BiomarkerType = ' BiomarkerList{m} '.biomarkerType;'])        
-            eval([NBTelementName '.BiomarkerUnit = ' BiomarkerList{m} '.units;'])         
+            eval([NBTelementName '.Biomarkers = ' BiomarkerList{m} '.biomarkers(useBiomarkers==1);'])
+            eval([NBTelementName '.BiomarkerType = ' BiomarkerList{m} '.biomarkerType(useBiomarkers==1);'])        
+            eval([NBTelementName '.BiomarkerUnit = ' BiomarkerList{m} '.units(useBiomarkers==1);'])         
         end
     end
 end

@@ -3,8 +3,30 @@ function nbt_compareBiomarkersPlotTopos(d1,d2,B_values1,B_values2,bioms1,bioms2,
 global NBTstudy
 
 load Questions
-
 load ARSQfactors
+
+class1 = strtok(strtok(bioms1,'.'),'{')
+class2 = strtok(strtok(bioms2,'.'),'{')
+
+classes1 = evalin('base',[class1{1} '.Class']);
+classes2 = evalin('base',[class2{1} '.Class']);
+
+
+if strcmp(classes1,'nbt_QBiomarker')
+    ARSQfactors.arsqLabels = evalin('base',[class1{1} '.BiomarkerMetaInfo'])
+    Questions = evalin('base',[class1{1} '.BiomarkerMetaInfo'])
+else
+    if strcmp(classes2,'nbt_QBiomarker');
+        ARSQfactors.arsqLabels = evalin('base',[class2{1} '.BiomarkerMetaInfo'])
+        Questions = evalin('base',[class2{1} '.BiomarkerMetaInfo'])
+    else
+        
+    end
+end
+
+
+
+
 ARSQfactors.arsqLabels = Questions;
 
 pos_cursor_unitfig = get(gca,'currentpoint');
@@ -53,13 +75,14 @@ end
     coolWarm = coolWarm.coolWarm;
     colormap(coolWarm);
     subplot(2,2,3)
+    % FIXME, HACK
     if strcmp(regs_or_chans_name,'Regions')
         nbt_plot_subregions_hack(log10(Pvalues(question,:)),-2.6,0);
     else  
         topoplot(log10(Pvalues(question,:)), NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
-        set(bh,'markersize',5);
+        %set(bh,'markersize',5);
         set(bh,'ButtonDownFcn',{@nbt_testTopo,bh})
     end
     minPValue = -2.6;% Plot log10(P-Values) to trick colour bar
@@ -77,7 +100,7 @@ end
         topoplot((rho(question,:)), NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
-        set(bh,'markersize',5);
+        %set(bh,'markersize',5);
         set(bh,'ButtonDownFcn',{@nbt_testTopo,bh})
     end
     
@@ -193,7 +216,7 @@ end
         topoplot( MeanB1, NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
-        set(bh,'markersize',5);
+%        set(bh,'markersize',5);
         set(bh,'ButtonDownFcn',{@nbt_testTopo,bh})
     end
     if splitType == 1
@@ -210,7 +233,7 @@ end
         topoplot(MeanB2, NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
-        set(bh,'markersize',5);
+%        set(bh,'markersize',5);
         set(bh,'ButtonDownFcn',{@nbt_testTopo,bh})
     end
     
@@ -228,7 +251,7 @@ end
         topoplot(log10(p), NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
-        set(bh,'markersize',5);
+%         set(bh,'markersize',5);
         set(bh,'ButtonDownFcn',{@nbt_testTopo,bh})
     end
     
@@ -250,7 +273,7 @@ end
         topoplot(diffmean, NBTstudy.groups{1}.chanLocs,'headrad','rim','electrodes','on');
         bh = get(gca,'children');
         bh = bh(1);
-        set(bh,'markersize',5);
+%         set(bh,'markersize',5);
         set(bh,'ButtonDownFcn',{@nbt_testTopo,bh});
     end
     title('Difference of the means of the 2 groups')
