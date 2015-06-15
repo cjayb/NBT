@@ -104,8 +104,8 @@ if(~exist('saveflag','var') || isempty(saveflag))
     end
 else
     auto = 1;
-    name = SignalInfo.signalName;
 end
+name = SignalInfo.signalName;
 
 %Make signals
 eval([name '= Signal;'])
