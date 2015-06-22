@@ -36,7 +36,7 @@
 %-------------------------------------------------------------------------
 
 
-function nbt_importSubjectInfoMatch(infoPath, XLSfilename, matchHandle, importParameters)
+function [subjectsAdded,subjectsMissing]=nbt_importSubjectInfoMatch(infoPath, XLSfilename, matchHandle, importParameters)
 %import XLS file
 [dummy,dummy,rawXLS] = xlsread(XLSfilename);
 subjectsMissing = [];
