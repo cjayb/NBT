@@ -235,7 +235,7 @@ function NBTelement=nbt_FindDublicatedIDs(NBTelement)
 chDone =0;
 IDs = NBTelement.ID;
 for iii=1:size(NBTelement.ID,1)
-    pDub=nbt_searchvector(NBTelement.ID,{NBTelement.ID{iii,1}});
+    pDub=nbt_searchvector(NBTelement.ID,NBTelement.ID(iii,1));
     if (length(pDub) >1)
         chDone = 1;
         for m=2:length(pDub)
