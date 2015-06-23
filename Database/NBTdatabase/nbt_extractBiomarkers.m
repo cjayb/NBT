@@ -45,6 +45,7 @@ else
     end 
 end
 
+if(nargout>2)
  in = 1;
     for i = 1:length(BiomarkerObjects)
         for m = 1:length(Biomarkers{1,i})
@@ -56,4 +57,5 @@ end
             in = in + 1;
         end
     end
+end
 end

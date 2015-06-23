@@ -99,7 +99,7 @@ if(~isempty(JoinArray))
             upIDt = cell(1,1);
             uu =0;
             for mm = 1:lastLevel
-                if(~isstr(tmp))
+                if(~ischar(tmp))
                     for ii=1:tmpUpIDSize(i)
                         uu = uu+1;
                         upIDt{uu,1} = [ int2str(tmp(ii)) '.' upID{mm,1} ] ;
@@ -110,7 +110,7 @@ if(~isempty(JoinArray))
                 end
             end
             upID = upIDt;
-            if(~isstr(tmp))
+            if(~ischar(tmp))
                 lastLevel = length(tmp);
             else
                 lastLevel = 1;
@@ -154,7 +154,8 @@ if(isempty(NewIDs))
     doAppend = 1;
     %find current ID
     if(~isempty(NBTelement.ID))
-        CurrentID =  max(str2double(strtok(NBTelement.ID,'.')));
+       % CurrentID =  max(str2double(strtok(NBTelement.ID,'.')));
+       CurrentID = length(NBTelement.Data);
     else
         CurrentID = 0;
     end
@@ -225,7 +226,8 @@ if(doAppend)
     end
 end
 if(doDeDub)
-    NBTelement=nbt_FindDublicatedIDs(NBTelement);
+    %NBTelement=nbt_FindDublicatedIDs(NBTelement);
+    NBTelement.ID = unique(NBTelement.ID);
 end
 end
 
@@ -293,6 +295,7 @@ end
 
 function NBTelement=nbt_rePlaceIDs(NBTelement,pDub)
 [ID UpIds] = strtok(NBTelement.ID,'.');
+pDubb = cell(length(pDub),1);
 for m=1:length(pDub)
     pDubb{m,1} = int2str(pDub(m));
 end
@@ -305,17 +308,18 @@ end
 end
 
 function NBTelement = collapseData(NBTelement, DataTmp)
-[oldID UpIds] = strtok(NBTelement.ID,'.');
+[oldID, UpIds] = strtok(NBTelement.ID,'.');
 newID = oldID;
 newID(find(isnan(DataTmp),1,'first'):(length(oldID)-1))=oldID(find(isnan(DataTmp),1,'first')+1:end)-1;
 DataTmp(find(isnan(DataTmp),1,'first'):(length(oldID)-1))=DataTmp(find(isnan(DataTmp),1,'first')+1:end)-1;
 end
 
 function NBTelement = nbt_collapseDataAndID(NBTelement)
-NBTelement = nbt_FindDublicatedIDs(NBTelement);
-[oldID UpIds] = strtok(NBTelement.ID,'.');
+%NBTelement = nbt_FindDublicatedIDs(NBTelement);
+NBTelement.ID = unique(NBTelement.ID);
+[oldID, UpIds] = strtok(NBTelement.ID,'.');
 
-[NewID dummy OldIDindex] = unique(str2double(oldID));
+[NewID, dummy, OldIDindex] = unique(str2double(oldID));
 DiffIndex = diff((NewID));
 if ~isempty(DiffIndex)
     %update Data field
@@ -328,6 +332,7 @@ if ~isempty(DiffIndex)
         NewData(:,NewID(IndexToMove)) = NBTelement.Data(:,tmp);
         DiffIndex = diff((NewID));
     end
+    NewNewID = nan(length(OldIDindex),1);
     for m=1:length(OldIDindex)
         NewNewID(m) = NewID(OldIDindex(m));
     end
