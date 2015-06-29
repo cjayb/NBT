@@ -95,7 +95,7 @@ NBTSignal = nbt_RemoveIntervals(NBTSignal,InfoObject);
 %[NBTSignal] = nbt_filter_firHp(NBTSignal,0.5,InfoObject.convertedSamplingFrequency,4); %this high-pass is done to get a better PSD
 
 
-for ChId=1:size(NBTSignal(:,:),2)
+for ChId=setdiff(1:size(NBTSignal(:,:),2), InfoObject.nonEEGch)
     [p1,f1]=pwelch(NBTSignal(:,ChId),PSDWindow,PSDOverlap,PSDFreqResolution,InfoObject.convertedSamplingFrequency); %2^9
     
     PeakFitObject.p{ChId,1} = p1;

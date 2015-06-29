@@ -49,7 +49,7 @@ end
 if(iscell(searchvector))
     if(length(searchvector) == 1)
         if(ischar(searchvector{1,1}))
-            positive = find(strcmp(vector,searchvector{1,1}));
+            positive = find(strcmp(searchvector,vector));
         elseif(isnumeric(searchvector{1,1}))
             vector = nbt_cellc(vector,0);
             positive = [];

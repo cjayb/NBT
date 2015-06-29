@@ -44,8 +44,16 @@
 % <date> - Version <#> - <text>
 
 function cellstring=nbt_TrimCellStr(cellstring)
-dotindex = strfind(cellstring,'.');
-if(iscell(dotindex))
+
+if(iscell(cellstring))
+    %first we check first element
+    dotindex = strfind(cellstring{1,1},'.');
+    if(~isempty(dotindex))
+        if(dotindex(1) ~= 1 && dotindex(end) ~= length(cellstring{1,1}))
+            return
+        end
+    end
+    dotindex = strfind(cellstring,'.');
     for i=1:length(cellstring)
         tmp = dotindex{i,1};
         if(~isempty(tmp))
@@ -59,6 +67,7 @@ if(iscell(dotindex))
         end
     end
 else
+    dotindex = strfind(cellstring,'.');
     if(dotindex(1) == 1)
         cellstring = cellstring(2:end);
     elseif(dotindex(end) == length(cellstring))
