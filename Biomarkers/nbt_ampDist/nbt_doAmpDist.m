@@ -66,8 +66,7 @@ AmpDistObject = nbt_ampDist(size(Signal,2));
 %% get info from InfoObject
 AmpDistObject = nbt_UpdateBiomarkerInfo(AmpDistObject, InfoObject);
 %% Compute markervalues. Add here your algorithm to compute the biomarker
-
-for ChId = 1:(size(Signal,2)) % loop over channels
+for ChId = setdiff(1:(size(Signal,2)), InfoObject.nonEEGch) % loop over channels
     AmpDistObject.Kurtosis(ChId) = kurtosis(Signal(:,ChId));
     AmpDistObject.Skewness(ChId) = skewness(Signal(:,ChId));
     AmpDistObject.Iqr(ChId) = iqr(Signal(:,ChId));

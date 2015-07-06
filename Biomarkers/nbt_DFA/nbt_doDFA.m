@@ -111,7 +111,7 @@ end
 
 %% The DFA algorithm...
 
-for ChannelID = 1:(size(Signal,2)) % loop over channels
+for ChannelID = setdiff(1:(size(Signal,2)), InfoObject.nonEEGch) % loop over channels
     disp(ChannelID);
     if (isempty(DFAobject.DFA_y{ChannelID,1}))
         DFA_y = nan(size(DFA_x,2),1);
@@ -139,7 +139,8 @@ end
 
 
 %% Fitting power-law
-for ChannelID = 1:(size(Signal,2)) % loop over channels
+
+for ChannelID = setdiff(1:(size(Signal,2)), InfoObject.nonEEGch) % loop over channels
     DFA_y = DFAobject.DFA_y{ChannelID,1};
     DFA_SmallTime_LogSample = min(find(DFA_x>=CalcInterval(1)*Fs));		%
     DFA_LargeTime_LogSample = max(find(DFA_x<=CalcInterval(2)*Fs));
