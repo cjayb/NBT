@@ -143,7 +143,10 @@ for ChannelID=setdiff(1:size(Signalobject,2), InfoObject.nonEEGch)
         end
     catch
     end
+    
 end
+
+OscBobject = nbt_UpdateBiomarkerInfo(OscBobject, InfoObject);
 
 %% Nested functions part
     function ChID = GetChannelID()

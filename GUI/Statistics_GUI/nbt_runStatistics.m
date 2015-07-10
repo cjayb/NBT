@@ -61,7 +61,10 @@ for gp = 1:length(S.groups)
 end
 
 if strcmp(class(S),'nbt_lssvm')
-    %cv_type = input('Cross validation: 10-fold or random subsampler? (F/RS)');
+    cv_type = input('Cross validation: 10-fold (F) or random subsampler (RS)? (default: RS) ', 's');
+    if strcmp(cv_type,'F') S.subSampleType='kfold';
+    else S.subSampleType='holdout';
+    end
     S.nCrossVals = input('Input the desired number of cross-validations (e.g. 100) ');
     dimRed = input('Would you like to perform dimensionality reduction first? Y/N ','s');
     if strcmp(dimRed,'Y')
