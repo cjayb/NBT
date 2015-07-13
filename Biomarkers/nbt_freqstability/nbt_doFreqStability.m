@@ -9,7 +9,7 @@ biomarkerObject = nbt_UpdateBiomarkerInfo(biomarkerObject, SignalInfo);
 %Central Frequency in windows.
 WindowSize  = SignalInfo.convertedSamplingFrequency*5;
 CentralFreq = nan(floor(length(MasterSignal(:,:))/WindowSize),1);
-for ChId=1:size(MasterSignal(:,:),2)
+for ChId=setdiff(1:size(MasterSignal(:,:),2), SignalInfo.nonEEGch)
     Interval = [1 WindowSize];
     for i=1:floor(length(MasterSignal(:,:))/WindowSize)
         Signal = MasterSignal(Interval(1):Interval(2),ChId);
@@ -25,7 +25,7 @@ for ChId=1:size(MasterSignal(:,:),2)
 end
 
 %TF-method
-for ChId=1:size(MasterSignal,2)
+for ChId=setdiff(1:size(MasterSignal(:,:),2), SignalInfo.nonEEGch)
 [W,p,s,coi] = nbt_wavelet33(MasterSignal(:,ChId),1/SignalInfo.convertedSamplingFrequency,1,0.1,1.033*LowFreq,1.033*HighFreq);
 TF=sqrt(abs(W));
 ff = nan(floor(length(TF)/WindowSize),1);
@@ -42,7 +42,7 @@ end
 %phase crossing method
 SignalPhase = angle(hilbert(nbt_filter_fir(MasterSignal,LowFreq,HighFreq,SignalInfo.convertedSamplingFrequency,2/LowFreq)));
 
-for ChId=1:size(SignalPhase,2)
+for ChId=setdiff(1:size(SignalPhase,2), SignalInfo.nonEEGch)
     Interval = [1 WindowSize];
     for i=1:floor(length(SignalPhase)/WindowSize)
         Signal = SignalPhase(Interval(1):Interval(2),ChId);

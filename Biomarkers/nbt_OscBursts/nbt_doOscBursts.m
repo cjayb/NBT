@@ -92,7 +92,7 @@ threshold = OscBobject.threshold;
 %% Find life and waiting-times
 % add option to extract individual bursts for further analysis.
 
-for ChannelID=1:size(Signalobject,2)
+for ChannelID=setdiff(1:size(Signalobject,2), InfoObject.nonEEGch)
     %% Life-times
     try
         SignalToTest = Signalobject(:,GetChannelID);
@@ -143,7 +143,10 @@ for ChannelID=1:size(Signalobject,2)
         end
     catch
     end
+    
 end
+
+OscBobject = nbt_UpdateBiomarkerInfo(OscBobject, InfoObject);
 
 %% Nested functions part
     function ChID = GetChannelID()
