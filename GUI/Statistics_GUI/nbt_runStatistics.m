@@ -73,25 +73,27 @@ if strcmp(class(S),'nbt_lssvm')
 end
 
 if isa(S,'nbt_PairedStat') || isa(S,'nbt_UnPairedStat')
-    multiComp = input('Input desired multiple comparison correction: "holm", "hochberg", "binomial", "bonfi" or "fdr" ', 's');
-    NBTstudy.settings.visual.mcpCorrection = multiComp;
-    
-    if strcmp(multiComp,'fdr')
-        q = input('Specify the desired false discovery rate: (default = 0.05) ');
-        NBTstudy.settings.visual.FDRq = q;
+    if ~isa(S,'nbt_biomarkerCurve')
+        multiComp = input('Input desired multiple comparison correction: "holm", "hochberg", "binomial", "bonfi" or "fdr" ', 's');
+        NBTstudy.settings.visual.mcpCorrection = multiComp;
+        
+        if strcmp(multiComp,'fdr')
+            q = input('Specify the desired false discovery rate: (default = 0.05) ');
+            NBTstudy.settings.visual.FDRq = q;
+        end
     end
 end
     
 S = S.calculate(NBTstudy);
 
-if ~ismember('nbt_Visualization',superclasses(S)) && ~isa(S,'nbt_comparebiomarkers')
+if ~ismember('nbt_Visualization',superclasses(S)) && ~isa(S,'nbt_comparebiomarkers') && ~isa(S,'nbt_biomarkerCurve')
     % FIX ME: NBT specific plot function with build-in function name
     plot(S)
 end
     
 NBTstudy.statAnalysis{length(NBTstudy.statAnalysis)+1} = S;
 disp('Statistics done.')
-if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot') && ~strcmp(class(S),'nbt_comparebiomarkers') && ~ismember('rsq.Answers',S.getBiomarkerNames) %&& ~ismember('bval.values',S.getBiomarkerNames)%&& ~strcmp(class(S),'nbt_ttest')
+if ~strcmp(class(S),'nbt_lssvm')&& ~strcmp(class(S),'nbt_spiderplot') && ~strcmp(class(S),'nbt_comparebiomarkers') && ~ismember('rsq.Answers',S.getBiomarkerNames) && ~isa(S,'nbt_biomarkerCurve') %&& ~ismember('bval.values',S.getBiomarkerNames)%&& ~strcmp(class(S),'nbt_ttest')
     nbt_plot_2conditions_topoAll(S)
 end
 

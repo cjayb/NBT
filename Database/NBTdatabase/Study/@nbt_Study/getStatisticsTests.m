@@ -56,6 +56,7 @@ if(index ==0)
         'Elastic logit', ...
         'LS-SVM', ...
         'Compare biomarkers' ...
+        'Biomarker curve' ...
         };
     return
 end
@@ -139,6 +140,8 @@ switch index
         S = nbt_lssvm;
     case 24
         S = nbt_comparebiomarkers;
+    case 25
+        S = nbt_biomarkerCurve;
     otherwise
         S = [];
 end
