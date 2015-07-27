@@ -87,6 +87,28 @@ classdef (Abstract) nbt_SignalBiomarker < nbt_CoreBiomarker
                     eval(['biomarkerObject.' biomarkerObject.biomarkers{1,i} '=biomarker;']);
                 end
             end
+            
+%             %set NonEEGchannels to NaN
+%             if(~isempty(SignalInfo.nonEEGch))
+%                 for i=1:length(biomarkerObject.biomarkers)
+%                     eval(['biomarker=biomarkerObject.' biomarkerObject.biomarkers{1,i} ';']);
+%                     if(iscell(biomarker))
+%                         for m=1:length(biomarker)
+%                             if(~iscell(biomarker{m,1}))
+%                                 biomarker{m,1}(find(SignalInfo.nonEEGch)) = NaN;
+%                             else
+%                                 for mm=1:length(biomarker{m,1})
+%                                     biomarker{m,1}{mm,1}(find(SignalInfo.nonEEGch)) = NaN;
+%                                 end
+%                             end
+%                         end
+%                     else
+%                         biomarker(find(SignalInfo.nonEEGch)) = NaN;
+%                     end
+%                     eval(['biomarkerObject.' biomarkerObject.biomarkers{1,i} '=biomarker;']);
+%                 end
+%             end
+            
         end
         
         

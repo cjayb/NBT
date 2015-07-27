@@ -94,6 +94,7 @@ PeakFitObject.PSDOverlap = PSDOverlap;
 NBTSignal = nbt_RemoveIntervals(NBTSignal,InfoObject);
 %[NBTSignal] = nbt_filter_firHp(NBTSignal,0.5,InfoObject.convertedSamplingFrequency,4); %this high-pass is done to get a better PSD
 
+goodChannels = setdiff(1:size(NBTSignal(:,:),2), InfoObject.nonEEGch);
 
 for ChId=setdiff(1:size(NBTSignal(:,:),2), InfoObject.nonEEGch)
     [p1,f1]=pwelch(NBTSignal(:,ChId),PSDWindow,PSDOverlap,PSDFreqResolution,InfoObject.convertedSamplingFrequency); %2^9
@@ -335,41 +336,41 @@ for ChId=setdiff(1:size(NBTSignal(:,:),2), InfoObject.nonEEGch)
     end
 end
     %% splitting up bioms per classical frequency bands
-            PeakFitObject.Bandwidth_Delta = PeakFitObject.Bandwidth{1};
-            PeakFitObject.Bandwidth_Theta = PeakFitObject.Bandwidth{2};
-            PeakFitObject.Bandwidth_Alpha = PeakFitObject.Bandwidth{3};
-            PeakFitObject.Bandwidth_Beta = PeakFitObject.Bandwidth{4};
-            PeakFitObject.Bandwidth_Gamma = PeakFitObject.Bandwidth{5};
+            PeakFitObject.Bandwidth_Delta(goodChannels) = PeakFitObject.Bandwidth{1}(goodChannels);
+            PeakFitObject.Bandwidth_Theta(goodChannels) = PeakFitObject.Bandwidth{2}(goodChannels);
+            PeakFitObject.Bandwidth_Alpha(goodChannels) = PeakFitObject.Bandwidth{3}(goodChannels);
+            PeakFitObject.Bandwidth_Beta(goodChannels) = PeakFitObject.Bandwidth{4}(goodChannels);
+            PeakFitObject.Bandwidth_Gamma(goodChannels) = PeakFitObject.Bandwidth{5}(goodChannels);
             
-            PeakFitObject.CentralFreq_Delta = PeakFitObject.CentralFreq{1};
-            PeakFitObject.CentralFreq_Theta = PeakFitObject.CentralFreq{2};
-            PeakFitObject.CentralFreq_Alpha = PeakFitObject.CentralFreq{3};
-            PeakFitObject.CentralFreq_Beta = PeakFitObject.CentralFreq{4};
-            PeakFitObject.CentralFreq_Gamma = PeakFitObject.CentralFreq{5};
-            PeakFitObject.CentralFreq_Broadband = PeakFitObject.CentralFreq{6};
-            PeakFitObject.CentralFreq_Alpha1 =PeakFitObject.CentralFreq{7};
-            PeakFitObject.CentralFreq_Alpha2 = PeakFitObject.CentralFreq{8};
+            PeakFitObject.CentralFreq_Delta(goodChannels) = PeakFitObject.CentralFreq{1}(goodChannels);
+            PeakFitObject.CentralFreq_Theta(goodChannels) = PeakFitObject.CentralFreq{2}(goodChannels);
+            PeakFitObject.CentralFreq_Alpha(goodChannels) = PeakFitObject.CentralFreq{3}(goodChannels);
+            PeakFitObject.CentralFreq_Beta(goodChannels) = PeakFitObject.CentralFreq{4}(goodChannels);
+            PeakFitObject.CentralFreq_Gamma(goodChannels) = PeakFitObject.CentralFreq{5}(goodChannels);
+            PeakFitObject.CentralFreq_Broadband(goodChannels) = PeakFitObject.CentralFreq{6}(goodChannels);
+            PeakFitObject.CentralFreq_Alpha1(goodChannels) =PeakFitObject.CentralFreq{7}(goodChannels);
+            PeakFitObject.CentralFreq_Alpha2(goodChannels) = PeakFitObject.CentralFreq{8}(goodChannels);
             
-            PeakFitObject.SpectralEdge_Delta = PeakFitObject.SpectralEdge{1};
-            PeakFitObject.SpectralEdge_Theta = PeakFitObject.SpectralEdge{2};
-            PeakFitObject.SpectralEdge_Alpha = PeakFitObject.SpectralEdge{3};
-            PeakFitObject.SpectralEdge_Beta = PeakFitObject.SpectralEdge{4};
-            PeakFitObject.SpectralEdge_Gamma = PeakFitObject.SpectralEdge{5};
+            PeakFitObject.SpectralEdge_Delta(goodChannels) = PeakFitObject.SpectralEdge{1}(goodChannels);
+            PeakFitObject.SpectralEdge_Theta(goodChannels) = PeakFitObject.SpectralEdge{2}(goodChannels);
+            PeakFitObject.SpectralEdge_Alpha(goodChannels) = PeakFitObject.SpectralEdge{3}(goodChannels);
+            PeakFitObject.SpectralEdge_Beta(goodChannels) = PeakFitObject.SpectralEdge{4}(goodChannels);
+            PeakFitObject.SpectralEdge_Gamma(goodChannels) = PeakFitObject.SpectralEdge{5}(goodChannels);
 
-            PeakFitObject.AbsolutePower_Delta = PeakFitObject.AbsolutePower{1};
-            PeakFitObject.AbsolutePower_Theta = PeakFitObject.AbsolutePower{2};
-            PeakFitObject.AbsolutePower_Alpha = PeakFitObject.AbsolutePower{3};
-            PeakFitObject.AbsolutePower_Beta = PeakFitObject.AbsolutePower{4};
-            PeakFitObject.AbsolutePower_Gamma = PeakFitObject.AbsolutePower{5};
-            PeakFitObject.AbsolutePower_Broadband = PeakFitObject.AbsolutePower{6};
-            PeakFitObject.AbsolutePower_Alpha1 = PeakFitObject.AbsolutePower{7};
-            PeakFitObject.AbsolutePower_Alpha2 = PeakFitObject.AbsolutePower{8};
+            PeakFitObject.AbsolutePower_Delta(goodChannels) = PeakFitObject.AbsolutePower{1}(goodChannels);
+            PeakFitObject.AbsolutePower_Theta(goodChannels) = PeakFitObject.AbsolutePower{2}(goodChannels);
+            PeakFitObject.AbsolutePower_Alpha(goodChannels) = PeakFitObject.AbsolutePower{3}(goodChannels);
+            PeakFitObject.AbsolutePower_Beta(goodChannels) = PeakFitObject.AbsolutePower{4}(goodChannels);
+            PeakFitObject.AbsolutePower_Gamma(goodChannels) = PeakFitObject.AbsolutePower{5}(goodChannels);
+            PeakFitObject.AbsolutePower_Broadband(goodChannels) = PeakFitObject.AbsolutePower{6}(goodChannels);
+            PeakFitObject.AbsolutePower_Alpha1(goodChannels) = PeakFitObject.AbsolutePower{7}(goodChannels);
+            PeakFitObject.AbsolutePower_Alpha2(goodChannels) = PeakFitObject.AbsolutePower{8}(goodChannels);
             
-            PeakFitObject.RelativePower_Delta = PeakFitObject.RelativePower{1};
-            PeakFitObject.RelativePower_Theta = PeakFitObject.RelativePower{2};
-            PeakFitObject.RelativePower_Alpha = PeakFitObject.RelativePower{3};
-            PeakFitObject.RelativePower_Beta = PeakFitObject.RelativePower{4};
-            PeakFitObject.RelativePower_Gamma = PeakFitObject.RelativePower{5};
+            PeakFitObject.RelativePower_Delta(goodChannels) = PeakFitObject.RelativePower{1}(goodChannels);
+            PeakFitObject.RelativePower_Theta(goodChannels) = PeakFitObject.RelativePower{2}(goodChannels);
+            PeakFitObject.RelativePower_Alpha(goodChannels) = PeakFitObject.RelativePower{3}(goodChannels);
+            PeakFitObject.RelativePower_Beta(goodChannels) = PeakFitObject.RelativePower{4}(goodChannels);
+            PeakFitObject.RelativePower_Gamma(goodChannels) = PeakFitObject.RelativePower{5}(goodChannels);
             
 %Update information
 % assignin('base','thenewPeakFitObject',PeakFitObject);
